@@ -1,4 +1,4 @@
-package java.atdit.gelatelli;
+package atdit.gelatelli;
 
 public class DbConnectionTest{
 
