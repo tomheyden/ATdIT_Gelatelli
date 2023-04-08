@@ -1,18 +1,18 @@
 package atdit.gelatelli;
 
-import java.util.*;
+import java.util.List;
 
-public interface WarehouseInterface {
-
+public interface ProductionInterface {
 
     /**
      Method to read from the Database and display the information in the Warehouse UI for the employee
      */
 
-    List<Ingredient> readfromDBtoWE(Ingredient ingredient);
+    List<Flavour> readfromDBtoProduction (Ingredient ingredient);
 
     /**
      Method to update the DB entries from the Input in the Warehouse UI by the employee
      */
-    List<Batch> updateDBfromWE (String flavourName, int amount);
+    List<Batch> updateDBfromProduction (String flavourName, int amount);
 }
+
