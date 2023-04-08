@@ -1,4 +1,4 @@
-package java.atdit.gelatelli;
+package atdit.gelatelli;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
