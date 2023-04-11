@@ -18,7 +18,7 @@ public class DbConnectionTest{
 
     @Test
     public void testConnection() throws SQLException {
-        Connection connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/eiscafegelatelli", "root", "password");
+        Connection connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/eiscafegelatelli", "root", "CV2*#9c5W8pHgN8");
         Assertions.assertNotNull(connection);
     }
     
