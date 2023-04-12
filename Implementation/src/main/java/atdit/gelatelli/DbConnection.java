@@ -33,14 +33,26 @@ public class DbConnection {
         String user = dbAccessProperties.getProperty( "user" );
         String password = dbAccessProperties.getProperty( "password" );
 
-        //logMissingParameters( url, user, password );
+        logMissingParameters( url, user, password );
 
         Connection connection = getConnection( url, user, password);
         return connection;
     }
 
-    List getDbTable (String sqlstatement) {
+    private void logMissingParameters(String url, String user, String password) {
+        if (url == null) {
+            log.error("Database URL is missing.");
+        }
+        if (user == null) {
+            log.error("Database username is missing.");
+        }
+        if (password == null) {
+            log.error("Database password is missing.");
+        }
+    }
 
+    List getDbTable (String sqlstatement) {
+      
         String sql1 = sqlstatement;
         List<Object[]> finalList = new ArrayList<>();
 
@@ -63,7 +75,7 @@ public class DbConnection {
 
         } catch( SQLException e ) {
                 final String msg = "database access failed";
-                //log.error(msg, e);
+                log.error(msg, e);
                 throw new RuntimeException(msg);
         }
         return finalList;
@@ -94,7 +106,7 @@ public class DbConnection {
         }
         catch( IOException | IllegalArgumentException | NullPointerException e ) {
             final String msg = "Loading database connection properties failed";
-            // log.error( msg, e );
+            log.error( msg, e );
             throw new RuntimeException( msg );
         }
         return dbAccessProperties;

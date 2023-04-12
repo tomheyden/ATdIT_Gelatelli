@@ -1,9 +1,14 @@
 package atdit.gelatelli;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductionService implements ProductionInterface {
+    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     DbConnection dbConnection = new DbConnection();
     List<Flavour> productionList = new ArrayList<>();
     List<Ingredient> ingredientlist = new WarehouseService().readIngredients();
@@ -11,28 +16,9 @@ public class ProductionService implements ProductionInterface {
     WarehouseService warehouseService = new WarehouseService();
 
     @Override
-    public void readfromDBtoProduction(Ingredient ingredient) {
-        /*List<Ingredient> list = warehouseService.readfromDBtoWE(null);
-
-        List<Object[]> result = dbConnection.getDbTable(null, "flavour",null);
-        List<Flavour> flavour = new ArrayList<>();
-
-        int i;
-        for (Object[] objarray : result) {
-            i = 0;
-            Object[] temp = new Object[2];
-            for (Object obj : objarray) {
-                temp[i] = obj;
-                i++;
-            }
-            Flavour flavour_temp = new Flavour((String)temp[0],Double.parseDouble(temp[1].toString()));
-            flavour.add(flavour_temp);
-        }
-        this.productionList = flavour;*/
-    }
+    public void readfromDBtoProduction(Ingredient ingredient) {}
 
     @Override
-    public void updateDBfromProduction(String flavourName, int amount) {
+    public void updateDBfromProduction(String flavourName, int amount) {}
 
-    }
 }

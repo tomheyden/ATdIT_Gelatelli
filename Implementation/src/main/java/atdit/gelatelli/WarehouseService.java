@@ -6,11 +6,16 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import java.util.*;
 import java.text.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import static java.sql.DriverManager.getConnection;
 
@@ -19,15 +24,19 @@ Service for the Warehouse UI (see {@link WarehouseInterface).
  */
 
 public class WarehouseService implements WarehouseInterface{
-    //private static final Logger log = LoggerFactory.getLogger( MethodHandles.lookup().lookupClass() );
+    private static final Logger log = LoggerFactory.getLogger( MethodHandles.lookup().lookupClass() );
     DbConnection dbConnection = new DbConnection();
 
     @Override
     public List<Ingredient> readIngredients() {
+    
+        log.info("Starting readfromDBtoWE method...");
+        
         String sql1 = """
                       SELECT * from ingredient
                       """ ;
         List<Object[]> result = dbConnection.getDbTable(sql1);
+
         List<Ingredient> ingredients = new ArrayList<>();
 
         int i;
@@ -39,8 +48,15 @@ public class WarehouseService implements WarehouseInterface{
                 temp[i] = obj;
                 i++;
             }
+               
+               try {
             Ingredient ingredient_temp = new Ingredient((String)temp[0],Double.parseDouble(temp[1].toString()),(String) temp[2]);
             ingredients.add(ingredient_temp);
+            
+            log.trace("Adding Ingredient object to list: {}", ingredient_temp);
+                } catch (Exception e) {
+                    log.error("Error converting data to Ingredient objects: {}", e.getMessage());
+                }
         }
         return ingredients;
     }
@@ -58,6 +74,7 @@ public class WarehouseService implements WarehouseInterface{
             Flavour flavour = new Flavour ((String) objarray[0], Double.parseDouble(objarray[1].toString()));
             flavours.add(flavour);
         }
+        log.debug("Retrieved data from database: {}", result);
         return flavours;
     }
 
@@ -67,7 +84,4 @@ public class WarehouseService implements WarehouseInterface{
         String sql = "INSERT INTO warehouse (id, bbd, amount, ingredient_name) VALUES ("+ (dbConnection.getMaxId()+1)+", '"+ Date.valueOf(bbd)+"', "+amount+", '"+ingredientName+"')";
         dbConnection.updateDBentry(sql);
     }
-
-
-
 }
