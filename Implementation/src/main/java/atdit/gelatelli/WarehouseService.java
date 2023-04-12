@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.sql.DriverManager.getConnection;
 
@@ -13,7 +15,7 @@ Service for the Warehouse UI (see {@link WarehouseInterface).
  */
 
 public class WarehouseService implements WarehouseInterface{
-    //private static final Logger log = LoggerFactory.getLogger( MethodHandles.lookup().lookupClass() );
+    private static final Logger log = LoggerFactory.getLogger( MethodHandles.lookup().lookupClass() );
     DbConnection dbConnection = new DbConnection();
 
     @Override

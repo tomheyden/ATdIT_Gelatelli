@@ -12,6 +12,6 @@ import org.slf4j.LoggerFactory;
 
 public class WarehouseImplementation {
 
-    //private static final Logger log = LoggerFactory.getLogger( MethodHandles.lookup().lookupClass() );
+    private static final Logger log = LoggerFactory.getLogger( MethodHandles.lookup().lookupClass() );
     }
 
