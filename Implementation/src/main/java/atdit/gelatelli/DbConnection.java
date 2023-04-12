@@ -38,6 +38,15 @@ public class DbConnection {
     }
 
     private void logMissingParameters(String url, String user, String password) {
+        if (url == null) {
+            log.error("Database URL is missing.");
+        }
+        if (user == null) {
+            log.error("Database username is missing.");
+        }
+        if (password == null) {
+            log.error("Database password is missing.");
+        }
     }
 
     List getDbTable (Object object, String tablename, String columname) {
@@ -61,7 +70,7 @@ public class DbConnection {
             }
         } catch( SQLException e ) {
                 final String msg = "database access failed";
-                //log.error(msg, e);
+                log.error(msg, e);
                 throw new RuntimeException(msg);
         }
         return finalList;
