@@ -1,15 +1,21 @@
 package atdit.gelatelli;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductionService implements ProductionInterface {
+    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     DbConnection dbConnection = new DbConnection();
     List<Flavour> productionList = new ArrayList<>();
 
     @Override
     public void readfromDBtoProduction(Ingredient ingredient) {
-        List<Object[]> result = dbConnection.getDbTable(null, "flavour",null);
+        log.info("Starting readfromDBtoProduction method...");
+        List<Object[]> result = dbConnection.getDbTable(null, "flavour", null);
         List<Flavour> flavour = new ArrayList<>();
 
         int i;
@@ -20,11 +26,17 @@ public class ProductionService implements ProductionInterface {
                 temp[i] = obj;
                 i++;
             }
-            Flavour flavour_temp = new Flavour((String)temp[0],Double.parseDouble(temp[1].toString()));
-            flavour.add(flavour_temp);
+            try {
+                Flavour flavour_temp = new Flavour((String) temp[0], Double.parseDouble(temp[1].toString()));
+                flavour.add(flavour_temp);
+                log.trace("Adding Flavour object to list: {}", flavour_temp);
+            } catch (Exception e) {
+                log.error("Error converting data to Flavour objects: {}", e.getMessage());
+            }
         }
 
         this.productionList = flavour;
+        log.debug("Retrieved data from database: {}", result);
     }
 
     @Override
@@ -32,8 +44,10 @@ public class ProductionService implements ProductionInterface {
     }
 
     public void sortList() {
+        log.info("Starting sortList method...");
         List<Flavour> tempList = this.productionList;
 
         //tempList.sort(ProductionListComparator);
+        log.trace("Sorted productionList: {}", this.productionList);
     }
 }
