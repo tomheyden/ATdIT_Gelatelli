@@ -35,12 +35,4 @@ public class ProductionService implements ProductionInterface {
     @Override
     public void updateDBfromProduction(String flavourName, int amount) {
     }
-
-    public void sortList() {
-        List<Flavour> tempList = this.productionList;
-
-        //tempList.sort(ProductionListComparator);
-    }
-
-    public
 }

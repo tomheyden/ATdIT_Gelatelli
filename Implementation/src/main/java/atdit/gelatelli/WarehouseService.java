@@ -21,7 +21,7 @@ public class WarehouseService implements WarehouseInterface{
         String sql1 = """
                       SELECT * from warehouse
                       """ ;
-        List<Object[]> result = dbConnection.getDbTable(null, sql1);
+        List<Object[]> result = dbConnection.getDbTable(sql1);
         List<Ingredient> ingredients = new ArrayList<>();
 
         int i;

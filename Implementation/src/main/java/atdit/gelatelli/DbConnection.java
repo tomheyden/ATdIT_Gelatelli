@@ -37,7 +37,7 @@ public class DbConnection {
         return connection;
     }
 
-    List getDbTable (Object object, String sqlstatement) {
+    List getDbTable (String sqlstatement) {
 
         String sql1 = sqlstatement;
         List<Object[]> finalList = new ArrayList<>();
