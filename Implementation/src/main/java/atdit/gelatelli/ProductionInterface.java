@@ -1,18 +1,22 @@
 package atdit.gelatelli;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface ProductionInterface {
+    public List<Flavour> productionlist = new ArrayList<>();
 
     /**
-     Method to read from the Database and display the information in the Warehouse UI for the employee
+     Method to read from the Database and display the information in the Production UI for the employee
      */
 
-    List<Flavour> readfromDBtoProduction (Ingredient ingredient);
+    public void readfromDBtoProduction (Ingredient ingredient);
+
+    void sortList ();
 
     /**
-     Method to update the DB entries from the Input in the Warehouse UI by the employee
+     Method to update the DB entries from the Input in the Production UI by the employee
      */
-    List<Batch> updateDBfromProduction (String flavourName, int amount);
+   public void updateDBfromProduction (String flavourName, int amount);
 }
 

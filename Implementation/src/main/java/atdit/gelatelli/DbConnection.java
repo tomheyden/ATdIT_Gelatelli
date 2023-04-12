@@ -1,6 +1,5 @@
 package atdit.gelatelli;
 
-import org.mariadb.jdbc.export.Prepare;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,7 @@ import java.lang.*;
 public class DbConnection {
     private static final Logger log = LoggerFactory.getLogger( MethodHandles.lookup().lookupClass() );
 
-    private Connection getDbConnection () throws SQLException {
+    public Connection getDbConnection () throws SQLException {
 
         Properties dbAccessProperties = getDbAccessProperties();
 
@@ -34,7 +33,7 @@ public class DbConnection {
 
         //logMissingParameters( url, user, password );
 
-        Connection connection = getConnection( url, user, password );
+        Connection connection = getConnection( url, user, password);
         return connection;
     }
 
@@ -51,7 +50,7 @@ public class DbConnection {
             int columnCount = rsmd.getColumnCount();
 
             while (dbQueryResult.next()) {
-                String[] row = new String[columnCount];
+                Object[] row = new Object[columnCount];
                 for (int i = 1; i <= columnCount; i++) {
                     row[i - 1] = dbQueryResult.getString(i);
                 }
@@ -67,17 +66,11 @@ public class DbConnection {
 
     private PreparedStatement prepareStatement( Connection connection, String tablename, String columname ) throws SQLException {
 
-        if (columname == null){
-            columname = "*";
-        }
-
         PreparedStatement result = connection.prepareStatement(
                 """
-                SELECT ? from ?
-                """
+                SELECT * from 
+                """ + tablename
         );
-        result.setString( 1, columname );
-        result.setString( 2, tablename );
         return result;
     }
 

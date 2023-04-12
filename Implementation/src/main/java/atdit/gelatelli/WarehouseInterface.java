@@ -9,7 +9,7 @@ public interface WarehouseInterface {
      Method to read from the Database and display the information in the Warehouse UI for the employee
      */
 
-    List<Ingredient> readfromDBtoWE(Ingredient ingredient);
+    List<Ingredient> readfromDBtoWE(String ingredient);
 
     /**
      Method to update the DB entries from the Input in the Warehouse UI by the employee
