@@ -18,14 +18,14 @@ public class DbConnectionTest{
 
     @Test
     public void testConnection() throws SQLException {
-        Connection connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/eiscafegelatelli", "root", "password");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/eiscafegelatelli", "root", "Tlhlfh0108");
         Assertions.assertNotNull(connection);
     }
     
     @Test
     public void testreadfromDBtoWE() throws SQLException {
        WarehouseService warehouseService = new WarehouseService();
-       List<Ingredient> actualIngredients = warehouseService.readfromDBtoWE(null);
+       List<Ingredient> actualIngredients = warehouseService.readIngredients();
 
         List<Ingredient> expectedIngredients = new ArrayList<>();
         expectedIngredients.add(new Ingredient("Cocoa powder",9.99,"kg"));
@@ -40,7 +40,7 @@ public class DbConnectionTest{
     public void testupdateDB() throws SQLException {
 
         WarehouseService warehouseService = new WarehouseService();
-        warehouseService.updateDBfromWE("2023-11-01",2.0,"Strawberry");
+        warehouseService.updateDBfromWE("2023-08-01",0.1,"Strawberry");
         Assertions.assertNotNull(1);
     }
 

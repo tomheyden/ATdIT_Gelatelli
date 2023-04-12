@@ -2,11 +2,15 @@ package atdit.gelatelli;
 
 import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import java.util.*;
+import java.text.*;
 
 import static java.sql.DriverManager.getConnection;
 
@@ -58,8 +62,10 @@ public class WarehouseService implements WarehouseInterface{
     }
 
     @Override
-    public List<Batch> updateDBfromWE(String flavourName, int amount) {
-        return null;
+    public void updateDBfromWE(String bbd,  double amount, String ingredientName) {
+
+        String sql = "INSERT INTO warehouse (id, bbd, amount, ingredient_name) VALUES ("+ (dbConnection.getMaxId()+1)+", '"+ Date.valueOf(bbd)+"', "+amount+", '"+ingredientName+"')";
+        dbConnection.updateDBentry(sql);
     }
 
 
