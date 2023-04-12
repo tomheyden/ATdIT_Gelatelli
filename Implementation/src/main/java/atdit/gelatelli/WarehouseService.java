@@ -41,9 +41,37 @@ public class WarehouseService implements WarehouseInterface{
         return ingredients;
     }
 
-    public List<Flavour> readFlavoursForSpoilingIngredients() {
-         String sql = """
-                      SELECT * FROM flavour WHERE flavour_name IN (SELECT flavour_name FROM flavour_ingredient WHERE ingredient_name IN (SELECT ingredient_name FROM warehouse WHERE bbd < DATE_ADD(NOW(), INTERVAL 1 WEEK)))
+    public void readFlavoursForSpoilingIngredients() {
+
+         String sqlIngredient = """
+                                SELECT ingredient_name FROM warehouse WHERE bbd < DATE_ADD(NOW(), INTERVAL 1 WEEK)
+                                """;
+
+         List<Object[]> ingredients = dbConnection.getDbTable(sqlIngredient);
+
+        for (Object[] ingredient : ingredients) {
+            String sqlFlavours = "SELECT * FROM flavour WHERE flavour_name IN (SELECT flavour_name FROM flavour_ingredient WHERE ingredient_name = '" + ingredient[0] + "')";
+            List<Object[]> flavours = dbConnection.getDbTable(sqlFlavours);
+
+            for (Object[] flavour : flavours) {
+                for (Flavour predefinedFlavour : FlavourSingleton.getInstance().getFlavours()) {
+                    if (flavour[0].equals(predefinedFlavour.getFlavourName())) {
+                        predefinedFlavour.increaseSort();
+                    }
+                }
+            }
+
+        }
+        FlavourSingleton.getInstance().sortByBbd();
+        for (Flavour flavour : FlavourSingleton.getInstance().getFlavours()) {
+            System.out.println(flavour.getFlavourName()+ " " + flavour.getSort());
+        }
+
+    }
+
+    public List<Flavour> readAllFlavours() {
+        String sql = """
+                      SELECT * FROM flavour
                       """ ;
 
         List<Object[]> result = dbConnection.getDbTable(sql);
