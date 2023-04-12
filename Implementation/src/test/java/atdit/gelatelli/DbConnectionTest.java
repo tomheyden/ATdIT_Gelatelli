@@ -25,7 +25,7 @@ public class DbConnectionTest{
     @Test
     public void testreadfromDBtoWE() throws SQLException {
        WarehouseService warehouseService = new WarehouseService();
-       List<Ingredient> actualIngredients = warehouseService.readIngredients();
+       List<Ingredient> actualIngredients = warehouseService.readfromDBtoWE(null);
 
         List<Ingredient> expectedIngredients = new ArrayList<>();
         expectedIngredients.add(new Ingredient("Cocoa powder",9.99,"kg"));
@@ -42,5 +42,18 @@ public class DbConnectionTest{
         WarehouseService warehouseService = new WarehouseService();
         warehouseService.updateDBfromWE("2023-11-01",2.0,"Strawberry");
         Assertions.assertNotNull(1);
+    }
+
+    @Test
+    public void testReadBatches() throws SQLException {
+        WarehouseService warehouseService = new WarehouseService();
+        List<Flavour> actualFlavours = warehouseService.readFlavoursForSpoilingIngredients();
+
+        List<Flavour> expectedFlavours = new ArrayList<>();
+        expectedFlavours.add(new Flavour("Strawberry", 0.12));
+
+        Assertions.assertEquals(expectedFlavours,actualFlavours);
+
+
     }
 }
