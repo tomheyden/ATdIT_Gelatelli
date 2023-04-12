@@ -6,9 +6,15 @@ import java.util.List;
 public class ProductionService implements ProductionInterface {
     DbConnection dbConnection = new DbConnection();
     List<Flavour> productionList = new ArrayList<>();
+    List<Ingredient> ingredientlist = new WarehouseService().readIngredients();
+
+    WarehouseService warehouseService = new WarehouseService();
 
     @Override
     public void readfromDBtoProduction(Ingredient ingredient) {
+        /*List<Ingredient> list = warehouseService.readfromDBtoWE(null);
+
+
         List<Object[]> result = dbConnection.getDbTable(null, "flavour",null);
         List<Flavour> flavour = new ArrayList<>();
 
@@ -23,8 +29,7 @@ public class ProductionService implements ProductionInterface {
             Flavour flavour_temp = new Flavour((String)temp[0],Double.parseDouble(temp[1].toString()));
             flavour.add(flavour_temp);
         }
-
-        this.productionList = flavour;
+        this.productionList = flavour;*/
     }
 
     @Override
@@ -36,4 +41,6 @@ public class ProductionService implements ProductionInterface {
 
         //tempList.sort(ProductionListComparator);
     }
+
+    public
 }

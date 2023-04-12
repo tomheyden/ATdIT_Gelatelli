@@ -17,8 +17,11 @@ public class WarehouseService implements WarehouseInterface{
     DbConnection dbConnection = new DbConnection();
 
     @Override
-    public List<Ingredient> readfromDBtoWE(String column) {
-        List<Object[]> result = dbConnection.getDbTable(null, "ingredient",null);
+    public List<Ingredient> readIngredients() {
+        String sql1 = """
+                      SELECT * from warehouse
+                      """ ;
+        List<Object[]> result = dbConnection.getDbTable(null, sql1);
         List<Ingredient> ingredients = new ArrayList<>();
 
         int i;
@@ -33,12 +36,6 @@ public class WarehouseService implements WarehouseInterface{
             Ingredient ingredient_temp = new Ingredient((String)temp[0],Double.parseDouble(temp[1].toString()),(String) temp[2]);
             ingredients.add(ingredient_temp);
         }
-
-        /*for (int i = 0; i <= result.size(); i++ ) {
-
-            Ingredient ingredient_temp = new Ingredient((String)result.get(i)[0],(double)result.get(i)[1],(String) result.get(i)[2]);
-            ingredients.add(ingredient_temp);
-        }*/
         return ingredients;
     }
 

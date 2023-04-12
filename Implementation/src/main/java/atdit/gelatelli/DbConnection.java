@@ -37,13 +37,15 @@ public class DbConnection {
         return connection;
     }
 
-    List getDbTable (Object object, String tablename, String columname) {
+    List getDbTable (Object object, String sqlstatement) {
 
-        final String tablenamefinal = tablename;
+        String sql1 = sqlstatement;
         List<Object[]> finalList = new ArrayList<>();
 
+
         try (Connection connection = getDbConnection();
-             PreparedStatement preparedStatement = prepareStatement(connection,tablenamefinal,columname);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql1);
+
              ResultSet dbQueryResult = preparedStatement.executeQuery();) {
 
             ResultSetMetaData rsmd = dbQueryResult.getMetaData();
@@ -62,16 +64,6 @@ public class DbConnection {
                 throw new RuntimeException(msg);
         }
         return finalList;
-    }
-
-    private PreparedStatement prepareStatement( Connection connection, String tablename, String columname ) throws SQLException {
-
-        PreparedStatement result = connection.prepareStatement(
-                """
-                SELECT * from 
-                """ + tablename
-        );
-        return result;
     }
 
     private Properties getDbAccessProperties() {
