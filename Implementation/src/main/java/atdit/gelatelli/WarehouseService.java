@@ -2,11 +2,20 @@ package atdit.gelatelli;
 
 import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import java.util.*;
+import java.text.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 import static java.sql.DriverManager.getConnection;
 
@@ -19,43 +28,60 @@ public class WarehouseService implements WarehouseInterface{
     DbConnection dbConnection = new DbConnection();
 
     @Override
-    public List<Ingredient> readfromDBtoWE(String column) {
+    public List<Ingredient> readIngredients() {
+    
         log.info("Starting readfromDBtoWE method...");
-        List<Object[]> result = dbConnection.getDbTable(null, "ingredient",null);
+        
+        String sql1 = """
+                      SELECT * from ingredient
+                      """ ;
+        List<Object[]> result = dbConnection.getDbTable(sql1);
+
         List<Ingredient> ingredients = new ArrayList<>();
 
         int i;
 
         for (Object[] objarray : result) {
             i = 0;
-            Object[] temp = new Object[3];
+            Object[] temp = new Object[result.toArray().length - 1];
             for (Object obj : objarray) {
                 temp[i] = obj;
                 i++;
             }
-                try {
+               
+               try {
             Ingredient ingredient_temp = new Ingredient((String)temp[0],Double.parseDouble(temp[1].toString()),(String) temp[2]);
             ingredients.add(ingredient_temp);
+            
             log.trace("Adding Ingredient object to list: {}", ingredient_temp);
                 } catch (Exception e) {
                     log.error("Error converting data to Ingredient objects: {}", e.getMessage());
                 }
         }
-
-        /*for (int i = 0; i <= result.size(); i++ ) {
-
-            Ingredient ingredient_temp = new Ingredient((String)result.get(i)[0],(double)result.get(i)[1],(String) result.get(i)[2]);
-            ingredients.add(ingredient_temp);
-        }*/
-        log.debug("Retrieved data from database: {}", result);
         return ingredients;
     }
 
-    @Override
-    public List<Batch> updateDBfromWE(String flavourName, int amount) {
-        return null;
+    public List<Flavour> readFlavoursForSpoilingIngredients() {
+         String sql = """
+                      SELECT * FROM flavour WHERE flavour_name IN (SELECT flavour_name FROM flavour_ingredient WHERE ingredient_name IN (SELECT ingredient_name FROM warehouse WHERE bbd < DATE_ADD(NOW(), INTERVAL 1 WEEK)))
+                      """ ;
+
+        List<Object[]> result = dbConnection.getDbTable(sql);
+        List<Flavour> flavours = new ArrayList<>();
+
+
+        for (Object[] objarray : result) {
+            Flavour flavour = new Flavour ((String) objarray[0], Double.parseDouble(objarray[1].toString()));
+            flavours.add(flavour);
+        }
+        log.debug("Retrieved data from database: {}", result);
+        return flavours;
     }
 
+    @Override
+    public void updateDBfromWE(String bbd,  double amount, String ingredientName) {
 
-
+        String sql = "INSERT INTO warehouse (id, bbd, amount, ingredient_name) VALUES ("+ (dbConnection.getMaxId()+1)+", '"+ Date.valueOf(bbd)+"', "+amount+", '"+ingredientName+"')";
+        dbConnection.updateDBentry(sql);
+    }
 }

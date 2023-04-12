@@ -9,11 +9,13 @@ import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.sql.*;
+import java.sql.Date;
 import java.util.*;
 import java.lang.*;
 
 
 /**
+
  The Implementation for DB Connection from the UIs
 
  A method for each table to get Information to display on the User Interface
@@ -49,13 +51,15 @@ public class DbConnection {
         }
     }
 
-    List getDbTable (Object object, String tablename, String columname) {
-
-        final String tablenamefinal = tablename;
+    List getDbTable (String sqlstatement) {
+      
+        String sql1 = sqlstatement;
         List<Object[]> finalList = new ArrayList<>();
 
+
         try (Connection connection = getDbConnection();
-             PreparedStatement preparedStatement = prepareStatement(connection,tablenamefinal,columname);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql1);
+
              ResultSet dbQueryResult = preparedStatement.executeQuery();) {
 
             ResultSetMetaData rsmd = dbQueryResult.getMetaData();
@@ -68,6 +72,7 @@ public class DbConnection {
                 }
                 finalList.add(row);
             }
+
         } catch( SQLException e ) {
                 final String msg = "database access failed";
                 log.error(msg, e);
@@ -76,14 +81,20 @@ public class DbConnection {
         return finalList;
     }
 
-    private PreparedStatement prepareStatement( Connection connection, String tablename, String columname ) throws SQLException {
 
-        PreparedStatement result = connection.prepareStatement(
-                """
-                SELECT * from 
-                """ + tablename
-        );
-        return result;
+    public void updateDBentry (String sqlStatement) {
+        String sql2 = sqlStatement;
+
+        try (Connection connection = getDbConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql2)) {
+
+            int rowsInserted = preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            final String msg ="Error inserting data: " + e.getMessage();
+            //log.error(msg,e)
+            throw new RuntimeException( msg );
+        }
     }
 
     private Properties getDbAccessProperties() {
@@ -103,5 +114,21 @@ public class DbConnection {
 
     private Connection getConnection( String url, String user, String password ) throws SQLException {
         return DriverManager.getConnection( url, user, password );
+    }
+
+    public int getMaxId() {
+        int maxId = 0;
+        try (Connection connection = getDbConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(id) FROM warehouse;");
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            if (resultSet.next()) {
+                maxId = resultSet.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get the maximum id from the warehouse table", e);
+        }
+        return maxId;
     }
 }
