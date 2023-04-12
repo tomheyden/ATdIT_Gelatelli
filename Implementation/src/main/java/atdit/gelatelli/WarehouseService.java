@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static java.sql.DriverManager.getConnection;
 
@@ -19,7 +21,7 @@ public class WarehouseService implements WarehouseInterface{
     @Override
     public List<Ingredient> readIngredients() {
         String sql1 = """
-                      SELECT * from warehouse
+                      SELECT * from ingredient
                       """ ;
         List<Object[]> result = dbConnection.getDbTable(sql1);
         List<Ingredient> ingredients = new ArrayList<>();
@@ -28,7 +30,7 @@ public class WarehouseService implements WarehouseInterface{
 
         for (Object[] objarray : result) {
             i = 0;
-            Object[] temp = new Object[3];
+            Object[] temp = new Object[result.toArray().length - 1];
             for (Object obj : objarray) {
                 temp[i] = obj;
                 i++;
@@ -37,6 +39,22 @@ public class WarehouseService implements WarehouseInterface{
             ingredients.add(ingredient_temp);
         }
         return ingredients;
+    }
+
+    public List<Flavour> readFlavoursForSpoilingIngredients() {
+         String sql = """
+                      SELECT * FROM flavour WHERE flavour_name IN (SELECT flavour_name FROM flavour_ingredient WHERE ingredient_name IN (SELECT ingredient_name FROM warehouse WHERE bbd < DATE_ADD(NOW(), INTERVAL 1 WEEK)))
+                      """ ;
+
+        List<Object[]> result = dbConnection.getDbTable(sql);
+        List<Flavour> flavours = new ArrayList<>();
+
+
+        for (Object[] objarray : result) {
+            Flavour flavour = new Flavour ((String) objarray[0], Double.parseDouble(objarray[1].toString()));
+            flavours.add(flavour);
+        }
+        return flavours;
     }
 
     @Override

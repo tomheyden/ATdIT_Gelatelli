@@ -10,10 +10,6 @@ import java.util.ArrayList;
 
 import java.util.*;
 
-/**
- * Unit test for simple App.
- */
-
 public class DbConnectionTest{
 
     @Test
@@ -25,7 +21,7 @@ public class DbConnectionTest{
     @Test
     public void testreadfromDBtoWE() throws SQLException {
        WarehouseService warehouseService = new WarehouseService();
-       List<Ingredient> actualIngredients = warehouseService.readfromDBtoWE(null);
+       List<Ingredient> actualIngredients = warehouseService.readIngredients();
 
         List<Ingredient> expectedIngredients = new ArrayList<>();
         expectedIngredients.add(new Ingredient("Cocoa powder",9.99,"kg"));
@@ -34,5 +30,18 @@ public class DbConnectionTest{
         expectedIngredients.add(new Ingredient("Vanilla extract",9.97,"l"));
 
        Assertions.assertEquals(expectedIngredients,actualIngredients);
+    }
+
+    @Test
+    public void testReadBatches() throws SQLException {
+        WarehouseService warehouseService = new WarehouseService();
+        List<Flavour> actualFlavours = warehouseService.readFlavoursForSpoilingIngredients();
+
+        List<Flavour> expectedFlavours = new ArrayList<>();
+        expectedFlavours.add(new Flavour("Strawberry", 0.12));
+
+        Assertions.assertEquals(expectedFlavours,actualFlavours);
+
+
     }
 }
