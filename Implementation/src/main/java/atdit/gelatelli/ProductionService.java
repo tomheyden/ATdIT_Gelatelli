@@ -14,7 +14,6 @@ public class ProductionService implements ProductionInterface {
     public void readfromDBtoProduction(Ingredient ingredient) {
         /*List<Ingredient> list = warehouseService.readfromDBtoWE(null);
 
-
         List<Object[]> result = dbConnection.getDbTable(null, "flavour",null);
         List<Flavour> flavour = new ArrayList<>();
 
@@ -34,5 +33,6 @@ public class ProductionService implements ProductionInterface {
 
     @Override
     public void updateDBfromProduction(String flavourName, int amount) {
+
     }
 }

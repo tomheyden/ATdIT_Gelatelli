@@ -4,6 +4,7 @@ import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static java.sql.DriverManager.getConnection;
@@ -19,7 +20,7 @@ public class WarehouseService implements WarehouseInterface{
     @Override
     public List<Ingredient> readIngredients() {
         String sql1 = """
-                      SELECT * from warehouse
+                      SELECT * from ingredient
                       """ ;
         List<Object[]> result = dbConnection.getDbTable(sql1);
         List<Ingredient> ingredients = new ArrayList<>();
@@ -39,9 +40,10 @@ public class WarehouseService implements WarehouseInterface{
         return ingredients;
     }
 
-    @Override
-    public List<Batch> updateDBfromWE(String flavourName, int amount) {
-        return null;
+    public void updateDBfromWE(String bbd,  double amount, String ingredientName) {
+
+        String sql2 = "INSERT INTO warehouse (bbd, amount, ingredient_name) VALUES ("+ bbd +", "+ amount +", "+ ingredientName +"); ";
+        dbConnection.updateDBentry(sql2);
     }
 
 

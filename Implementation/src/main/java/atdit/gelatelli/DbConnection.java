@@ -14,6 +14,7 @@ import java.lang.*;
 
 
 /**
+
  The Implementation for DB Connection from the UIs
 
  A method for each table to get Information to display on the User Interface
@@ -58,12 +59,29 @@ public class DbConnection {
                 }
                 finalList.add(row);
             }
+
         } catch( SQLException e ) {
                 final String msg = "database access failed";
                 //log.error(msg, e);
                 throw new RuntimeException(msg);
         }
         return finalList;
+    }
+
+    void updateDBentry (String sqlStatement) {
+        String sql2 = sqlStatement;
+
+        try (Connection connection = getDbConnection();) {
+             PreparedStatement preparedStatement = connection.prepareStatement(sql2);
+
+             int rowsUpdated = preparedStatement.executeUpdate();
+             System.out.println(rowsUpdated);
+
+        } catch (SQLException e) {
+            final String msg = "database access failed";
+            //log.error(msg, e);
+            throw new RuntimeException(msg);
+        }
     }
 
     private Properties getDbAccessProperties() {
