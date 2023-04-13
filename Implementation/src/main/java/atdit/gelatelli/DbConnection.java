@@ -9,11 +9,13 @@ import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.sql.*;
+import java.sql.Date;
 import java.util.*;
 import java.lang.*;
 
 
 /**
+
  The Implementation for DB Connection from the UIs
 
  A method for each table to get Information to display on the User Interface
@@ -31,14 +33,26 @@ public class DbConnection {
         String user = dbAccessProperties.getProperty( "user" );
         String password = dbAccessProperties.getProperty( "password" );
 
-        //logMissingParameters( url, user, password );
+        logMissingParameters( url, user, password );
 
         Connection connection = getConnection( url, user, password);
         return connection;
     }
 
-    List getDbTable (String sqlstatement) {
+    private void logMissingParameters(String url, String user, String password) {
+        if (url == null) {
+            log.error("Database URL is missing.");
+        }
+        if (user == null) {
+            log.error("Database username is missing.");
+        }
+        if (password == null) {
+            log.error("Database password is missing.");
+        }
+    }
 
+    List getDbTable (String sqlstatement) {
+      
         String sql1 = sqlstatement;
         List<Object[]> finalList = new ArrayList<>();
 
@@ -58,12 +72,29 @@ public class DbConnection {
                 }
                 finalList.add(row);
             }
+
         } catch( SQLException e ) {
                 final String msg = "database access failed";
-                //log.error(msg, e);
+                log.error(msg, e);
                 throw new RuntimeException(msg);
         }
         return finalList;
+    }
+
+
+    public void updateDBentry (String sqlStatement) {
+        String sql2 = sqlStatement;
+
+        try (Connection connection = getDbConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql2)) {
+
+            int rowsInserted = preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            final String msg ="Error inserting data: " + e.getMessage();
+            //log.error(msg,e)
+            throw new RuntimeException( msg );
+        }
     }
 
     private Properties getDbAccessProperties() {
@@ -75,7 +106,7 @@ public class DbConnection {
         }
         catch( IOException | IllegalArgumentException | NullPointerException e ) {
             final String msg = "Loading database connection properties failed";
-            // log.error( msg, e );
+            log.error( msg, e );
             throw new RuntimeException( msg );
         }
         return dbAccessProperties;
@@ -83,5 +114,21 @@ public class DbConnection {
 
     private Connection getConnection( String url, String user, String password ) throws SQLException {
         return DriverManager.getConnection( url, user, password );
+    }
+
+    public int getMaxId() {
+        int maxId = 0;
+        try (Connection connection = getDbConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(id) FROM warehouse;");
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            if (resultSet.next()) {
+                maxId = resultSet.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get the maximum id from the warehouse table", e);
+        }
+        return maxId;
     }
 }

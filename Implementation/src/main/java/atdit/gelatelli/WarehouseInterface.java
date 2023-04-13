@@ -14,5 +14,10 @@ public interface WarehouseInterface {
     /**
      Method to update the DB entries from the Input in the Warehouse UI by the employee
      */
-    List<Batch> updateDBfromWE (String flavourName, int amount);
+    void updateDBfromWE(String bbd,  double amount, String ingredientName);
+
+    /**
+     Method to read from the DB  in the Warehouse UI
+     */
+    public List<Flavour> readFlavoursForSpoilingIngredients();
 }
