@@ -59,7 +59,6 @@ public class DbConnection {
 
         try (Connection connection = getDbConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql1);
-
              ResultSet dbQueryResult = preparedStatement.executeQuery();) {
 
             ResultSetMetaData rsmd = dbQueryResult.getMetaData();
@@ -116,10 +115,10 @@ public class DbConnection {
         return DriverManager.getConnection( url, user, password );
     }
 
-    public int getMaxId() {
+    public int getMaxId(String table) {
         int maxId = 0;
         try (Connection connection = getDbConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(id) FROM warehouse;");
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(id) FROM "+ table);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             if (resultSet.next()) {

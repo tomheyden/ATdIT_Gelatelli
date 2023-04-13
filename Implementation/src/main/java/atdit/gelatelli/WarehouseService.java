@@ -81,7 +81,7 @@ public class WarehouseService implements WarehouseInterface{
     @Override
     public void updateDBfromWE(String bbd,  double amount, String ingredientName) {
 
-        String sql = "INSERT INTO warehouse (id, bbd, amount, ingredient_name) VALUES ("+ (dbConnection.getMaxId()+1)+", '"+ Date.valueOf(bbd)+"', "+amount+", '"+ingredientName+"')";
+        String sql = "INSERT INTO warehouse (id, bbd, amount, ingredient_name) VALUES ("+ (dbConnection.getMaxId("warehouse")+1)+", '"+ Date.valueOf(bbd)+"', "+amount+", '"+ingredientName+"')";
         dbConnection.updateDBentry(sql);
     }
 }
