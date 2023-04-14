@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="LOG_DIR">logs</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%highlight{%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n }{ FATAL=red, ERROR=red, WARN=yellow, INFO=green, TRACE=green, TRACE=green }"
+                    disableAnsi="false"/>
+        </Console>
+
+        <RollingFile
+                name="File"
+                fileName="${LOG_DIR}/eiscafegelatelli.log"
+                filePattern="${LOG_DIR}/discount.%d{yyyy_MM_dd_HH_mm_ss}_%i.log"
+                ignoreExceptions="false">
+            <PatternLayout>
+                <Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <OnStartupTriggeringPolicy minSize="0"/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${LOG_DIR}" maxDepth="2">
+                    <IfLastModified age="P01D"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="Console"/>
+        </Root>
+        <Logger name="org.mariadb" level="off"/>
+    </Loggers>
+</Configuration>

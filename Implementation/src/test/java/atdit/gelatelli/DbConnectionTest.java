@@ -3,15 +3,22 @@ package atdit.gelatelli;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 
-public class DbConnectionTest{
+public class DbConnectionTest {
+    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @BeforeAll
     public static void createSingleton() {
@@ -20,13 +27,20 @@ public class DbConnectionTest{
 
     @Test
     public void testConnection() throws SQLException {
-        Connection connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/eiscafegelatelli", "root", "password");
+
+        log.info("Starting testConnection");
+        Connection connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/eiscafegelatelli", "root", "CV2*#9c5W8pHgN8");
         Assertions.assertNotNull(connection);
+        log.info("Finished testConnection");
     }
 
     @Test
     public void testreadfromDBtoWE() throws SQLException {
+
+       log.info("Starting testreadfromDBtoWE");
++
        WarehouseService warehouseService = new WarehouseService();
+       log.info("Reading ingredients from the database");
        List<Ingredient> actualIngredients = warehouseService.readIngredients();
 
         List<Ingredient> expectedIngredients = new ArrayList<>();
@@ -36,7 +50,16 @@ public class DbConnectionTest{
         expectedIngredients.add(new Ingredient("Strawberry",5.02,"kg"));
         expectedIngredients.add(new Ingredient("Vanilla extract",9.97,"l"));
 
-       Assertions.assertEquals(expectedIngredients,actualIngredients);
+        Assertions.assertEquals(expectedIngredients, actualIngredients);
+        log.info("Finished testreadfromDBtoWE");
+    }
+
+    @Test
+    public void testupdateDB() throws SQLException {
+
+        WarehouseService warehouseService = new WarehouseService();
+        warehouseService.updateDBfromWE("2023-08-01",0.1,"Strawberry");
+        Assertions.assertNotNull(1);
     }
 
     @Test
