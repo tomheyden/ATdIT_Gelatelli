@@ -1,5 +1,7 @@
 package atdit.gelatelli;
 
+import java.util.Objects;
+
 public class Flavour implements Comparable<Flavour> {
 
     private String flavourName;
@@ -10,6 +12,12 @@ public class Flavour implements Comparable<Flavour> {
         this.flavourName = flavourName;
         this.contributionMargin = contributionMargin;
         sort = 0;
+    }
+
+    public Flavour(String flavourName, double contributionMargin, int sort) {
+        this.flavourName = flavourName;
+        this.contributionMargin = contributionMargin;
+        this.sort = sort;
     }
 
     public int getSort() {
@@ -56,5 +64,26 @@ public class Flavour implements Comparable<Flavour> {
         }
 
         return sortComparison;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Flavour other = (Flavour) obj;
+        return Objects.equals(flavourName, other.flavourName)
+                && Double.compare(contributionMargin, other.contributionMargin) == 0
+                && sort == other.sort;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(flavourName, contributionMargin, sort);
     }
 }

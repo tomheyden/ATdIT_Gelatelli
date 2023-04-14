@@ -62,10 +62,8 @@ public class WarehouseService implements WarehouseInterface{
             }
 
         }
+
         FlavourSingleton.getInstance().sortByBbd();
-        for (Flavour flavour : FlavourSingleton.getInstance().getFlavours()) {
-            System.out.println(flavour.getFlavourName()+ " " + flavour.getSort());
-        }
 
     }
 

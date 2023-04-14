@@ -24,18 +24,20 @@ public class DbConnectionTest{
         Assertions.assertNotNull(connection);
     }
 
-    /*public void testreadfromDBtoWE() throws SQLException {
+    @Test
+    public void testreadfromDBtoWE() throws SQLException {
        WarehouseService warehouseService = new WarehouseService();
        List<Ingredient> actualIngredients = warehouseService.readIngredients();
 
         List<Ingredient> expectedIngredients = new ArrayList<>();
         expectedIngredients.add(new Ingredient("Cocoa powder",9.99,"kg"));
+        expectedIngredients.add(new Ingredient("Cream", 4.03,"l"));
         expectedIngredients.add(new Ingredient("Oreo",9.99,"kg"));
         expectedIngredients.add(new Ingredient("Strawberry",5.02,"kg"));
         expectedIngredients.add(new Ingredient("Vanilla extract",9.97,"l"));
 
        Assertions.assertEquals(expectedIngredients,actualIngredients);
-    }*/
+    }
 
     @Test
     public void testReadBatches() throws SQLException {
@@ -43,10 +45,12 @@ public class DbConnectionTest{
         warehouseService.readFlavoursForSpoilingIngredients();
 
         List<Flavour> expectedFlavours = new ArrayList<>();
-        expectedFlavours.add(new Flavour("Strawberry", 0.12));
+        expectedFlavours.add(new Flavour("Strawberry", 0.12, 2));
+        expectedFlavours.add(new Flavour("Chocolate", 0.15, 1));
+        expectedFlavours.add(new Flavour("Vanilla", 0.17, 0));
+        expectedFlavours.add(new Flavour("Oreo", 0.1, 0));
 
-        //Assertions.assertEquals(expectedFlavours,actualFlavours);
-
+        Assertions.assertEquals(expectedFlavours,FlavourSingleton.getInstance().getFlavours());
 
     }
 }
