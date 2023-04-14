@@ -19,17 +19,19 @@ import java.util.*;
 
 public class DbConnectionTest {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static WarehouseService warehouseService;
 
     @BeforeAll
     public static void createSingleton() {
         FlavourSingleton.getInstance();
+        warehouseService = new WarehouseService();
     }
 
     @Test
     public void testConnection() throws SQLException {
 
         log.info("Starting testConnection");
-        Connection connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/eiscafegelatelli", "root", "CV2*#9c5W8pHgN8");
+        Connection connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/eiscafegelatelli", "root", "password");
         Assertions.assertNotNull(connection);
         log.info("Finished testConnection");
     }
@@ -38,8 +40,7 @@ public class DbConnectionTest {
     public void testreadfromDBtoWE() throws SQLException {
 
        log.info("Starting testreadfromDBtoWE");
-+
-       WarehouseService warehouseService = new WarehouseService();
+
        log.info("Reading ingredients from the database");
        List<Ingredient> actualIngredients = warehouseService.readIngredients();
 
@@ -56,7 +57,6 @@ public class DbConnectionTest {
 
     @Test
     public void testupdateDB() throws SQLException {
-
         WarehouseService warehouseService = new WarehouseService();
         warehouseService.updateDBfromWE("2023-08-01",0.1,"Strawberry");
         Assertions.assertNotNull(1);
@@ -64,7 +64,6 @@ public class DbConnectionTest {
 
     @Test
     public void testReadBatches() throws SQLException {
-        WarehouseService warehouseService = new WarehouseService();
         warehouseService.readFlavoursForSpoilingIngredients();
 
         List<Flavour> expectedFlavours = new ArrayList<>();

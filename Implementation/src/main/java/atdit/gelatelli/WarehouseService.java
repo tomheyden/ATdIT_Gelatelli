@@ -1,17 +1,9 @@
 package atdit.gelatelli;
 
 import java.lang.invoke.MethodHandles;
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import java.util.*;
-import java.text.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,9 +74,7 @@ public class WarehouseService implements WarehouseInterface{
             }
 
         }
-
         FlavourSingleton.getInstance().sortByBbd();
-
     }
 
     public List<Flavour> readAllFlavours() {
