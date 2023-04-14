@@ -10,6 +10,7 @@ import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import org.slf4j.Logger;
@@ -67,10 +68,10 @@ public class DbConnectionTest {
         warehouseService.readFlavoursForSpoilingIngredients();
 
         List<Flavour> expectedFlavours = new ArrayList<>();
-        expectedFlavours.add(new Flavour("Strawberry", 0.12, 2));
-        expectedFlavours.add(new Flavour("Chocolate", 0.15, 1));
-        expectedFlavours.add(new Flavour("Vanilla", 0.17, 0));
-        expectedFlavours.add(new Flavour("Oreo", 0.1, 0));
+        expectedFlavours.add(new Flavour("Strawberry", 0.12, 2, LocalDate.of(2023,04,15)));
+        expectedFlavours.add(new Flavour("Chocolate", 0.15, 1, LocalDate.of(2023,04,18)));
+        expectedFlavours.add(new Flavour("Vanilla", 0.17, 0, null));
+        expectedFlavours.add(new Flavour("Oreo", 0.1, 0, null));
 
         Assertions.assertEquals(expectedFlavours,FlavourSingleton.getInstance().getFlavours());
 
