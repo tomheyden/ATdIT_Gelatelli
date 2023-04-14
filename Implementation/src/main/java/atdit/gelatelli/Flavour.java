@@ -1,15 +1,27 @@
 package atdit.gelatelli;
 
+import java.time.LocalDate;
+import java.util.Objects;
+
 public class Flavour implements Comparable<Flavour> {
 
     private String flavourName;
     private double contributionMargin;
     private int sort;
+    private LocalDate earliestBBD;
 
     public Flavour(String flavourName, double contributionMargin) {
         this.flavourName = flavourName;
         this.contributionMargin = contributionMargin;
         sort = 0;
+        //earliestBBD = LocalDate.of(0000,01,01);
+    }
+
+    public Flavour(String flavourName, double contributionMargin, int sort, LocalDate earliestBBD) {
+        this.flavourName = flavourName;
+        this.contributionMargin = contributionMargin;
+        this.sort = sort;
+        this.earliestBBD = earliestBBD;
     }
 
     public int getSort() {
@@ -38,6 +50,14 @@ public class Flavour implements Comparable<Flavour> {
         this.contributionMargin = contributionMargin;
     }
 
+    public LocalDate getEarliestBBD() {
+        return earliestBBD;
+    }
+
+    public void setEarliestBBD(LocalDate earliestBBD) {
+        this.earliestBBD = earliestBBD;
+    }
+
     public void increaseSort() {
         sort++;
     }
@@ -48,6 +68,14 @@ public class Flavour implements Comparable<Flavour> {
 
     @Override
     public int compareTo(Flavour other) {
+        // Compare by the 'earliestBBD' attribute first
+        if (earliestBBD != null && other.getEarliestBBD() != null) {
+            int bbdComparison = this.earliestBBD.compareTo(other.earliestBBD);
+            if (bbdComparison != 0) {
+                return bbdComparison;
+            }
+        }
+        // If 'earliestBBD' attributes are equal, compare by the 'sort' attribute
         int sortComparison = Integer.compare(other.sort, this.sort);
 
         // If 'sort' attributes are equal, compare by the 'contributionMargin' attribute
@@ -56,5 +84,26 @@ public class Flavour implements Comparable<Flavour> {
         }
 
         return sortComparison;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Flavour other = (Flavour) obj;
+        return Objects.equals(flavourName, other.flavourName)
+                && Double.compare(contributionMargin, other.contributionMargin) == 0
+                && sort == other.sort;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(flavourName, contributionMargin, sort);
     }
 }

@@ -17,7 +17,7 @@ public interface WarehouseInterface {
     void updateDBfromWE(String bbd,  double amount, String ingredientName);
 
     /**
-     Method to read from the DB  in the Warehouse UI
+     * Method to read from the DB  in the Warehouse UI
      */
-    public List<Flavour> readFlavoursForSpoilingIngredients();
+    public void readFlavoursForSpoilingIngredients();
 }

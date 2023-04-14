@@ -1,17 +1,11 @@
 package atdit.gelatelli;
 
 import java.lang.invoke.MethodHandles;
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import java.util.*;
-import java.text.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +58,7 @@ public class WarehouseService implements WarehouseInterface{
     public void readFlavoursForSpoilingIngredients() {
 
          String sqlIngredient = """
-                                SELECT ingredient_name FROM warehouse WHERE bbd < DATE_ADD(NOW(), INTERVAL 1 WEEK)
+                                SELECT ingredient_name,bbd FROM warehouse WHERE bbd < DATE_ADD(NOW(), INTERVAL 1 WEEK)
                                 """;
 
          List<Object[]> ingredients = dbConnection.getDbTable(sqlIngredient);
@@ -77,16 +71,15 @@ public class WarehouseService implements WarehouseInterface{
                 for (Flavour predefinedFlavour : FlavourSingleton.getInstance().getFlavours()) {
                     if (flavour[0].equals(predefinedFlavour.getFlavourName())) {
                         predefinedFlavour.increaseSort();
+                        if(predefinedFlavour.getEarliestBBD() == null || predefinedFlavour.getEarliestBBD().isAfter(LocalDate.parse(ingredient[1].toString(), DateTimeFormatter.ISO_LOCAL_DATE))) {
+                            predefinedFlavour.setEarliestBBD(LocalDate.parse(ingredient[1].toString(), DateTimeFormatter.ISO_LOCAL_DATE));
+                        }
                     }
                 }
             }
 
         }
         FlavourSingleton.getInstance().sortByBbd();
-        for (Flavour flavour : FlavourSingleton.getInstance().getFlavours()) {
-            System.out.println(flavour.getFlavourName()+ " " + flavour.getSort());
-        }
-
     }
 
     public List<Flavour> readAllFlavours() {
