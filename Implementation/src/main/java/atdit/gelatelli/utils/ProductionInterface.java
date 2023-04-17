@@ -15,8 +15,6 @@ public interface ProductionInterface {
 
     public void readfromDBtoProduction (Ingredient ingredient);
 
-    void sortList ();
-
     /**
      Method to update the DB entries from the Input in the Production UI by the employee
      */

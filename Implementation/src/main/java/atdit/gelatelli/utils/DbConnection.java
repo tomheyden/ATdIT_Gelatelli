@@ -1,4 +1,4 @@
-package atdit.gelatelli.utils;
+package atdit.gelatelli;
 
 
 import org.slf4j.Logger;
@@ -51,7 +51,7 @@ public class DbConnection {
         }
     }
 
-    public List getDbTable (String sqlstatement) {
+    List getDbTable (String sqlstatement) {
       
         String sql1 = sqlstatement;
         List<Object[]> finalList = new ArrayList<>();
@@ -126,9 +126,7 @@ public class DbConnection {
             }
 
         } catch (SQLException e) {
-            final String msg = "Loading database connection properties failed";
-            log.error( msg, e );
-            throw new RuntimeException(msg, e);
+            throw new RuntimeException("Failed to get the maximum id from the warehouse table", e);
         }
         return maxId;
     }
