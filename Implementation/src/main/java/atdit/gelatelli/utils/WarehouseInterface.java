@@ -1,4 +1,7 @@
-package atdit.gelatelli;
+package atdit.gelatelli.utils;
+
+import atdit.gelatelli.models.Batch;
+import atdit.gelatelli.models.Ingredient;
 
 import java.util.*;
 

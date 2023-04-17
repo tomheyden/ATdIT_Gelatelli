@@ -1,5 +1,7 @@
 package atdit.gelatelli;
 
+import atdit.gelatelli.models.Ingredient;
+import atdit.gelatelli.utils.WarehouseService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

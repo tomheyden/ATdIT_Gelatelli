@@ -1,4 +1,7 @@
-package atdit.gelatelli;
+package atdit.gelatelli.utils;
+
+import atdit.gelatelli.models.Flavour;
+import atdit.gelatelli.models.Ingredient;
 
 import java.util.ArrayList;
 import java.util.List;

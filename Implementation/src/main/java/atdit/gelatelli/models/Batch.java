@@ -1,4 +1,4 @@
-package atdit.gelatelli;
+package atdit.gelatelli.models;
 
 import java.util.Date;
 

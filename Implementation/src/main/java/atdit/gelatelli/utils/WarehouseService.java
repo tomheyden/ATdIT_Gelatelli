@@ -1,8 +1,8 @@
-package atdit.gelatelli;
+package atdit.gelatelli.utils;
 
-import java.lang.invoke.MethodHandles;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import atdit.gelatelli.models.Batch;
+import atdit.gelatelli.models.Ingredient;
+
 import java.util.ArrayList;
 import java.util.List;
 
