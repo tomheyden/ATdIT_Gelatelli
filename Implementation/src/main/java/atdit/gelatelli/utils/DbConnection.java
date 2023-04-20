@@ -1,5 +1,4 @@
-package atdit.gelatelli;
-
+package atdit.gelatelli.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,8 @@ import java.lang.*;
 public class DbConnection {
     private static final Logger log = LoggerFactory.getLogger( MethodHandles.lookup().lookupClass() );
 
-    public Connection getDbConnection () throws SQLException {
+
+    public static Connection getDbConnection () throws SQLException {
 
         Properties dbAccessProperties = getDbAccessProperties();
 
@@ -39,7 +39,7 @@ public class DbConnection {
         return connection;
     }
 
-    private void logMissingParameters(String url, String user, String password) {
+    private static void logMissingParameters(String url, String user, String password) {
         if (url == null) {
             log.error("Database URL is missing.");
         }
@@ -51,7 +51,7 @@ public class DbConnection {
         }
     }
 
-    List getDbTable (String sqlstatement) {
+    public static List getDbTable (String sqlstatement) {
       
         String sql1 = sqlstatement;
         List<Object[]> finalList = new ArrayList<>();
@@ -81,7 +81,7 @@ public class DbConnection {
     }
 
 
-    public void updateDBentry (String sqlStatement) {
+    public static void updateDBentry (String sqlStatement) {
         String sql2 = sqlStatement;
 
         try (Connection connection = getDbConnection();
@@ -96,10 +96,10 @@ public class DbConnection {
         }
     }
 
-    private Properties getDbAccessProperties() {
+    private static Properties getDbAccessProperties() {
         Properties dbAccessProperties;
 
-        try( InputStream is = getClass().getClassLoader().getResourceAsStream( "db.properties" ) ) {
+        try( InputStream is = DbConnection.class.getClassLoader().getResourceAsStream( "db.properties" ) ) {
             dbAccessProperties = new Properties();
             dbAccessProperties.load( is );
         }
@@ -111,11 +111,11 @@ public class DbConnection {
         return dbAccessProperties;
     }
 
-    private Connection getConnection( String url, String user, String password ) throws SQLException {
+    private static Connection getConnection( String url, String user, String password ) throws SQLException {
         return DriverManager.getConnection( url, user, password );
     }
 
-    public int getMaxId(String table) {
+    public static int getMaxId(String table) {
         int maxId = 0;
         try (Connection connection = getDbConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(id) FROM "+ table);
@@ -130,4 +130,33 @@ public class DbConnection {
         }
         return maxId;
     }
+
+    public static void createLowInventoryTrigger(Connection conn) throws SQLException {
+        String dbName = "eiscafegelatelli";
+        String tableName = "warehouse";
+        String ingredientNameColumn = "ingredient_name";
+        String amountColumn = "amount";
+        int threshold = 5;
+
+        String triggerName = "check_inventory";
+        String triggerSql = String.format(
+                "CREATE TRIGGER %s AFTER INSERT ON %s " +
+                        "FOR EACH ROW " +
+                        "BEGIN " +
+                        "    IF (SELECT %s FROM %s WHERE %s = NEW.%s) < %d " +
+                        "    THEN " +
+                        "        INSERT INTO low_inventory (ingredient_name, quantity) " +
+                        "        VALUES (NEW.%s, NEW.%s); " +
+                        "    END IF; " +
+                        "END;",
+                triggerName, tableName, amountColumn, tableName,
+                ingredientNameColumn, ingredientNameColumn, threshold,
+                ingredientNameColumn, amountColumn);
+
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute(triggerSql);
+        }
+    }
 }
+
+

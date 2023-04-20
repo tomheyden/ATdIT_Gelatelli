@@ -1,6 +1,6 @@
 package atdit.gelatelli;
 
-import atdit.gelatelli.models.Ingredient;
+import atdit.gelatelli.models.*;
 import atdit.gelatelli.utils.WarehouseService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -14,9 +14,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
