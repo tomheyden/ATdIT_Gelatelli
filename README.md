@@ -2,8 +2,21 @@
 
 This programm is designed to help ice cream shops streamline their production process and optimize their inventory management. It includes a range of features to help shops use their ingredients more efficiently, make informed predictions about ice cream demand, and track their inventory and sales
 
-## Installation
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [Features](#features)
+  - [Production Planning](#production-planning)
+  - [Efficient Ingredient Usage](#efficient-ingredient-usage)
+  - [Efficient Ingredient Procurement](#efficient-ingredient-procurement)
+  - [Criteria-Based Prediction](#criteria-based-prediction)
+  - [Ice Cream Consumption Tracking](#ice-cream-consumption-tracking)
+  - [Data Analysis for Trend Detection](#data-analysis-for-trend-detection)
+- [Examples](#examples)
+- [Documentation](#documentation)
+- [Contact](#contact)
 
+## Installation
 [Installation instructions]
 
 ## Usage
@@ -39,6 +52,8 @@ This programm is designed to help ice cream shops streamline their production pr
 
 ### Data Analysis for Trend Detection
 * Anonymized analysis of IoT data to detect trends in ice cream flavors
+
+## Examples
 
 ## Documentation
 
