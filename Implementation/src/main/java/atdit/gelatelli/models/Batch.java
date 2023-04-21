@@ -25,22 +25,4 @@ public class Batch implements Comparable<Batch>{
     public int compareTo(Batch o) {
         return this.bbd.compareTo(o.bbd);
     }
-
-    public static List<Batch> getBatchTable () {
-        List<Batch> batchlist = new ArrayList<>();
-
-        String sql = "SELECT * FROM warehouse ORDER BY ddb ASC";
-        List<Map<String, Object>> rows = DbConnection.getDbTable(sql);
-        for (Map<String, Object> row : rows) {
-            Batch batch = new Batch(
-                    (int) row.get("id"),
-                    (Date) row.get("bbd"),
-                    (double) row.get("amount"),
-                    (String) row.get("ingredient_name")
-            );
-            batchlist.add(batch);
-        }
-        return batchlist;
-    }
-
 }

@@ -1,5 +1,6 @@
 package atdit.gelatelli;
 
+import atdit.gelatelli.views.ProductionView;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.geometry.Pos;
@@ -16,6 +17,9 @@ import javafx.stage.Stage;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+
+import org.kordamp.bootstrapfx.BootstrapFX;
+import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 public class HelloApplication extends Application {
 
@@ -61,7 +65,12 @@ public class HelloApplication extends Application {
         titleLabel.getStyleClass().add("title-label");
         Button productionButton = new Button("Production");
         productionButton.setOnAction(e -> {
-            stage.setScene(productionScene);
+            // Create an instance of your new class
+            ProductionView productionView = new ProductionView();
+            Scene scene = new Scene(productionView, 800, 600);
+            scene.getStylesheets().add("/path/to/bootstrapfx.css");
+            // Set the scene of the new class to the stage
+            stage.setScene(scene);
         });
         Button warehouseButton = new Button("Warehouse");
         warehouseButton.setOnAction(e -> {
