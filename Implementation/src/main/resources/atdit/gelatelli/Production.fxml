@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="atdit.gelatelli.controllers.ProductionController">
+   <children>
+      <Accordion layoutX="66.0" layoutY="49.0" />
+      <HBox layoutX="33.0" layoutY="59.0" prefHeight="27.0" prefWidth="198.0">
+         <children>
+            <ComboBox prefHeight="14.0" prefWidth="150.0" promptText="Choose Flavour" />
+         </children>
+      </HBox>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+      <TextArea layoutX="214.0" layoutY="59.0" prefHeight="128.0" prefWidth="231.0" promptText="Recipe for the Flavour" />
+      <Button layoutX="33.0" layoutY="94.0" mnemonicParsing="false" text="Show Recipe">
+         <font>
+            <Font size="8.0" />
+         </font>
+      </Button>
+      <ChoiceBox layoutX="33.0" layoutY="161.0" prefWidth="150.0" />
+      <Button layoutX="33.0" layoutY="194.0" minHeight="20.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="64.0" text="Produce" />
+      <ProgressBar layoutX="32.0" layoutY="232.0" prefHeight="20.0" prefWidth="124.0" progress="0.0" />
+      <Label layoutX="167.0" layoutY="233.0" text="Label" />
+   </children>
+</AnchorPane>

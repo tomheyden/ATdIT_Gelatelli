@@ -6,7 +6,8 @@ module atdit.gelatelli {
     requires org.kordamp.bootstrapfx.core;
     requires org.controlsfx.controls;
 
-
     opens atdit.gelatelli to javafx.fxml;
+    opens atdit.gelatelli.controllers to javafx.fxml;
     exports atdit.gelatelli;
+    exports atdit.gelatelli.controllers to javafx.fxml;
 }

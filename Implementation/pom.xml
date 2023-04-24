@@ -19,9 +19,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.mariadb.jdbc</groupId>
-            <artifactId>mariadb-java-client</artifactId>
-            <version>3.0.6</version>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.0.33</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -92,7 +92,6 @@
             <artifactId>controlsfx</artifactId>
             <version>11.1.0</version>
         </dependency>
-
     </dependencies>
 
     <build>

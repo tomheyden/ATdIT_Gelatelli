@@ -6,9 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Type;
 import java.sql.*;
-import java.sql.Date;
 import java.util.*;
 import java.lang.*;
 
@@ -99,7 +97,7 @@ public class DbConnection {
     private static Properties getDbAccessProperties() {
         Properties dbAccessProperties;
 
-        try( InputStream is = DbConnection.class.getClassLoader().getResourceAsStream( "db.properties" ) ) {
+        try( InputStream is = DbConnection.class.getClassLoader().getResourceAsStream("atdit/gelatelli/db.properties") ) {
             dbAccessProperties = new Properties();
             dbAccessProperties.load( is );
         }
