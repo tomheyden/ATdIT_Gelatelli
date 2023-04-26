@@ -12,16 +12,11 @@ This programm is designed to help ice cream shops streamline their production pr
   - [Criteria-Based Prediction](#criteria-based-prediction)
   - [Ice Cream Consumption Tracking](#ice-cream-consumption-tracking)
   - [Data Analysis for Trend Detection](#data-analysis-for-trend-detection)
-- [Examples](#examples)
 - [Documentation](#documentation)
 - [Contact](#contact)
 
 ## Installation
-[Installation instructions]
-
-## Usage
-
-[Usage instructions]
+For information on how to install the programm and get it ready-to-use refer to the [Installation Guide](https://github.com/tomheyden/ATdIT_Gelatelli/blob/ReadMe/Installation%20Guide.md).
 
 ## Features
 
@@ -53,7 +48,10 @@ This programm is designed to help ice cream shops streamline their production pr
 ### Data Analysis for Trend Detection
 * Anonymized analysis of IoT data to detect trends in ice cream flavors
 
-## Examples
+
+## Usage
+
+For information on how to use the programm once it is installed refer to the [Operating Manual](https://github.com/tomheyden/ATdIT_Gelatelli/blob/ReadMe/Operating%20Manual.md).
 
 ## Documentation
 
