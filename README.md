@@ -4,7 +4,6 @@ This programm is designed to help ice cream shops streamline their production pr
 
 ## Table of Contents
 - [Installation](#installation)
-- [Usage](#usage)
 - [Features](#features)
   - [Production Planning](#production-planning)
   - [Efficient Ingredient Usage](#efficient-ingredient-usage)
@@ -12,6 +11,7 @@ This programm is designed to help ice cream shops streamline their production pr
   - [Criteria-Based Prediction](#criteria-based-prediction)
   - [Ice Cream Consumption Tracking](#ice-cream-consumption-tracking)
   - [Data Analysis for Trend Detection](#data-analysis-for-trend-detection)
+- [Usage](#usage)
 - [Documentation](#documentation)
 - [Contact](#contact)
 
