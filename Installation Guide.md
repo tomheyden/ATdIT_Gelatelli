@@ -3,8 +3,14 @@
 ## Introduction
 Thank you for choosing our ice cream software. This guide will provide you with step-by-step instructions on how to install and get the software ready-to-use.
 
+## Preconditions
+* Github Profile: A Github Profile is needed in order to install the software. If you do not already have one, please create an account and login.
+* Integrated Development Environment (IDE): An IDE (e.g. IntelliJ, Eclipse) is needed in order to run the software. (Is it?)
+
 ## Installation Process
 ### ...
+* Fork the Github Repository into your own Github account.
+* Open the forked Repository in your IDE.
 ### Set up and start the database server
 The following guide uses MariaDB. While any other Database Server is possible, installation steps might vary.
 * Download and install MariaDB: [Download](https://mariadb.org/download/?t=mariadb&p=mariadb&r=11.1.0&os=windows&cpu=x86_64&pkg=msi&m=hs-esslingen) and install the software and follow the instructions provided by the installer
@@ -17,7 +23,9 @@ While it is possible to manage the Database through the MariaDB command prompt, 
 
 ## Configuration
 ### ...
+* Open the pom.xml and change the artifactId and groupId to match the forked project. (noch genauer spezifizieren)
 ### Database Connection
 To connect the Programm to the Database you just created, alter the [db.properties](https://github.com/tomheyden/ATdIT_Gelatelli/blob/ReadMe/Implementation/src/main/resources/db.properties) file to match your configurations.
 
 ## Uninstallation
+Brauchen wir das??
