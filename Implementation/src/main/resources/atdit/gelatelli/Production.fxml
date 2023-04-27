@@ -10,27 +10,33 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="atdit.gelatelli.controllers.ProductionController">
    <children>
       <Accordion layoutX="66.0" layoutY="49.0" />
       <HBox layoutX="33.0" layoutY="59.0" prefHeight="27.0" prefWidth="198.0">
          <children>
-            <ComboBox prefHeight="14.0" prefWidth="150.0" promptText="Choose Flavour" />
+            <ComboBox fx:id="flavorComboBox" prefHeight="14.0" prefWidth="150.0" promptText="Choose Flavour" />
          </children>
       </HBox>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-      <TextArea layoutX="214.0" layoutY="59.0" prefHeight="128.0" prefWidth="231.0" promptText="Recipe for the Flavour" />
-      <Button layoutX="33.0" layoutY="94.0" mnemonicParsing="false" text="Show Recipe">
+      <TextArea fx:id="recipeTextArea" editable="false" layoutX="381.0" layoutY="51.0" prefHeight="45.0" prefWidth="157.0" promptText="Recipe for the Flavour" />
+      <Button fx:id="showRecipeButton" layoutX="33.0" layoutY="94.0" mnemonicParsing="false" onAction="#handleShowRecipeButtonAction" prefHeight="40.0" prefWidth="124.0" text="Show Recipe" />
+      <ChoiceBox fx:id="sizeChoiceBox" layoutX="33.0" layoutY="197.0" prefWidth="150.0" />
+      <Button fx:id="produceButton" layoutX="33.0" layoutY="230.0" minHeight="20.0" mnemonicParsing="false" onAction="#handleProduceButtonAction" prefHeight="40.0" prefWidth="124.0" text="Produce" />
+      <ProgressBar fx:id="productionProgressBar" layoutX="33.0" layoutY="287.0" prefHeight="20.0" prefWidth="124.0" progress="0.0" />
+      <Label fx:id="productionStatusLabel" layoutX="167.0" layoutY="288.0" text="Label" />
+      <TextArea fx:id="recipeTextArea1" editable="false" layoutX="239.0" layoutY="51.0" prefHeight="45.0" prefWidth="46.0" promptText="Amount" />
+      <TextArea fx:id="recipeTextArea11" editable="false" layoutX="299.0" layoutY="51.0" prefHeight="45.0" prefWidth="72.0" promptText="unit" />
+      <TextArea layoutX="239.0" layoutY="137.0" prefHeight="86.0" prefWidth="306.0" />
+      <Label layoutX="239.0" layoutY="114.0" prefHeight="18.0" prefWidth="91.0" text="Warehouse" />
+      <TextArea layoutX="239.0" layoutY="266.0" prefHeight="86.0" prefWidth="306.0" />
+      <Label layoutX="239.0" layoutY="243.0" prefHeight="18.0" prefWidth="91.0" text="Activity" />
+      <Label layoutX="33.0" layoutY="171.0" prefHeight="18.0" prefWidth="102.0" text="Choose Amount" />
+      <Button fx:id="goBackButton" layoutY="-1.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="102.0" text="&lt; Go Back"/>
+      <Label alignment="CENTER" layoutX="185.0" layoutY="6.0" prefHeight="20.0" prefWidth="236.0" text="Production Site" textAlignment="CENTER">
          <font>
-            <Font size="8.0" />
+            <Font name="System Bold" size="13.0" />
          </font>
-      </Button>
-      <ChoiceBox layoutX="33.0" layoutY="161.0" prefWidth="150.0" />
-      <Button layoutX="33.0" layoutY="194.0" minHeight="20.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="64.0" text="Produce" />
-      <ProgressBar layoutX="32.0" layoutY="232.0" prefHeight="20.0" prefWidth="124.0" progress="0.0" />
-      <Label layoutX="167.0" layoutY="233.0" text="Label" />
+      </Label>
    </children>
 </AnchorPane>

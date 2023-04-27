@@ -97,7 +97,7 @@ public class DbConnection {
     private static Properties getDbAccessProperties() {
         Properties dbAccessProperties;
 
-        try( InputStream is = DbConnection.class.getClassLoader().getResourceAsStream("atdit/gelatelli/db.properties") ) {
+        try( InputStream is = DbConnection.class.getClassLoader().getResourceAsStream("db.properties") ) {
             dbAccessProperties = new Properties();
             dbAccessProperties.load( is );
         }

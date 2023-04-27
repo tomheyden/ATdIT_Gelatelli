@@ -1,6 +1,7 @@
 package atdit.gelatelli;
 
 import atdit.gelatelli.models.*;
+import atdit.gelatelli.utils.DbConnection;
 import atdit.gelatelli.utils.ProductionService;
 import atdit.gelatelli.utils.WarehouseService;
 import org.junit.jupiter.api.Assertions;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,10 +24,10 @@ public class DbConnectionTest {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static WarehouseService warehouseService;
 
-    @BeforeAll
-    public static void createSingleton() {
-        FlavourSingleton.getInstance();
-        warehouseService = new WarehouseService();
+    @Test
+    public void testDBConnection () {
+        InputStream is =  ClassLoader.getSystemResourceAsStream("db.properties");
+        Assertions.assertNotNull(is);
     }
 
     @Test
@@ -86,5 +88,11 @@ public class DbConnectionTest {
     public void testReadTable() throws SQLException {
         Assertions.assertNotNull(ProductionService.getFlavourIngredientTable());
         Assertions.assertNotNull(ProductionService.getBatchTable());
+    }
+
+    @Test
+    public void testUpdate() throws SQLException {
+        ProductionService.produceFlavour("Strawberry", Double.parseDouble("2"));
+        Assertions.assertNotNull(1);
     }
 }

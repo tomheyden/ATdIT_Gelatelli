@@ -18,6 +18,7 @@ public class HomeController {
     private Scene productionScene;
     private Scene warehouseScene;
 
+
     public void setScenes(Scene homeScene, Scene productionScene, Scene warehouseScene) {
         this.homeScene = homeScene;
         this.productionScene = productionScene;
@@ -28,11 +29,13 @@ public class HomeController {
     public void initialize() {
         // Set the actions for the buttons
         productionButton.setOnAction(event -> {
+            ProductionController.setHomeScene(homeScene);
             productionButton.getScene().getWindow().hide();
             StageHelper.showScene(productionScene);
         });
 
         warehouseButton.setOnAction(event -> {
+            WarehouseController.setHomeScene(homeScene);
             warehouseButton.getScene().getWindow().hide();
             StageHelper.showScene(warehouseScene);
         });

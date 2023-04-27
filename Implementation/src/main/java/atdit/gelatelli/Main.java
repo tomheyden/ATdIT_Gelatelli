@@ -54,7 +54,7 @@ public class Main extends Application {
 
         // Set the main scene to the Home view
         stage.setScene(homeScene);
-        stage.setTitle("Ice Cream Shop");
+        stage.setTitle("IT System Gelatelli");
         stage.show();
     }
 
