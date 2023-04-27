@@ -60,6 +60,22 @@ CREATE TABLE IF NOT EXISTS `warehouse` (
   CONSTRAINT `FK__stored_ingredient` FOREIGN KEY (`ingredient_name`) REFERENCES `ingredient` (`ingredient_name`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='storage for batches of ingredients';
 
+CREATE EVENT IF NOT EXISTS check_bbd_event
+ON SCHEDULE EVERY 1 DAY
+DO
+BEGIN
+    DELETE FROM warehouse WHERE bbd < CURDATE();
+END;
+
+CREATE TRIGGER check_amount_update_trigger
+AFTER UPDATE ON warehouse
+FOR EACH ROW
+BEGIN
+    IF NEW.amount = 0 THEN
+        DELETE FROM warehouse WHERE id = NEW.id;
+    END IF;
+END;
+
 -- Exportiere Daten aus Tabelle eiscafegelatelli.warehouse: 4~ rows (ungefähr)
 DELETE FROM `warehouse`;
 INSERT INTO `warehouse` (`id`, `bbd`, `amount`, `ingredient_name`) VALUES
