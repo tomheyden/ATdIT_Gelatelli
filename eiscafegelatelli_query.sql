@@ -99,9 +99,16 @@ CREATE TABLE IF NOT EXISTS `flavour_ingredient` (
 DELETE FROM `flavour_ingredient`;
 INSERT INTO `flavour_ingredient` (`flavour_name`, `ingredient_name`, `amount`) VALUES
 	('Chocolate', 'Cocoa Powder', 4),
+	('Chocolate', 'Milk', 2),
+	('Chocolate', 'Sugar', 1),
 	('Vanilla', 'Vanilla Extract', 4),
+	('Vanilla', 'Milk', 2),
+	('Vanilla', 'Sugar', 1),
 	('Oreo', 'Oreo', 4),
-	('Strawberry', 'Strawberry', 4);
+	('Oreo', 'Milk', 2),
+	('Strawberry', 'Strawberry', 4),
+	('Strawberry', 'Milk', 2),
+	('Strawberry', 'Sugar', 1);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
