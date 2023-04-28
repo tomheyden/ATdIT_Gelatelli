@@ -1,6 +1,8 @@
 package atdit.gelatelli;
 
 import atdit.gelatelli.models.*;
+import atdit.gelatelli.utils.DbConnection;
+import atdit.gelatelli.utils.ProductionService;
 import atdit.gelatelli.utils.WarehouseService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -8,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,17 +24,17 @@ public class DbConnectionTest {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static WarehouseService warehouseService;
 
-    @BeforeAll
-    public static void createSingleton() {
-        FlavourSingleton.getInstance();
-        warehouseService = new WarehouseService();
+    @Test
+    public void testDBConnection () {
+        InputStream is =  ClassLoader.getSystemResourceAsStream("db.properties");
+        Assertions.assertNotNull(is);
     }
 
     @Test
     public void testConnection() throws SQLException {
 
         log.info("Starting testConnection");
-        Connection connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/eiscafegelatelli", "root", "password");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/eiscafegelatelli", "root", "Tlhlfh0108");
         Assertions.assertNotNull(connection);
         log.info("Finished testConnection");
     }
@@ -64,7 +67,7 @@ public class DbConnectionTest {
 
     @Test
     public void testReadBatches() throws SQLException {
-        /*warehouseService.readFlavoursForSpoilingIngredients();
+
 
         List<Flavour> expectedFlavours = new ArrayList<>();
         expectedFlavours.add(new Flavour("Strawberry", 0.12, 2, LocalDate.of(2023,04,15)));
@@ -73,6 +76,29 @@ public class DbConnectionTest {
         expectedFlavours.add(new Flavour("Oreo", 0.1, 0, null));
 
         Assertions.assertEquals(expectedFlavours,FlavourSingleton.getInstance().getFlavours());
-*/
+
+    }
+
+    @Test
+    public void testBatch() throws SQLException{
+        Assertions.assertEquals("Cocoa Powder", ProductionService.FlavourtoIngredient("Chocolate"));
+    }
+
+    @Test
+    public void testReadTable() throws SQLException {
+        Assertions.assertNotNull(ProductionService.getFlavourIngredientTable());
+        Assertions.assertNotNull(ProductionService.getBatchTable());
+    }
+
+    @Test
+    public void testUpdate() throws SQLException {
+        ProductionService.produceFlavour("Strawberry", Double.parseDouble("2"));
+        Assertions.assertNotNull(1);
+    }
+
+    @Test
+    public void testWarehouse() throws SQLException {
+        java.sql.Date sqlDate = new java.sql.Date(2023-1900, Calendar.AUGUST, 28);
+        WarehouseService.insertIngredient(new Batch(0,sqlDate,2.0,"Strawberry"));
     }
 }
