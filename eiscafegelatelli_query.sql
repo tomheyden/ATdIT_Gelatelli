@@ -22,7 +22,7 @@ USE `eiscafegelatelli`;
 -- Exportiere Struktur von Tabelle eiscafegelatelli.flavour
 CREATE TABLE IF NOT EXISTS `flavour` (
   `flavour_name` VARCHAR(15) NOT NULL COMMENT 'flavour''s unique name',
-  `contribution_margin` DECIMAL(2,2) COMMENT 'flavor''s contribution margin',
+  `contribution_margin` DECIMAL(65, 30) COMMENT 'flavor''s contribution margin',
   PRIMARY KEY (`flavour_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='offered icecream flavours';
 
@@ -54,7 +54,7 @@ INSERT INTO `ingredient` (`ingredient_name`, `purchase_price`, `unit`) VALUES
 CREATE TABLE IF NOT EXISTS `warehouse` (
   `id` INT(10) NOT NULL COMMENT 'unique id to identify batch of ingredients',
   `bbd` DATE NOT NULL COMMENT 'ingredient batch''s best before date',
-  `amount` DECIMAL(2,2) NOT NULL,
+  `amount` DECIMAL(65, 30) NOT NULL,
   `ingredient_name` VARCHAR(15) NOT NULL COMMENT 'foreign key type of ingredient stored in the batch',
   PRIMARY KEY (`id`),
   CONSTRAINT `FK__stored_ingredient` FOREIGN KEY (`ingredient_name`) REFERENCES `ingredient` (`ingredient_name`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -88,7 +88,7 @@ INSERT INTO `warehouse` (`id`, `bbd`, `amount`, `ingredient_name`) VALUES
 CREATE TABLE IF NOT EXISTS `flavour_ingredient` (
   `flavour_name` VARCHAR(15) NOT NULL,
   `ingredient_name` VARCHAR(15) NOT NULL,
-  `amount` DECIMAL(2,2) NOT NULL,
+  `amount` DECIMAL(65, 30) NOT NULL,
   PRIMARY KEY (`flavour_name`,`ingredient_name`),
   KEY `FK__ingredient` (`ingredient_name`),
   CONSTRAINT `FK__flavour` FOREIGN KEY (`flavour_name`) REFERENCES `flavour` (`flavour_name`) ON DELETE NO ACTION ON UPDATE NO ACTION,
