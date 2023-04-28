@@ -78,19 +78,6 @@ public class ProductionService implements ProductionInterface {
         return productionamount;
     }
 
-    public static String getRecipeforFlavour(String flavour) {
-        flavourIngredientList = getFlavourIngredientTable();
-
-        System.out.println(flavour);
-
-        for (FlavourIngredient flavourIngredient : flavourIngredientList) {
-            if(flavourIngredient.flavour().equalsIgnoreCase(flavour)) {
-                return flavourIngredient.ingredient();
-            }
-            }
-        return "**NO Recipe for this Flavour**";
-        }
-
 
     public static List<Batch> getBatchTable () {
         List<Batch> batchlist = new ArrayList<>();
@@ -164,5 +151,18 @@ public class ProductionService implements ProductionInterface {
             }
         }
         return tempamount >= amount;
+    }
+
+    public static List<String> getListContent (String flavour) {
+        List <String> resultList = new ArrayList<>();
+
+        List <FlavourIngredient> flavourIngredientList = getFlavourIngredientTable();
+
+        for (FlavourIngredient flavourIngredient : flavourIngredientList) {
+            if (flavourIngredient.flavour().equals(flavour)) {
+                resultList.add(flavourIngredient.amount() + " " + DbConnection.getUnitfromIngredient(flavourIngredient.ingredient()) + " from " + flavourIngredient.ingredient());
+            }
+        }
+        return resultList;
     }
 }

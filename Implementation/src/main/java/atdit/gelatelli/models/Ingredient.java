@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,13 +17,14 @@ public class Ingredient implements Comparable<Ingredient> {
         private double purchasePrice;
         private String unit;
 
+
         public String getUnit() {
             return this.unit;
         }
 
-    public String getName() {
-        return this.name;
-    }
+        public String getName() {
+            return this.name;
+        }
 
         public Ingredient (String name, double purchasePrice, String unit) {
             this.name = name;
@@ -39,7 +41,7 @@ public class Ingredient implements Comparable<Ingredient> {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            return this.name.equals(((Ingredient) o).name);
+            return this.name.equalsIgnoreCase(((Ingredient) o).name);
         }
 
         @Override

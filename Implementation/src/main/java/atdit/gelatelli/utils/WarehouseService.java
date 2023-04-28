@@ -1,7 +1,7 @@
 package atdit.gelatelli.utils;
 
 import java.lang.invoke.MethodHandles;
-import java.sql.Date;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -39,20 +39,9 @@ public class WarehouseService implements WarehouseInterface {
         List<String> ListContent = new ArrayList<String>();
 
         for (Batch good : warehouseList) {
-            ListContent.add(good.amount() + " " + getUnitfromIngredient(good.ingredient()) + " from " + good.ingredient() + " with ID: " + good.id());
+            ListContent.add(good.amount() + " " + DbConnection.getUnitfromIngredient(good.ingredient()) + " from " + good.ingredient() + " expiring: " + getbbd(good.ingredient()));
         }
         return ListContent;
-    }
-
-    private String getUnitfromIngredient(String ingredient) {
-        List<Ingredient> ingredientList = Ingredient.readIngredients();
-
-        for (Ingredient ingredienttemp : ingredientList) {
-            if (ingredienttemp.equals(new Ingredient(ingredient, 0.0, null))) {
-                return ingredienttemp.getUnit();
-            }
-        }
-        return null;
     }
 
     public Set<String> getIngredients(String column) {
@@ -67,5 +56,33 @@ public class WarehouseService implements WarehouseInterface {
         if (column.equalsIgnoreCase("Name"))
             return nameResults;
         return unitResults;
+    }
+
+    public static Date getbbd(String ingredient) {
+        List<Batch > batchList = ProductionService.getBatchTable();
+
+        for (Batch batch : batchList) {
+            if (batch.ingredient().equalsIgnoreCase(ingredient)) {
+                return (Date) batch.bbd();
+            }
+        }
+        return null;
+    }
+
+    public static void insertIngredient (Batch batch) {
+
+        try (Connection connection = DbConnection.getDbConnection();
+             PreparedStatement ps = connection.prepareStatement(" INSERT INTO `warehouse` (`id`,`bbd`, `amount`, `ingredient_name`) VALUES (? ,?, ?, ?)")) {
+
+            ps.setInt(1,(DbConnection.getMaxId("warehouse")+1));
+            ps.setDate(2,(Date) batch.bbd());
+            ps.setDouble(3,batch.amount());
+            ps.setString(4,batch.ingredient());
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

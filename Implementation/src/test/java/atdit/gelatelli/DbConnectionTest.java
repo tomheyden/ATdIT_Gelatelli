@@ -95,4 +95,10 @@ public class DbConnectionTest {
         ProductionService.produceFlavour("Strawberry", Double.parseDouble("2"));
         Assertions.assertNotNull(1);
     }
+
+    @Test
+    public void testWarehouse() throws SQLException {
+        java.sql.Date sqlDate = new java.sql.Date(2023-1900, Calendar.AUGUST, 28);
+        WarehouseService.insertIngredient(new Batch(0,sqlDate,2.0,"Strawberry"));
+    }
 }

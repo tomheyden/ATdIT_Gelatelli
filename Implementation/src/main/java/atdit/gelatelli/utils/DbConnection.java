@@ -1,5 +1,6 @@
 package atdit.gelatelli.utils;
 
+import atdit.gelatelli.models.Ingredient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,8 +117,9 @@ public class DbConnection {
     public static int getMaxId(String table) {
         int maxId = 0;
         try (Connection connection = getDbConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(id) FROM "+ table);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(id) FROM " + table)){
+
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
                 maxId = resultSet.getInt(1);
@@ -155,6 +157,19 @@ public class DbConnection {
             stmt.execute(triggerSql);
         }
     }
+
+    public static String getUnitfromIngredient(String ingredient) {
+        List<Ingredient> ingredientList = Ingredient.readIngredients();
+
+        for (Ingredient ingredienttemp : ingredientList) {
+            if (ingredienttemp.equals(new Ingredient(ingredient, 0.0, null))) {
+                    return ingredienttemp.getUnit();
+            }
+        }
+        return null;
+    }
+
+
 }
 
 
