@@ -25,42 +25,24 @@ public class ProductionService implements ProductionInterface {
 
         String tempingredient = FlavourtoIngredient(flavour_name).toString();
         Double productionAmount = getProductionAmount(flavour_name,amount);
-        // Step 1: Prepare the SQL statement with parameters
-        //String sql = "UPDATE warehouse SET amount = CASE WHEN amount >= ? THEN amount - ? ELSE 0 END WHERE ingredient_name = ? AND bbd = (SELECT bbd FROM warehouse WHERE ingredient_name = ? AND bbd >= ? ORDER BY bbd ASC LIMIT 1)";
 
-        String query = "UPDATE warehouse SET amount = amount - ? WHERE flavour_name = ?";
-        String subquery = "SELECT * FROM warehouse WHERE flavour_name = ? ORDER BY bbd ASC LIMIT ? FOR UPDATE";
+        SortedMap<Date,Double> sortedExpirationList = getExpirationDates(flavour_name);
+
+        String query = "UPDATE warehouse SET amount = amount - ? WHERE flavour_name = ? AND bbd = ?;";
 
         try (Connection connection = DbConnection.getDbConnection();
-             PreparedStatement ps = connection.prepareStatement(subquery)) {
+             PreparedStatement ps = connection.prepareStatement(query)) {
             // Set parameters for subquery
+
             ps.setString(1, flavour_name);
-            ps.setDouble(2, productionAmount);
 
-            // Execute subquery to get rows to update
-            ResultSet rs = ps.executeQuery();
+            for (int i = 0; productionAmount > sortedExpirationList.get(i); i++) {
 
-            // Update rows one by one
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                int qty = rs.getInt("quantity");
-
-                // Update row with new quantity
-                PreparedStatement psUpdate = connection.prepareStatement(query);
-                psUpdate.setDouble(1, productionAmount);
-                psUpdate.setString(2, flavour_name);
-                psUpdate.executeUpdate();
-                psUpdate.close();
-
-                // Subtract quantity from remaining update count
-                productionAmount -= qty;
-
-                // Exit loop if no more updates needed
-                if (productionAmount <= 0) {
-                    break;
-                }
+                ps.setDouble(2, productionAmount);
+                ps.executeQuery();
+                productionAmount =- sortedExpirationList.get(i);
             }
-            rs.close();
+
         } catch (SQLException e){}
     }
 
@@ -164,5 +146,16 @@ public class ProductionService implements ProductionInterface {
             }
         }
         return resultList;
+    }
+
+    public static SortedMap<Date, Double> getExpirationDates (String flavour_name) {
+        List <Batch> batchTable = getBatchTable();
+        SortedMap<Date,Double> resultMap = new TreeMap<Date, Double>();
+
+        for (Batch batch : batchTable) {
+            if (batch.ingredient().equalsIgnoreCase(flavour_name))
+            resultMap.put((Date) batch.bbd(),batch.amount());
+        }
+        return resultMap;
     }
 }
