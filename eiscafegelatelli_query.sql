@@ -22,17 +22,24 @@ USE `eiscafegelatelli`;
 -- Exportiere Struktur von Tabelle eiscafegelatelli.flavour
 CREATE TABLE IF NOT EXISTS `flavour` (
   `flavour_name` VARCHAR(15) NOT NULL COMMENT 'flavour''s unique name',
-  `contribution_margin` DECIMAL(2,2) COMMENT 'flavor''s contribution margin',
+  `contribution_margin` DECIMAL(65, 30) COMMENT 'flavor''s contribution margin',
   PRIMARY KEY (`flavour_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='offered icecream flavours';
 
 -- Exportiere Daten aus Tabelle eiscafegelatelli.flavour: ~4 rows (ungefähr)
 DELETE FROM `flavour`;
 INSERT INTO `flavour` (`flavour_name`, `contribution_margin`) VALUES
-	('Chocolate', 0.15),
-	('Vanilla', 0.17),
-	('Oreo', 0.10),
-	('Strawberry', 0.12);
+	('Unsweetened Cocoa Powder', 9.99, 'kg'),
+	('Whole Milk', 9.99, 'l'),
+	('Granulated Sugar', 9.99, 'kg'),
+	('Heavy Cream', 9.99, 'l'),
+	('Egg Yolk', 9.99, '??'),
+	('Bittersweet Chocolate', 9.99, 'kg'),
+	('Fine Sea Salt', 9.99, 'tsp'),
+	('Vanilla Extract', 9.97, 'tbsp'),
+	('Oreo Cookies', 9.99, 'kg'),
+	('Lemon Juice', 5.02, 'tbsp')
+	('Fresh Strawberries', 5.02, 'kg'); 
 	
 -- Exportiere Struktur von Tabelle eiscafegelatelli.ingredient
 CREATE TABLE IF NOT EXISTS `ingredient` (
@@ -45,34 +52,50 @@ CREATE TABLE IF NOT EXISTS `ingredient` (
 -- Exportiere Daten aus Tabelle eiscafegelatelli.ingredient: 4~ rows (ungefähr)
 DELETE FROM `ingredient`;
 INSERT INTO `ingredient` (`ingredient_name`, `purchase_price`, `unit`) VALUES
-	('Cocoa powder', 9.99, 'kg'),
-	('Vanilla extract', 9.97, 'l'),
-	('Oreo', 9.99, 'kg'),
-	('Strawberry', 5.02, 'kg'); 
+	('Unsweetened Cocoa Powder', 9.99, 'kg'),
+	('Vanilla Extract', 9.97, 'l'),
+	('Oreo Cookies', 9.99, 'kg'),
+	('Fresh Strawberries', 5.02, 'kg'); 
 
 -- Exportiere Struktur von Tabelle eiscafegelatelli.warehouse
 CREATE TABLE IF NOT EXISTS `warehouse` (
   `id` INT(10) NOT NULL COMMENT 'unique id to identify batch of ingredients',
   `bbd` DATE NOT NULL COMMENT 'ingredient batch''s best before date',
-  `amount` DECIMAL(2,2) NOT NULL,
+  `amount` DECIMAL(65, 30) NOT NULL,
   `ingredient_name` VARCHAR(15) NOT NULL COMMENT 'foreign key type of ingredient stored in the batch',
   PRIMARY KEY (`id`),
   CONSTRAINT `FK__stored_ingredient` FOREIGN KEY (`ingredient_name`) REFERENCES `ingredient` (`ingredient_name`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='storage for batches of ingredients';
 
+CREATE EVENT IF NOT EXISTS check_bbd_event
+ON SCHEDULE EVERY 1 DAY
+DO
+BEGIN
+    DELETE FROM warehouse WHERE bbd < CURDATE();
+END;
+
+CREATE TRIGGER check_amount_update_trigger
+AFTER UPDATE ON warehouse
+FOR EACH ROW
+BEGIN
+    IF NEW.amount = 0 THEN
+        DELETE FROM warehouse WHERE id = NEW.id;
+    END IF;
+END;
+
 -- Exportiere Daten aus Tabelle eiscafegelatelli.warehouse: 4~ rows (ungefähr)
 DELETE FROM `warehouse`;
 INSERT INTO `warehouse` (`id`, `bbd`, `amount`, `ingredient_name`) VALUES
-	(1, '2025.05.23', 1, 'Cocoa powderr'),
-	(2, '2023.12.31', 0.22, 'Vanilla extract'),
-	(3, '2024.12.31', 0.4, 'Oreo'),
-	(4, '2023.04.10', 1, 'Strawberry');
+	(1, '2025.05.23', 1, 'Unsweetened Cocoa Powder'),
+	(2, '2023.12.31', 0.22, 'Vanilla Extract'),
+	(3, '2024.12.31', 0.4, 'Oreo Cookies'),
+	(4, '2023.04.10', 1, 'Fresh Strawberries');
 
 -- Exportiere Struktur von Tabelle eiscafegelatelli.flavour_ingredient
 CREATE TABLE IF NOT EXISTS `flavour_ingredient` (
   `flavour_name` VARCHAR(15) NOT NULL,
   `ingredient_name` VARCHAR(15) NOT NULL,
-  `amount` DECIMAL(2,2) NOT NULL,
+  `amount` DECIMAL(65, 30) NOT NULL,
   PRIMARY KEY (`flavour_name`,`ingredient_name`),
   KEY `FK__ingredient` (`ingredient_name`),
   CONSTRAINT `FK__flavour` FOREIGN KEY (`flavour_name`) REFERENCES `flavour` (`flavour_name`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -82,10 +105,35 @@ CREATE TABLE IF NOT EXISTS `flavour_ingredient` (
 -- Exportiere Daten aus Tabelle eiscafegelatelli.flavour_ingredient: 4~ rows (ungefähr)
 DELETE FROM `flavour_ingredient`;
 INSERT INTO `flavour_ingredient` (`flavour_name`, `ingredient_name`, `amount`) VALUES
-	('Chocolate', 'Cocoa Powder', 4),
-	('Vanilla', 'Vanilla Extract', 4),
-	('Oreo', 'Oreo', 4),
-	('Strawberry', 'Strawberry', 4);
+	('Chocolate', 'Heavy Cream', 2.5),
+	('Chocolate', 'Whole Milk', 1.25),
+	('Chocolate', 'Granulated Sugar', 0.75),
+	('Chocolate', 'Unsweetened Cocoa Powder', 0.25),
+	('Chocolate', 'Fine Sea Salt', 0.5),
+	('Chocolate', 'Egg Yolk', 15),
+	('Chocolate', 'Bittersweet Chocolate', 0.5),
+	('Chocolate', 'Vanilla Extract', 2.5),
+	('Vanilla', 'Heavy Cream', 2.5),
+	('Vanilla', 'Whole Milk', 1.25),
+	('Vanilla', 'Granulated Sugar', 0.75),
+	('Vanilla', 'Unsweetened Cocoa Powder', 0.25),
+	('Vanilla', 'Fine Sea Salt', 0.5),
+	('Vanilla', 'Egg Yolk', 15),
+	('Oreo', 'Heavy Cream', 2.5),
+	('Oreo', 'Whole Milk', 1.25),
+	('Oreo', 'Granulated Sugar', 0.75),
+	('Oreo', 'Unsweetened Cocoa Powder', 0.25),
+	('Oreo', 'Fine Sea Salt', 0.5),
+	('Oreo', 'Egg Yolk', 15),
+	('Oreo', 'Oreo Cookies', 1.5),
+	('Strawberry', 'Heavy Cream', 2.5),
+	('Strawberry', 'Whole Milk', 1.25),
+	('Strawberry', 'Granulated Sugar', 0.5),
+	('Strawberry', 'Unsweetened Cocoa Powder', 0.25),
+	('Strawberry', 'Fine Sea Salt', 0.5),
+	('Strawberry', 'Egg Yolk', 15),
+	('Strawberry', 'Fresh Strawberries', 2);
+	('Strawberry', 'Lemon Juice', 4);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
