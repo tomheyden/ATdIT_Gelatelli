@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.Border;
 import javafx.scene.paint.Color;
 
 import java.sql.Date;
@@ -53,6 +54,10 @@ public class WarehouseController {
             numbers.add(i);
         }
         amountComboBox.setItems(numbers);
+
+        expiryDatePicker.setStyle("-fx-control-inner-background: white;");
+        amountComboBox.setStyle("-fx-control-inner-background: white;");
+        goodsComboBox.setStyle("-fx-control-inner-background: white;");
     }
 
     @FXML
@@ -62,9 +67,46 @@ public class WarehouseController {
 
     @FXML
     private void handleInsertButton() {
-        WarehouseService.insertIngredient(new Batch(0,Date.valueOf(expiryDatePicker.getValue()),amountComboBox.getValue(),goodsComboBox.getValue()));
+
+        doneLabel.setText("");
         doneLabel.setVisible(true);
-        inserted = true;
+        boolean fieldsempty = true;
+
+        if (expiryDatePicker.getValue() == null) {
+            handleEmptyBox(expiryDatePicker,doneLabel,"Date");
+            fieldsempty = false;
+        } else {
+            expiryDatePicker.setStyle("-fx-border-color: WHITE;");
+        }
+
+        if (amountComboBox.getValue() == null) {
+            handleEmptyBox(amountComboBox,doneLabel,"Amount");
+            fieldsempty = false;
+        } else {
+            amountComboBox.setStyle("-fx-border-color: WHITE;");
+        }
+
+        if (goodsComboBox.getValue() == null) {
+            handleEmptyBox(goodsComboBox,doneLabel,"Ingredient");
+            fieldsempty = false;
+        } else {
+            goodsComboBox.setStyle("-fx-border-color: WHITE;");
+        }
+
+        if (fieldsempty) {
+            WarehouseService.insertIngredient(new Batch(0,Date.valueOf(expiryDatePicker.getValue()),amountComboBox.getValue(),goodsComboBox.getValue()));
+            doneLabel.setText("Done");
+            doneLabel.setTextFill(Color.GREEN);
+            doneLabel.setVisible(true);
+            inserted = true;
+        }
+    }
+
+
+    private void handleEmptyBox (Control control, Label label, String type) {
+        control.setStyle("-fx-border-color: RED;");
+        label.setText("Values are missing");
+        label.setTextFill(Color.RED);
     }
 
     @FXML
