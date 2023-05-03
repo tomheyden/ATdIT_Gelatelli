@@ -9,21 +9,23 @@
 
 <AnchorPane fx:id="homeAnchorPane" prefHeight="386.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="atdit.gelatelli.controllers.HomeController">
 
-    <Label layoutX="175.0" layoutY="160.0" prefHeight="20.0" prefWidth="137.0" text="Eiscafé Gelatelli " textAlignment="CENTER" AnchorPane.leftAnchor="175.0" AnchorPane.topAnchor="160.0">
+    <Label layoutX="202.0" layoutY="213.0" prefHeight="20.0" prefWidth="137.0" text="Eiscafé Gelatelli " textAlignment="CENTER" AnchorPane.leftAnchor="202.0" AnchorPane.topAnchor="213.0">
       <font>
          <Font name="Arial Bold" size="17.0" />
       </font></Label>
-   <Label layoutX="175.0" layoutY="143.0" prefHeight="17.0" prefWidth="137.0" text="IT System">
+   <Label layoutX="202.0" layoutY="196.0" prefHeight="17.0" prefWidth="137.0" text="IT System">
       <font>
          <Font name="Arial" size="11.0" />
       </font>
    </Label>
-   <Button fx:id="productionButton" layoutX="126.0" layoutY="199.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="106.0" text="Produktion" />
-   <Button fx:id="warehouseButton" layoutX="243.0" layoutY="199.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="106.0" text="Lager" />
-   <ImageView fitHeight="122.0" fitWidth="119.0" layoutX="177.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+   <Button fx:id="productionButton" layoutX="153.0" layoutY="252.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="106.0" text="Produktion" />
+   <Button fx:id="warehouseButton" layoutX="270.0" layoutY="252.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="106.0" text="Lager" />
+   <ImageView fitHeight="122.0" fitWidth="119.0" layoutX="204.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true">
       <image>
-         <Image url="@../../Gelatelli_Logo.png" />
+         <Image url="@../../gelatelli-new2.png" />
       </image>
    </ImageView>
+   <Button fx:id="warehouseButton1" layoutX="153.0" layoutY="300.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="106.0" text="Bestellungen" />
+   <Button fx:id="warehouseButton2" layoutX="270.0" layoutY="300.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="106.0" text="Benutzer - App" />
 
 </AnchorPane>

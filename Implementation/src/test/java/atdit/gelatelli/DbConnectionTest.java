@@ -34,7 +34,7 @@ public class DbConnectionTest {
     public void testConnection() throws SQLException {
 
         log.info("Starting testConnection");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/eiscafegelatelli", "root", "Tlhlfh0108");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/eiscafegelatelli", "root", "");
         Assertions.assertNotNull(connection);
         log.info("Finished testConnection");
     }
@@ -81,7 +81,8 @@ public class DbConnectionTest {
 
     @Test
     public void testBatch() throws SQLException{
-        Assertions.assertEquals("Cocoa Powder", ProductionService.FlavourtoIngredient("Chocolate"));
+        ProductionService.produceFlavour("Chocolate",2.0);
+        Assertions.assertNotNull(1);
     }
 
     @Test

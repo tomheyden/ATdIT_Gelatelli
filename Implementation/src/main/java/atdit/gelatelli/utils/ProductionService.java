@@ -23,12 +23,13 @@ public class ProductionService implements ProductionInterface {
 
     public static void produceFlavour(String flavour_name, double amount) {
 
-        String tempingredient = FlavourtoIngredient(flavour_name).toString();
-        Double productionAmount = getProductionAmount(flavour_name,amount);
-
+        Map<String,Double> ingredientsForFlavour = FlavourtoIngredients(flavour_name);
         SortedMap<Date,Double> sortedExpirationList = getExpirationDates(flavour_name);
 
-        String query = "UPDATE warehouse SET amount = amount - ? WHERE flavour_name = ? AND bbd = ?;";
+        System.out.println(ingredientsForFlavour);
+        System.out.println(sortedExpirationList);
+
+        /*String query = "UPDATE warehouse SET amount = amount - ? WHERE flavour_name = ? AND bbd = ?;";
 
         try (Connection connection = DbConnection.getDbConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
@@ -43,7 +44,7 @@ public class ProductionService implements ProductionInterface {
                 productionAmount =- sortedExpirationList.get(i);
             }
 
-        } catch (SQLException e){}
+        } catch (SQLException e){}*/
     }
 
 
@@ -78,15 +79,15 @@ public class ProductionService implements ProductionInterface {
         return batchlist;
     }
 
-    public static String FlavourtoIngredient(String flavour) {
+    public static Map<String,Double> FlavourtoIngredients(String flavour) {
         List<FlavourIngredient> flavourIngredients = getFlavourIngredientTable();
-
+        Map<String,Double> ingredientsforFlavour = new TreeMap();
         for (FlavourIngredient obj : flavourIngredients) {
             if (obj.flavour().equalsIgnoreCase(flavour)) {
-                return obj.ingredient();
+                ingredientsforFlavour.put(obj.ingredient(),obj.amount());
             }
         }
-        return null;
+        return ingredientsforFlavour;
     }
 
     public static List<FlavourIngredient> getFlavourIngredientTable(){

@@ -58,7 +58,7 @@ public class ProductionController {
         if (ProductionService.checkifenoughIngredients(selectedFlavour,productionAmount)) {
             ProductionService.produceFlavour(selectedFlavour, selectedAmount);
         } else {
-            System.out.println("Not enough Ingredients -- Please get at least " + productionAmount +" of "+ProductionService.FlavourtoIngredient(selectedFlavour));
+            //System.out.println("Not enough Ingredients -- Please get at least " + productionAmount +" of "+ProductionService.FlavourtoIngredient(selectedFlavour));
         }
 
         Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(productionProgressBar.progressProperty(), 0)),

@@ -10,11 +10,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.LabelSkin;
 import javafx.scene.layout.Border;
 import javafx.scene.paint.Color;
 
 import java.sql.Date;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WarehouseController {
@@ -99,6 +101,10 @@ public class WarehouseController {
             doneLabel.setTextFill(Color.GREEN);
             doneLabel.setVisible(true);
             inserted = true;
+
+            refreshItems();
+
+            inserted = true;
         }
     }
 
@@ -112,9 +118,11 @@ public class WarehouseController {
     @FXML
     private void handleUpdateButtonAction() {
         if (inserted) {
+            warehouseListView.getItems().clear();
             warehouseListView.getItems().addAll(warehouseService.getListContent());
             hintLabel.setText("Refreshed");
             hintLabel.setTextFill(Color.GREEN);
+            inserted = false;
         } else {
             hintLabel.setText("No Items inserted after last refresh");
             hintLabel.setTextFill(Color.RED);
@@ -124,10 +132,50 @@ public class WarehouseController {
     @FXML
     private void handleGoBackButtonAction() {
         StageHelper.showScene(staticHomeScene);
+        refreshItems();
     }
 
     public static  void setHomeScene (Scene homeScene) {
         staticHomeScene = homeScene;
     }
 
+    private void refreshItems () {
+        List<Control> controls = new ArrayList<>();
+        controls.add(expiryDatePicker);
+        controls.add(amountComboBox);
+        controls.add(goodsComboBox);
+        controls.add(filterComboBox);
+
+        List<Label> labels = new ArrayList<>();
+        labels.add(doneLabel);
+        labels.add(hintLabel);
+
+        for (Label label : labels) {
+            label.setVisible(false);
+        }
+
+        for (Control control : controls) {
+            try {
+                control.setStyle("-fx-border-color: WHITE;");
+
+                if (control instanceof TextField) {
+                    ((TextField) control).clear();
+                } else if (control instanceof TextArea) {
+                    ((TextArea) control).clear();
+                } else if (control instanceof ChoiceBox) {
+                    ((ChoiceBox<?>) control).setValue(null);
+                } else if (control instanceof ComboBox) {
+                    ((ComboBox<?>) control).setValue(null);
+                } else if (control instanceof DatePicker) {
+                    ((DatePicker) control).setValue(null);
+                } else if (control instanceof Spinner) {
+                    ((Spinner<?>) control).getValueFactory().setValue(null);
+                } else if (control instanceof TableView) {
+                    ((TableView<?>) control).getItems().clear();
+                } else if (control instanceof ListView) {
+                    ((ListView<?>) control).getItems().clear();
+                }
+            } catch (NullPointerException e) {System.out.println("Item is empty"); continue;}
+        }
+    }
 }
