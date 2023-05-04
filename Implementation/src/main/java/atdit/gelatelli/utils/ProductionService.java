@@ -168,7 +168,6 @@ public class ProductionService implements ProductionInterface {
                             break;
                         }
                     } else {
-                        // Handle the case where no rows are returned
                     }
                 }
             }
