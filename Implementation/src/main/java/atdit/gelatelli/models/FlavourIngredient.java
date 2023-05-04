@@ -1,3 +1,7 @@
 package atdit.gelatelli.models;
 
-public record FlavourIngredient(String flavour, String ingredient, double amount) { }
+/**
+ * A record that represents an ingredient used in a flavor of ice cream and its quantity.
+ */
+public record FlavourIngredient(String flavour, String ingredient, double amount) {
+}

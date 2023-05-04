@@ -16,6 +16,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.*;
 
+/**
+ * This class implements the ProductionInterface and provides the production service methods.
+ */
 public class ProductionService implements ProductionInterface {
 
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -23,31 +26,24 @@ public class ProductionService implements ProductionInterface {
     static List<FlavourIngredient> flavourIngredientList = getFlavourIngredientTable();
     WarehouseService warehouseService = new WarehouseService();
 
+
     public static String errorOfIngredientsamount = "";
 
-    public static double getProductionAmount(String flavour, double amount) {
-        List<FlavourIngredient> flavourIngredientsList = getFlavourIngredientTable();
 
-        double productionamount = 0;
-
-        for (FlavourIngredient flavourIngredienttemp : flavourIngredientsList) {
-            if (flavourIngredienttemp.flavour().equals(flavour)) {
-                productionamount = flavourIngredienttemp.amount() * amount;
-            }
-        }
-        return productionamount;
-    }
-
-
-    public static List<Batch> getBatchTable () {
+    /**
+     * Returns a list of batches ordered by their expiration dates.
+     *
+     * @return a list of batches ordered by their expiration dates
+     */
+    public static List<Batch> getBatchTable() {
         List<Batch> batchlist = new ArrayList<>();
 
         String sql = "SELECT * FROM warehouse ORDER BY bbd ASC";
-        List<Object []> rows = DbConnection.getDbTable(sql);
+        List<Object[]> rows = DbConnection.getDbTable(sql);
         for (Object[] row : rows) {
             Batch batch = new Batch(
-                    Integer.parseInt((String)row[0]),
-                    Date.valueOf((String)row[1]),
+                    Integer.parseInt((String) row[0]),
+                    Date.valueOf((String) row[1]),
                     Double.parseDouble((String) row[2]),
                     (String) row[3]
             );
@@ -56,43 +52,59 @@ public class ProductionService implements ProductionInterface {
         return batchlist;
     }
 
-    public static Map<String,Double> FlavourtoIngredients(String flavour) {
+    /**
+     * Returns a map of ingredients and their corresponding amounts for a given flavour.
+     *
+     * @param flavour the name of the flavour
+     * @return a map of ingredients and their corresponding amounts for the given flavour
+     */
+    public static Map<String, Double> FlavourtoIngredients(String flavour) {
         List<FlavourIngredient> flavourIngredients = getFlavourIngredientTable();
-        Map<String,Double> ingredientsforFlavour = new TreeMap();
+        Map<String, Double> ingredientsforFlavour = new TreeMap();
         for (FlavourIngredient obj : flavourIngredients) {
             if (obj.flavour().equalsIgnoreCase(flavour)) {
-                ingredientsforFlavour.put(obj.ingredient(),obj.amount());
+                ingredientsforFlavour.put(obj.ingredient(), obj.amount());
             }
         }
         return ingredientsforFlavour;
     }
 
-    public static List<FlavourIngredient> getFlavourIngredientTable(){
+    /**
+     * Returns a list of FlavourIngredient objects containing information about all flavour-ingredient relationships.
+     *
+     * @return a list of FlavourIngredient objects
+     */
+    public static List<FlavourIngredient> getFlavourIngredientTable() {
         String sql = """
-                      SELECT * FROM flavour_ingredient
-                      """ ;
+                SELECT * FROM flavour_ingredient
+                """;
 
         List<Object[]> result = DbConnection.getDbTable(sql);
         List<FlavourIngredient> flavourIngredients = new ArrayList<>();
 
         for (Object[] objarray : result) {
-            FlavourIngredient flavourIngredientobj = new FlavourIngredient ((String) objarray[0],(String) objarray[1] ,Double.parseDouble(objarray[2].toString()));
+            FlavourIngredient flavourIngredientobj = new FlavourIngredient((String) objarray[0], (String) objarray[1], Double.parseDouble(objarray[2].toString()));
             flavourIngredients.add(flavourIngredientobj);
         }
         log.debug("Retrieved data from database: {}", result);
         return flavourIngredients;
     }
 
+    /**
+     * Returns an ObservableList of strings containing the names of all flavours in the database.
+     *
+     * @return an ObservableList of strings containing the names of all flavours in the database
+     */
     public static ObservableList<String> getFlavourTable() {
         String sql = """
-                      SELECT * FROM flavour
-                      """ ;
+                SELECT * FROM flavour
+                """;
 
         List<Object[]> result = DbConnection.getDbTable(sql);
         ObservableList<String> flavourList = FXCollections.observableArrayList();
 
         for (Object[] objarray : result) {
-            String flavour= (String) objarray[0];
+            String flavour = (String) objarray[0];
             flavourList.add(flavour);
         }
         log.debug("Retrieved data from database: {}", result);
@@ -113,6 +125,12 @@ public class ProductionService implements ProductionInterface {
         return resultList;
     }
 
+     /**
+     * Produces the given flavour in the specified amount.
+     *
+     * @param inputFlavour the name of the flavour to be produced
+     * @param inputAmount       the amount of the flavour to be produced
+     */
     public static void produceFlavour(String inputFlavour, Double inputAmount) {
         try (Connection connection = DbConnection.getDbConnection()) {
 
@@ -158,6 +176,12 @@ public class ProductionService implements ProductionInterface {
             System.out.println("Error message: " + errorMessage);}
     }
 
+    /**
+     * Returns the Amount of the Ingredient that you need to produce a specific Flavour
+     *
+     * @param flavour         the name of the flavour to be produced
+     * @param ingredient      the ingredient for the flavour
+     */
     public static double getAmountNeededForOne(String flavour, String ingredient) {
         try (Connection connection = DbConnection.getDbConnection()) {
 
@@ -179,6 +203,13 @@ public class ProductionService implements ProductionInterface {
         return 0.0;
     }
 
+        /**
+     * Checks if there are enough ingredient across all batches to produce a specified amount of a Flavour
+     *
+     * @param inputFlavour    the name of the Flavour to check
+     * @param inputAmount     the desired amount to be produced
+     * @return true if there are enough Ingredients to produce the desired amount of the Flavour, false otherwise
+     */
     public static boolean checkIfEnoughIngredients (String inputFlavour, double inputAmount) {
 
         try(Connection connection = DbConnection.getDbConnection()) {
@@ -234,5 +265,4 @@ public class ProductionService implements ProductionInterface {
         } catch (SQLException e) {}
 
         return false;
-    }
 }

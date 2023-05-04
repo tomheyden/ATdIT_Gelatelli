@@ -18,19 +18,38 @@ import javafx.util.Duration;
 
 import java.util.List;
 
+
+/**
+ * This class is the controller for the Production View, which allows the user to produce flavors and check the
+ * production's progress. It provides methods to handle user's input and display data on the view.
+ *
+ * @version 1.1
+ * @since 27/04/2023
+ */
 public class ProductionController {
 
-    @FXML private AnchorPane productionAnchorPane;
-    @FXML private ComboBox<String> flavorComboBox;
-    @FXML private ChoiceBox<Integer> sizeChoiceBox;
-    @FXML private Button showRecipeButton;
-    @FXML private Button produceButton;
-    @FXML private ProgressBar productionProgressBar;
-    @FXML private Label productionStatusLabel;
-    @FXML private ListView<String> receiptListView;
-    @FXML private ListView<String> warehouseListView;
-    @FXML private ListView<String> activityListView;
-    @FXML private Button goBackButton;
+    @FXML
+    private AnchorPane productionAnchorPane;
+    @FXML
+    private ComboBox<String> flavorComboBox;
+    @FXML
+    private ChoiceBox<Integer> sizeChoiceBox;
+    @FXML
+    private Button showRecipeButton;
+    @FXML
+    private Button produceButton;
+    @FXML
+    private ProgressBar productionProgressBar;
+    @FXML
+    private Label productionStatusLabel;
+    @FXML
+    private ListView<String> receiptListView;
+    @FXML
+    private ListView<String> warehouseListView;
+    @FXML
+    private ListView<String> activityListView;
+    @FXML
+    private Button goBackButton;
 
     WarehouseService warehouseService = new WarehouseService();
 
@@ -38,6 +57,10 @@ public class ProductionController {
 
     private static Scene staticHomeScene;
 
+    /**
+     * This method is called when the "Show Recipe" button is clicked by the user. It clears the receiptListView and
+     * populates it with the recipe for the selected flavor.
+     */
     @FXML
     private void handleShowRecipeButtonAction() {
         receiptListView.getItems().clear();
@@ -45,6 +68,11 @@ public class ProductionController {
         System.out.println("Show Recipe Button");
     }
 
+    /**
+     * This method is called when the "Produce" button is clicked by the user. It checks if there are enough
+     * ingredients in the warehouse to produce the selected flavor and amount. If there are, it produces the flavor
+     * and updates the progress bar accordingly. If there are not, it displays an error message.
+     */
     @FXML
     private void handleProduceButtonAction() {
         System.out.println("Produce Button");
@@ -62,6 +90,11 @@ public class ProductionController {
         }
     }
 
+    /**
+     * This method is called when the Production View is loaded. It populates the warehouseListView with the content
+     * returned by the WarehouseService and the flavorComboBox with the available flavors returned by the
+     * ProductionService. It also initializes the sizeChoiceBox with the numbers from 1 to 20.
+     */
     public void initialize() {
 
         productionStatusLabel.setVisible(false);
@@ -74,7 +107,6 @@ public class ProductionController {
             numbers.add(i);
         }
         sizeChoiceBox.setItems(numbers);
-        //sizeChoiceBox.getItems().add()
 
         goBackButton.setOnAction(event -> {
             goBackButton.getScene().getWindow().hide();
@@ -82,7 +114,12 @@ public class ProductionController {
         });
     }
 
-    public static void setHomeScene (Scene homeScene) {
+    /**
+     * Sets the static home scene for this controller. This is used to switch back to the home scene when the "Go back" button is pressed.
+     *
+     * @param homeScene the static home scene
+     */
+    public static void setHomeScene(Scene homeScene) {
         staticHomeScene = homeScene;
     }
 
