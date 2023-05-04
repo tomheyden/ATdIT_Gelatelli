@@ -8,8 +8,12 @@ import java.util.*;
 public interface WarehouseInterface {
 
     /**
-     Method to update the DB entries from the Input in the Warehouse UI by the employee
+     * Updates the database entries from the input in the Warehouse UI by the employee
+     *
+     * @param bbd            The batch best before date
+     * @param amount         The amount of the ingredient in the batch
+     * @param ingredientName The name of the ingredient
      */
-    void updateDBfromWE(String bbd,  double amount, String ingredientName);
+    void updateDBfromWE(String bbd, double amount, String ingredientName);
 
 }
