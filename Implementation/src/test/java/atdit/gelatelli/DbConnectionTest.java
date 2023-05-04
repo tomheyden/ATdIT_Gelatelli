@@ -82,7 +82,7 @@ public class DbConnectionTest {
     @Test
     public void testBatch() throws SQLException{
         //ProductionService.produceFlavour("Chocolate",2.0);
-        ProductionService.produceTest("Chocolate",1.0);
+        ProductionService.produceFlavour("Chocolate",1.0);
         Assertions.assertNotNull(1);
     }
 

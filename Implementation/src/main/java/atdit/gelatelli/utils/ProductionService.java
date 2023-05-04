@@ -23,32 +23,7 @@ public class ProductionService implements ProductionInterface {
     static List<FlavourIngredient> flavourIngredientList = getFlavourIngredientTable();
     WarehouseService warehouseService = new WarehouseService();
 
-    public static void produceFlavour(String flavour_name, double amount) {
-
-        Map<String,Double> ingredientsForFlavour = FlavourtoIngredients(flavour_name);
-        SortedMap<Date,Object[]> sortedExpirationList = getExpirationDates(ingredientsForFlavour);
-
-        System.out.println(ingredientsForFlavour);
-        System.out.println(sortedExpirationList);
-
-        /*String query = "UPDATE warehouse SET amount = amount - ? WHERE flavour_name = ? AND bbd = ?;";
-
-        try (Connection connection = DbConnection.getDbConnection();
-             PreparedStatement ps = connection.prepareStatement(query)) {
-            // Set parameters for subquery
-
-            ps.setString(1, flavour_name);
-
-            for (int i = 0; productionAmount > sortedExpirationList.get(i); i++) {
-
-                ps.setDouble(2, productionAmount);
-                ps.executeQuery();
-                productionAmount =- sortedExpirationList.get(i);
-            }
-
-        } catch (SQLException e){}*/
-    }
-
+    public static String errorOfIngredientsamount = "";
 
     public static double getProductionAmount(String flavour, double amount) {
         List<FlavourIngredient> flavourIngredientsList = getFlavourIngredientTable();
@@ -125,19 +100,6 @@ public class ProductionService implements ProductionInterface {
         return flavourList;
     }
 
-    public static boolean checkifenoughIngredients (String ingredient , double amount) {
-        List<Batch> batchlist = getBatchTable();
-        double tempamount = 0;
-        String flavour;
-
-        for (Batch charge : batchlist) {
-            if (charge.ingredient().equals(ingredient)) {
-                tempamount += charge.amount();
-            }
-        }
-        return tempamount >= amount;
-    }
-
     public static List<String> getListContent (String flavour) {
         List <String> resultList = new ArrayList<>();
 
@@ -151,23 +113,75 @@ public class ProductionService implements ProductionInterface {
         return resultList;
     }
 
-    public static SortedMap<Date, Object[]> getExpirationDates (Map<String,Double> flavourIngredients) {
-        List <Batch> batchTable = getBatchTable();
-        SortedMap<Date,Object[]> resultMap = new TreeMap<Date, Object[]>();
+    public static void produceFlavour(String inputFlavour, Double inputAmount) {
+        try (Connection connection = DbConnection.getDbConnection()) {
 
-        for (Batch batch : batchTable) {
-            if (flavourIngredients.containsKey(batch.ingredient()))
-                resultMap.put((Date) batch.bbd(),new Object[]{batch.ingredient(),batch.amount()});
-        }
-        return resultMap;
+            Map<String,Double> ingredientsForFlavour = FlavourtoIngredients(inputFlavour);
+
+            for (Map.Entry<String, Double> entry : ingredientsForFlavour.entrySet()) {
+                boolean loopbool = true;
+                Double UpdatedAmount = inputAmount * getAmountNeededForOne(inputFlavour, entry.getKey());
+                while (loopbool) {
+                    String querySelect = "SELECT amount,id FROM warehouse WHERE ingredient_name = ? ORDER BY bbd ASC";
+                    String queryUpdate = "UPDATE warehouse SET amount = ? WHERE ingredient_name = ? ORDER BY bbd ASC";
+
+                    PreparedStatement stmtSelect = connection.prepareStatement(querySelect, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                    stmtSelect.setString(1, entry.getKey());
+                    ResultSet rsSelect = stmtSelect.executeQuery();
+
+                    if (rsSelect.next()) {
+                        double chargeAmount = rsSelect.getDouble("amount");
+                        int chargeId = rsSelect.getInt("id");
+
+                        if (chargeAmount < UpdatedAmount) {
+                            String sqlDelete = "DELETE FROM warehouse WHERE id = ?";
+                            PreparedStatement stmtDelete = connection.prepareStatement(sqlDelete);
+                            stmtDelete.setInt(1, chargeId);
+                            int rowsDeleted = stmtDelete.executeUpdate();
+                            UpdatedAmount -= chargeAmount;
+                            System.out.println(rowsDeleted + " deleted");
+                            continue;
+                        } else if (chargeAmount >= UpdatedAmount) {
+                            PreparedStatement stmtUpdate = connection.prepareStatement(queryUpdate);
+                            stmtUpdate.setString(2, entry.getKey());
+                            stmtUpdate.setDouble(1, chargeAmount - UpdatedAmount);
+                            stmtUpdate.executeUpdate();
+                            System.out.println("Update of " + entry.getKey() + " done");
+                            break;
+                        }
+                    } else {
+                        // Handle the case where no rows are returned
+                    }
+                }
+            }
+        } catch (SQLException e) {String errorMessage = e.getMessage();
+            System.out.println("Error message: " + errorMessage);}
     }
 
-    public static void produceTest(String inputFlavour, Double inputAmount) {
+    public static double getAmountNeededForOne(String flavour, String ingredient) {
         try (Connection connection = DbConnection.getDbConnection()) {
-            // Get user input for flavour and amount to produce
-            String flavour = "Chocolate";
-            int amountToProduce = 1;
 
+            String sql = "SELECT amount FROM flavour_ingredient WHERE ingredient_name = ? AND flavour_name = ?";
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, ingredient);
+            stmt.setString(2, flavour);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getDouble("amount");
+            } else {
+                throw new IllegalArgumentException("Invalid flavour-ingredient combination: " + flavour + "-" + ingredient);
+            }
+        } catch(SQLException e) {String errorMessage = e.getMessage();
+            System.out.println("Error message: " + errorMessage);}
+
+        return 0.0;
+    }
+
+    public static boolean checkIfEnoughIngredients (String inputFlavour, double inputAmount) {
+
+        try(Connection connection = DbConnection.getDbConnection()) {
             Map<String,Double> ingredientsForFlavour = FlavourtoIngredients(inputFlavour);
             Map<String,Double> ingredientsNotAvailable = new TreeMap<>();
 
@@ -208,91 +222,17 @@ public class ProductionService implements ProductionInterface {
             boolean ingredientsAvailable = false;
             if (ingredientsNotAvailable.isEmpty()) {
                 System.out.println("All Ingredients are available");
-                ingredientsAvailable = true;
+                return true;
             } else {
                 StringBuilder sb = new StringBuilder("The following Ingredients are not available --> ");
                 for (Map.Entry<String, Double> entry : ingredientsNotAvailable.entrySet()) {
                     sb.append(entry.getKey()).append("=").append(entry.getValue()).append(",");
                 }
-                String result = sb.deleteCharAt(sb.length() - 1).toString(); // remove the trailing comma
-                System.out.println(result);
-                return;
+                errorOfIngredientsamount = sb.deleteCharAt(sb.length() - 1).toString(); // remove the trailing comma
+                return false;
             }
+        } catch (SQLException e) {}
 
-            for (Map.Entry<String, Double> entry : ingredientsForFlavour.entrySet()) {
-                boolean loopbool = true;
-                Double UpdatedAmount = inputAmount * getAmountNeededForOne(inputFlavour, entry.getKey());
-                while (loopbool) {
-                    String querySelect = "SELECT amount,id FROM warehouse WHERE ingredient_name = ? ORDER BY bbd ASC";
-                    String queryUpdate = "UPDATE warehouse SET amount = ? WHERE ingredient_name = ? ORDER BY bbd ASC";
-
-                    PreparedStatement stmtSelect = connection.prepareStatement(querySelect, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-                    stmtSelect.setString(1, entry.getKey());
-                    ResultSet rsSelect = stmtSelect.executeQuery();
-
-                    if (rsSelect.next()) {
-                        double chargeAmount = rsSelect.getDouble("amount");
-                        int chargeId = rsSelect.getInt("id");
-
-                        if (chargeAmount < UpdatedAmount) {
-                            String sqlDelete = "DELETE FROM warehouse WHERE id = ?";
-                            PreparedStatement stmtDelete = connection.prepareStatement(sqlDelete);
-                            stmtDelete.setInt(1, chargeId);
-                            int rowsDeleted = stmtDelete.executeUpdate();
-                            UpdatedAmount -= chargeAmount;
-                            System.out.println(rowsDeleted + " deleted");
-                            continue;
-                        } else if (chargeAmount >= UpdatedAmount) {
-                            PreparedStatement stmtUpdate = connection.prepareStatement(queryUpdate);
-                            stmtUpdate.setString(2, entry.getKey());
-                            stmtUpdate.setDouble(1, chargeAmount - UpdatedAmount);
-                            stmtUpdate.executeUpdate();
-                            System.out.println("Update of " + entry.getKey() + " done");
-                            break;
-                        }
-                    } else {
-                        // Handle the case where no rows are returned
-                    }
-                }
-            }
-
-            // Check if all ingredients for the flavour are available
-            String query = "SELECT ingredient_name, amount, id FROM warehouse WHERE ingredient_name IN (SELECT ingredient_name FROM flavour_ingredient WHERE flavour_name = ?) ORDER BY bbd ASC";
-            PreparedStatement stmt = connection.prepareStatement(query);
-            stmt.setString(1, flavour);
-            ResultSet rs = stmt.executeQuery();
-            Map<String, Double> inventoryforFlavour = new HashMap<>();
-            while (rs.next()) {
-                String ingredient = rs.getString("ingredient_name");
-                double amount = rs.getDouble("amount");
-                int id = rs.getInt("id");
-                inventoryforFlavour.put(ingredient, amount);
-            }
-
-            System.out.println(inventoryforFlavour);
-
-        } catch (SQLException e) {String errorMessage = e.getMessage();
-            System.out.println("Error message: " + errorMessage);}
-    }
-
-    public static double getAmountNeededForOne(String flavour, String ingredient) {
-        try (Connection connection = DbConnection.getDbConnection()) {
-
-            String sql = "SELECT amount FROM flavour_ingredient WHERE ingredient_name = ? AND flavour_name = ?";
-
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(1, ingredient);
-            stmt.setString(2, flavour);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return rs.getDouble("amount");
-            } else {
-                throw new IllegalArgumentException("Invalid flavour-ingredient combination: " + flavour + "-" + ingredient);
-            }
-        } catch(SQLException e) {String errorMessage = e.getMessage();
-            System.out.println("Error message: " + errorMessage);}
-
-        return 0.0;
+        return false;
     }
 }

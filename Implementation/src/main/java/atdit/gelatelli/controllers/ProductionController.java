@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.util.List;
@@ -50,28 +51,20 @@ public class ProductionController {
         String selectedFlavour = flavorComboBox.getValue();
         Double selectedAmount = Double.valueOf(sizeChoiceBox.getValue());
 
-        double productionAmount = ProductionService.getProductionAmount(selectedFlavour,selectedAmount);
-
         System.out.println(selectedAmount);
         System.out.println(selectedFlavour);
 
-        if (ProductionService.checkifenoughIngredients(selectedFlavour,productionAmount)) {
+        if (ProductionService.checkIfEnoughIngredients(selectedFlavour,selectedAmount)) {
             ProductionService.produceFlavour(selectedFlavour, selectedAmount);
+            progessBarDisplay("green");
         } else {
-            //System.out.println("Not enough Ingredients -- Please get at least " + productionAmount +" of "+ProductionService.FlavourtoIngredient(selectedFlavour));
+            progessBarDisplay("red");
         }
-
-        Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(productionProgressBar.progressProperty(), 0)),
-                new KeyFrame(Duration.seconds(3), new KeyValue(productionProgressBar.progressProperty(), 1)));
-        timeline.play();
-
-        timeline.setOnFinished(e -> {
-            productionStatusLabel.setText("Finished");
-        });
     }
 
     public void initialize() {
 
+        productionStatusLabel.setVisible(false);
         warehouseListView.getItems().addAll(warehouseService.getListContent());
         flavorComboBox.getItems().addAll(ProductionService.getFlavourTable());
 
@@ -89,8 +82,25 @@ public class ProductionController {
         });
     }
 
-    public static  void setHomeScene (Scene homeScene) {
+    public static void setHomeScene (Scene homeScene) {
         staticHomeScene = homeScene;
     }
 
+    private void progessBarDisplay (String color) {
+        productionProgressBar.setStyle("-fx-accent: blue;");
+        Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(productionProgressBar.progressProperty(), 0)),
+                new KeyFrame(Duration.seconds(3), new KeyValue(productionProgressBar.progressProperty(), 1)));
+        timeline.play();
+
+        timeline.setOnFinished(e -> {
+            productionStatusLabel.setVisible(true);
+            if(color.equalsIgnoreCase(color)) {
+                productionProgressBar.setStyle("-fx-accent: "+ color +" ;");
+                productionStatusLabel.setText(ProductionService.errorOfIngredientsamount);
+            } else {
+                productionProgressBar.setStyle("-fx-accent: green ;");
+                productionStatusLabel.setText("Finished");
+            }
+        });
+    }
 }
