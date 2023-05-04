@@ -15,16 +15,25 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.*;
 
+/**
+ * This class implements the ProductionInterface and provides the production service methods.
+ */
 public class ProductionService implements ProductionInterface {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     List<Flavour> productionList = new ArrayList<>();
     static List<FlavourIngredient> flavourIngredientList = getFlavourIngredientTable();
     WarehouseService warehouseService = new WarehouseService();
 
+    /**
+     * Produces the given flavour in the specified amount.
+     *
+     * @param flavour_name the name of the flavour to be produced
+     * @param amount       the amount of the flavour to be produced
+     */
     public static void produceFlavour(String flavour_name, double amount) {
 
-        Map<String,Double> ingredientsForFlavour = FlavourtoIngredients(flavour_name);
-        SortedMap<Date,Double> sortedExpirationList = getExpirationDates(flavour_name);
+        Map<String, Double> ingredientsForFlavour = FlavourtoIngredients(flavour_name);
+        SortedMap<Date, Double> sortedExpirationList = getExpirationDates(flavour_name);
 
         System.out.println(ingredientsForFlavour);
         System.out.println(sortedExpirationList);
@@ -47,7 +56,13 @@ public class ProductionService implements ProductionInterface {
         } catch (SQLException e){}*/
     }
 
-
+    /**
+     * Calculates the amount of flavour needed to produce the given amount of the specified flavour.
+     *
+     * @param flavour the flavour to be produced
+     * @param amount  the amount of the flavour to be produced
+     * @return the amount of flavour needed to produce the specified amount of the flavour
+     */
     public static double getProductionAmount(String flavour, double amount) {
         List<FlavourIngredient> flavourIngredientsList = getFlavourIngredientTable();
 
@@ -61,16 +76,20 @@ public class ProductionService implements ProductionInterface {
         return productionamount;
     }
 
-
-    public static List<Batch> getBatchTable () {
+    /**
+     * Returns a list of batches ordered by their expiration dates.
+     *
+     * @return a list of batches ordered by their expiration dates
+     */
+    public static List<Batch> getBatchTable() {
         List<Batch> batchlist = new ArrayList<>();
 
         String sql = "SELECT * FROM warehouse ORDER BY bbd ASC";
-        List<Object []> rows = DbConnection.getDbTable(sql);
+        List<Object[]> rows = DbConnection.getDbTable(sql);
         for (Object[] row : rows) {
             Batch batch = new Batch(
-                    Integer.parseInt((String)row[0]),
-                    Date.valueOf((String)row[1]),
+                    Integer.parseInt((String) row[0]),
+                    Date.valueOf((String) row[1]),
                     Double.parseDouble((String) row[2]),
                     (String) row[3]
             );
@@ -79,43 +98,59 @@ public class ProductionService implements ProductionInterface {
         return batchlist;
     }
 
-    public static Map<String,Double> FlavourtoIngredients(String flavour) {
+    /**
+     * Returns a map of ingredients and their corresponding amounts for a given flavour.
+     *
+     * @param flavour the name of the flavour
+     * @return a map of ingredients and their corresponding amounts for the given flavour
+     */
+    public static Map<String, Double> FlavourtoIngredients(String flavour) {
         List<FlavourIngredient> flavourIngredients = getFlavourIngredientTable();
-        Map<String,Double> ingredientsforFlavour = new TreeMap();
+        Map<String, Double> ingredientsforFlavour = new TreeMap();
         for (FlavourIngredient obj : flavourIngredients) {
             if (obj.flavour().equalsIgnoreCase(flavour)) {
-                ingredientsforFlavour.put(obj.ingredient(),obj.amount());
+                ingredientsforFlavour.put(obj.ingredient(), obj.amount());
             }
         }
         return ingredientsforFlavour;
     }
 
-    public static List<FlavourIngredient> getFlavourIngredientTable(){
+    /**
+     * Returns a list of FlavourIngredient objects containing information about all flavour-ingredient relationships.
+     *
+     * @return a list of FlavourIngredient objects
+     */
+    public static List<FlavourIngredient> getFlavourIngredientTable() {
         String sql = """
-                      SELECT * FROM flavour_ingredient
-                      """ ;
+                SELECT * FROM flavour_ingredient
+                """;
 
         List<Object[]> result = DbConnection.getDbTable(sql);
         List<FlavourIngredient> flavourIngredients = new ArrayList<>();
 
         for (Object[] objarray : result) {
-            FlavourIngredient flavourIngredientobj = new FlavourIngredient ((String) objarray[0],(String) objarray[1] ,Double.parseDouble(objarray[2].toString()));
+            FlavourIngredient flavourIngredientobj = new FlavourIngredient((String) objarray[0], (String) objarray[1], Double.parseDouble(objarray[2].toString()));
             flavourIngredients.add(flavourIngredientobj);
         }
         log.debug("Retrieved data from database: {}", result);
         return flavourIngredients;
     }
 
+    /**
+     * Returns an ObservableList of strings containing the names of all flavours in the database.
+     *
+     * @return an ObservableList of strings containing the names of all flavours in the database
+     */
     public static ObservableList<String> getFlavourTable() {
         String sql = """
-                      SELECT * FROM flavour
-                      """ ;
+                SELECT * FROM flavour
+                """;
 
         List<Object[]> result = DbConnection.getDbTable(sql);
         ObservableList<String> flavourList = FXCollections.observableArrayList();
 
         for (Object[] objarray : result) {
-            String flavour= (String) objarray[0];
+            String flavour = (String) objarray[0];
             flavourList.add(flavour);
         }
         log.debug("Retrieved data from database: {}", result);
@@ -123,7 +158,14 @@ public class ProductionService implements ProductionInterface {
         return flavourList;
     }
 
-    public static boolean checkifenoughIngredients (String ingredient , double amount) {
+    /**
+     * Checks if the current total amount of a given ingredient across all batches is greater than or equal to a specified amount.
+     *
+     * @param ingredient the name of the ingredient to check
+     * @param amount     the desired amount
+     * @return true if the current total amount of the given ingredient is greater than or equal to the specified amount, false otherwise
+     */
+    public static boolean checkifenoughIngredients(String ingredient, double amount) {
         List<Batch> batchlist = getBatchTable();
         double tempamount = 0;
         String flavour;
@@ -136,10 +178,16 @@ public class ProductionService implements ProductionInterface {
         return tempamount >= amount;
     }
 
-    public static List<String> getListContent (String flavour) {
-        List <String> resultList = new ArrayList<>();
+    /**
+     * Returns a list of strings describing the amount of each ingredient required to create the given flavour.
+     *
+     * @param flavour the name of the flavour
+     * @return a list of strings describing the amount of each ingredient required to create the given flavour
+     */
+    public static List<String> getListContent(String flavour) {
+        List<String> resultList = new ArrayList<>();
 
-        List <FlavourIngredient> flavourIngredientList = getFlavourIngredientTable();
+        List<FlavourIngredient> flavourIngredientList = getFlavourIngredientTable();
 
         for (FlavourIngredient flavourIngredient : flavourIngredientList) {
             if (flavourIngredient.flavour().equals(flavour)) {
@@ -149,13 +197,19 @@ public class ProductionService implements ProductionInterface {
         return resultList;
     }
 
-    public static SortedMap<Date, Double> getExpirationDates (String flavour_name) {
-        List <Batch> batchTable = getBatchTable();
-        SortedMap<Date,Double> resultMap = new TreeMap<Date, Double>();
+    /**
+     * Returns a sorted map of expiration dates and corresponding amounts of a specific flavour.
+     *
+     * @param flavour_name the name of the flavour to get the expiration dates for
+     * @return a sorted map of expiration dates and corresponding amounts of the specified flavour
+     */
+    public static SortedMap<Date, Double> getExpirationDates(String flavour_name) {
+        List<Batch> batchTable = getBatchTable();
+        SortedMap<Date, Double> resultMap = new TreeMap<Date, Double>();
 
         for (Batch batch : batchTable) {
             if (batch.ingredient().equalsIgnoreCase(flavour_name))
-            resultMap.put((Date) batch.bbd(),batch.amount());
+                resultMap.put((Date) batch.bbd(), batch.amount());
         }
         return resultMap;
     }

@@ -32,6 +32,7 @@ public class Main extends Application {
      * Starts the application.
      *
      * @param primaryStage the primary stage for this application
+     * @throws Exception if an error occurs during application startup
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -50,7 +51,7 @@ public class Main extends Application {
         warehouseScene = new Scene(warehouseLoader.load());
         warehouseController = warehouseLoader.getController();
 
-        homeController.setScenes(homeScene,productionScene,warehouseScene);
+        homeController.setScenes(homeScene, productionScene, warehouseScene);
 
         // Set the main scene to the Home view
         stage.setScene(homeScene);
