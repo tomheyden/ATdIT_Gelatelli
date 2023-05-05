@@ -13,9 +13,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.skin.LabelSkin;
 import javafx.scene.layout.Border;
 import javafx.scene.paint.Color;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Date;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class WarehouseController {
     private Button goBackButton;
     @FXML
     private Button insertButton;
-
+    private static final Logger logger = LoggerFactory.getLogger(ProductionController.class);
     // WarehouseService instance for interacting with the database
     WarehouseService warehouseService = new WarehouseService();
 
@@ -73,6 +74,7 @@ public class WarehouseController {
      */
     @FXML
     private void initialize() {
+        logger.debug("Initializing the UI components and setting their initial values.");
         doneLabel.setVisible(false);
         inserted = false;
         warehouseListView.getItems().addAll(warehouseService.getListContent());
@@ -96,6 +98,7 @@ public class WarehouseController {
      */
     @FXML
     private void handleDeleteButtonAction() {
+        logger.debug("Handling the delete button action.");
         // Handle the delete button action
     }
 
@@ -104,7 +107,7 @@ public class WarehouseController {
      */
     @FXML
     private void handleInsertButton() {
-
+        logger.debug("Handling the insert button action.");
         doneLabel.setText("");
         doneLabel.setVisible(true);
         boolean fieldsempty = true;
@@ -113,6 +116,7 @@ public class WarehouseController {
         if (expiryDatePicker.getValue() == null) {
             handleEmptyBox(expiryDatePicker, doneLabel, "Date");
             fieldsempty = false;
+            logger.warn("Expiry date is not selected");
         } else {
             expiryDatePicker.setStyle("-fx-border-color: WHITE;");
         }
@@ -120,6 +124,7 @@ public class WarehouseController {
         if (amountComboBox.getValue() == null) {
             handleEmptyBox(amountComboBox, doneLabel, "Amount");
             fieldsempty = false;
+            logger.warn("Amount is not selected");
         } else {
             amountComboBox.setStyle("-fx-border-color: WHITE;");
         }
@@ -127,6 +132,7 @@ public class WarehouseController {
         if (goodsComboBox.getValue() == null) {
             handleEmptyBox(goodsComboBox, doneLabel, "Ingredient");
             fieldsempty = false;
+            logger.warn("Ingredient is not selected");
         } else {
             goodsComboBox.setStyle("-fx-border-color: WHITE;");
         }
@@ -142,6 +148,8 @@ public class WarehouseController {
             refreshItems();
 
             inserted = true;
+            logger.info("New inventory item added to the database: {} amount of {} with expiry date {}",
+                    amountComboBox.getValue(), goodsComboBox.getValue(), Date.valueOf(expiryDatePicker.getValue()));
         }
     }
 
@@ -156,6 +164,7 @@ public class WarehouseController {
         control.setStyle("-fx-border-color: RED;");
         label.setText("Values are missing");
         label.setTextFill(Color.RED);
+        logger.warn("Required input field of type {} is empty", type);
     }
 
     /**
@@ -174,9 +183,11 @@ public class WarehouseController {
             hintLabel.setText("Refreshed");
             hintLabel.setTextFill(Color.GREEN);
             inserted = false;
+            logger.info("Warehouse list has been refreshed");
         } else {
             hintLabel.setText("No Items inserted after last refresh");
             hintLabel.setTextFill(Color.RED);
+            logger.warn("No items have been inserted since the last refresh");
         }
     }
 
@@ -187,6 +198,7 @@ public class WarehouseController {
      */
     @FXML
     private void handleGoBackButtonAction() {
+        logger.debug("Go Back button clicked");
         StageHelper.showScene(staticHomeScene);
         refreshItems();
     }
@@ -197,6 +209,7 @@ public class WarehouseController {
      * @param homeScene The scene to set as home scene.
      */
     public static void setHomeScene(Scene homeScene) {
+        logger.debug("Setting home scene to {}", homeScene);
         staticHomeScene = homeScene;
     }
 
@@ -207,6 +220,7 @@ public class WarehouseController {
      * clears the items in table and list views.
      */
     private void refreshItems() {
+        logger.debug("Refreshing input fields");
         List<Control> controls = new ArrayList<>();
         controls.add(expiryDatePicker);
         controls.add(amountComboBox);
@@ -244,6 +258,7 @@ public class WarehouseController {
                 }
             } catch (NullPointerException e) {
                 System.out.println("Item is empty");
+                logger.error("Null pointer exception when refreshing item.", e);
                 continue;
             }
         }

@@ -1,7 +1,8 @@
 package atdit.gelatelli.controllers;
 
 import atdit.gelatelli.ressources.StageHelper;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,6 +21,7 @@ public class HomeController {
     private Scene homeScene;
     private Scene productionScene;
     private Scene warehouseScene;
+    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
     /**
      * Sets the scenes used by this controller.
@@ -42,17 +44,26 @@ public class HomeController {
      */
     @FXML
     public void initialize() {
+        logger.info("HomeController initialized");
         // Set the actions for the buttons
         productionButton.setOnAction(event -> {
+            logger.debug("Production button clicked");
+
             ProductionController.setHomeScene(homeScene);
             productionButton.getScene().getWindow().hide();
             StageHelper.showScene(productionScene);
+
+            logger.info("Navigated to Production screen.");
         });
 
         warehouseButton.setOnAction(event -> {
+            logger.debug("Warehouse button clicked");
+
             WarehouseController.setHomeScene(homeScene);
             warehouseButton.getScene().getWindow().hide();
             StageHelper.showScene(warehouseScene);
+
+            logger.info("Navigated to Warehouse screen");
         });
     }
 }
