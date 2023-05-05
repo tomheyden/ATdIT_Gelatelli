@@ -12,3 +12,5 @@
 
 /src/
 /src/*
+
+/Implementation/src/main/resources/db.properties

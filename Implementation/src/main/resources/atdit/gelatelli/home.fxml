@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="homeAnchorPane" prefHeight="386.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="atdit.gelatelli.controllers.HomeController">
+
+    <Label layoutX="202.0" layoutY="33.0" prefHeight="20.0" prefWidth="137.0" text="Eiscafé Gelatelli " textAlignment="CENTER" AnchorPane.leftAnchor="202.0" AnchorPane.topAnchor="33.0">
+      <font>
+         <Font name="Arial Bold" size="17.0" />
+      </font></Label>
+   <Label alignment="CENTER" layoutX="202.0" layoutY="14.0" prefHeight="17.0" prefWidth="129.0" text="IT System" textAlignment="CENTER">
+      <font>
+         <Font name="Arial" size="11.0" />
+      </font>
+   </Label>
+   <Button fx:id="productionButton" layoutX="153.0" layoutY="252.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="106.0" text="Produktion" />
+   <Button fx:id="warehouseButton" layoutX="270.0" layoutY="252.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="106.0" text="Lager" />
+   <ImageView fitHeight="80.0" fitWidth="252.0" layoutX="139.0" layoutY="107.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../../gelatelli-new2.png" />
+      </image>
+   </ImageView>
+   <Button fx:id="warehouseButton1" layoutX="153.0" layoutY="300.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="106.0" text="Bestellungen" />
+   <Button fx:id="warehouseButton2" layoutX="270.0" layoutY="300.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="106.0" text="Benutzer - App" />
+
+</AnchorPane>
