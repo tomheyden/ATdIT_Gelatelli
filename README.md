@@ -1,3 +1,6 @@
+![LogoGelatelli](Logo_gelatelli.svg)
+
+
 # IT-System for Eiscafé Gelatelli
 
 This programm is designed to help ice cream shops streamline their production process and optimize their inventory management. It includes a range of features to help shops use their ingredients more efficiently, make informed predictions about ice cream demand, and track their inventory and sales
