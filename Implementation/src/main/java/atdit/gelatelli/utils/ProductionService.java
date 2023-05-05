@@ -26,7 +26,6 @@ public class ProductionService implements ProductionInterface {
     static List<FlavourIngredient> flavourIngredientList = getFlavourIngredientTable();
     WarehouseService warehouseService = new WarehouseService();
 
-
     public static String errorOfIngredientsamount = "";
 
 
@@ -272,12 +271,11 @@ public class ProductionService implements ProductionInterface {
                 errorOfIngredientsamount = sb.deleteCharAt(sb.length() - 1).toString(); // remove the trailing comma
                 logger.warn(errorOfIngredientsamount);
             }
+
             return false;
 
         } catch (SQLException e) {
             logger.error("An error occurred while checking ingredients availability", e);
-        }
-
         return false;
     }
 }

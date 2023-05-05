@@ -1,5 +1,6 @@
 package atdit.gelatelli.controllers;
 
+import atdit.gelatelli.Main;
 import atdit.gelatelli.models.Batch;
 import atdit.gelatelli.ressources.StageHelper;
 import atdit.gelatelli.utils.ProductionService;
@@ -18,7 +19,9 @@ import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.ResourceBundle;
 
 
 /**
@@ -54,6 +57,7 @@ public class ProductionController {
     private Button goBackButton;
     private static final Logger logger = LoggerFactory.getLogger(ProductionController.class);
     WarehouseService warehouseService = new WarehouseService();
+    Main main = new Main();
 
     List<Batch> warehouseList;
 
@@ -119,23 +123,19 @@ public class ProductionController {
         sizeChoiceBox.setItems(numbers);
 
         goBackButton.setOnAction(event -> {
+
             logger.debug("Go back button pressed");
             goBackButton.getScene().getWindow().hide();
-            StageHelper.showScene(staticHomeScene);
+            try {
+                StageHelper.showScene(main.loadHomeScene());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 
-    /**
-     * Sets the static home scene for this controller. This is used to switch back to the home scene when the "Go back" button is pressed.
-     *
-     * @param homeScene the static home scene
-     */
-    public static void setHomeScene(Scene homeScene) {
-        logger.debug("Setting home scene");
-        staticHomeScene = homeScene;
-    }
-
     private void progessBarDisplay(String color) {
+    
         logger.debug("Displaying progress bar");
         productionProgressBar.setStyle("-fx-accent: blue;");
         Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(productionProgressBar.progressProperty(), 0)),

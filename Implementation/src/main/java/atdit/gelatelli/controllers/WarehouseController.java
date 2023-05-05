@@ -1,5 +1,6 @@
 package atdit.gelatelli.controllers;
 
+import atdit.gelatelli.Main;
 import atdit.gelatelli.models.Batch;
 import atdit.gelatelli.models.Ingredient;
 import atdit.gelatelli.ressources.StageHelper;
@@ -8,6 +9,7 @@ import atdit.gelatelli.utils.WarehouseService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.skin.LabelSkin;
@@ -16,9 +18,11 @@ import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * The WarehouseController class controls the UI for the warehouse management system.
@@ -56,18 +60,20 @@ public class WarehouseController {
     @FXML
     private Button updateButton;
     @FXML
-    private Button goBackButton;
+    private Button warehouseGoBackButton;
     @FXML
     private Button insertButton;
+    
     private static final Logger logger = LoggerFactory.getLogger(ProductionController.class);
+    
     // WarehouseService instance for interacting with the database
     WarehouseService warehouseService = new WarehouseService();
-
+    Button getGoBackButton = new Button();
+    
     // Flag indicating whether an item has been inserted
     private boolean inserted;
 
-    // Static reference to the home scene
-    private static Scene staticHomeScene;
+    Main main = new Main();
 
     /**
      * Initializes the UI components and sets their initial values.
@@ -198,19 +204,16 @@ public class WarehouseController {
      */
     @FXML
     private void handleGoBackButtonAction() {
-        logger.debug("Go Back button clicked");
-        StageHelper.showScene(staticHomeScene);
-        refreshItems();
-    }
 
-    /**
-     * Sets the home scene to the given scene.
-     *
-     * @param homeScene The scene to set as home scene.
-     */
-    public static void setHomeScene(Scene homeScene) {
-        logger.debug("Setting home scene to {}", homeScene);
-        staticHomeScene = homeScene;
+        logger.debug("Go Back button clicked");
+        
+        warehouseGoBackButton.getScene().getWindow().hide();
+        try {
+            StageHelper.showScene(main.loadHomeScene());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        refreshItems();
     }
 
     /**
@@ -262,5 +265,10 @@ public class WarehouseController {
                 continue;
             }
         }
+    }
+
+    public void setResourceBundle(String bundleName, Scene scene) {
+        ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
+
     }
 }

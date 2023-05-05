@@ -1,11 +1,16 @@
 package atdit.gelatelli.controllers;
 
+import atdit.gelatelli.Main;
 import atdit.gelatelli.ressources.StageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+
+import java.io.IOException;
+import java.util.ResourceBundle;
 
 /**
  * The HomeController class is a controller for the Home.fxml view file.
@@ -18,22 +23,22 @@ public class HomeController {
     @FXML
     private Button warehouseButton;
 
-    private Scene homeScene;
-    private Scene productionScene;
-    private Scene warehouseScene;
+
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
-    /**
-     * Sets the scenes used by this controller.
-     *
-     * @param homeScene       The scene for the home screen.
-     * @param productionScene The scene for the production screen.
-     * @param warehouseScene  The scene for the warehouse screen.
-     */
-    public void setScenes(Scene homeScene, Scene productionScene, Scene warehouseScene) {
-        this.homeScene = homeScene;
-        this.productionScene = productionScene;
-        this.warehouseScene = warehouseScene;
+    ProductionController productionController = new ProductionController();
+    WarehouseController warehouseController = new WarehouseController();
+
+    Main main = new Main();
+
+    @FXML
+    private void changeLanguageToEnglish() {
+        Main.setRessource("english");
+    }
+
+    @FXML
+    private void changeLanguageToGerman() {
+        Main.setRessource("german");
     }
 
     /**
@@ -42,6 +47,7 @@ public class HomeController {
      *
      * @since 1.0
      */
+     
     @FXML
     public void initialize() {
         logger.info("HomeController initialized");
@@ -58,12 +64,14 @@ public class HomeController {
 
         warehouseButton.setOnAction(event -> {
             logger.debug("Warehouse button clicked");
-
-            WarehouseController.setHomeScene(homeScene);
-            warehouseButton.getScene().getWindow().hide();
-            StageHelper.showScene(warehouseScene);
-
             logger.info("Navigated to Warehouse screen");
+            
+            warehouseButton.getScene().getWindow().hide();
+            try {
+                StageHelper.showScene(main.loadWarehouseScene());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 }
