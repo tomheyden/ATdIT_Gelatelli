@@ -56,7 +56,7 @@ public class HomeController {
         });
 
         warehouseButton.setOnAction(event -> {
-            productionButton.getScene().getWindow().hide();
+            warehouseButton.getScene().getWindow().hide();
             try {
                 StageHelper.showScene(main.loadWarehouseScene());
             } catch (IOException e) {
