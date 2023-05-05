@@ -21,7 +21,7 @@ import java.util.*;
  */
 public class ProductionService implements ProductionInterface {
 
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     List<Flavour> productionList = new ArrayList<>();
     static List<FlavourIngredient> flavourIngredientList = getFlavourIngredientTable();
     WarehouseService warehouseService = new WarehouseService();
@@ -36,7 +36,7 @@ public class ProductionService implements ProductionInterface {
      * @return a list of batches ordered by their expiration dates
      */
     public static List<Batch> getBatchTable() {
-        List<Batch> batchlist = new ArrayList<>();
+        List<Batch> batchList = new ArrayList<>();
 
         String sql = "SELECT * FROM warehouse ORDER BY bbd ASC";
         List<Object[]> rows = DbConnection.getDbTable(sql);
@@ -47,9 +47,10 @@ public class ProductionService implements ProductionInterface {
                     Double.parseDouble((String) row[2]),
                     (String) row[3]
             );
-            batchlist.add(batch);
+            batchList.add(batch);
         }
-        return batchlist;
+        logger.debug("Retrieved data from the database: {}", batchList);
+        return batchList;
     }
 
     /**
@@ -60,13 +61,14 @@ public class ProductionService implements ProductionInterface {
      */
     public static Map<String, Double> FlavourtoIngredients(String flavour) {
         List<FlavourIngredient> flavourIngredients = getFlavourIngredientTable();
-        Map<String, Double> ingredientsforFlavour = new TreeMap();
+        Map<String, Double> ingredientsForFlavour = new TreeMap();
         for (FlavourIngredient obj : flavourIngredients) {
             if (obj.flavour().equalsIgnoreCase(flavour)) {
-                ingredientsforFlavour.put(obj.ingredient(), obj.amount());
+                ingredientsForFlavour.put(obj.ingredient(), obj.amount());
             }
         }
-        return ingredientsforFlavour;
+        logger.debug("Retrieved the ingredients of the flavour '{}' from the database: {}", flavour, ingredientsForFlavour);
+        return ingredientsForFlavour;
     }
 
     /**
@@ -86,7 +88,7 @@ public class ProductionService implements ProductionInterface {
             FlavourIngredient flavourIngredientobj = new FlavourIngredient((String) objarray[0], (String) objarray[1], Double.parseDouble(objarray[2].toString()));
             flavourIngredients.add(flavourIngredientobj);
         }
-        log.debug("Retrieved data from database: {}", result);
+        logger.debug("Retrieved data from database: {}", flavourIngredients);
         return flavourIngredients;
     }
 
@@ -107,34 +109,35 @@ public class ProductionService implements ProductionInterface {
             String flavour = (String) objarray[0];
             flavourList.add(flavour);
         }
-        log.debug("Retrieved data from database: {}", result);
-        System.out.println(flavourList);
+        logger.debug("Retrieved data from database: {}", result);
+        logger.debug("Flavour list: {}", flavourList);
         return flavourList;
     }
 
-    public static List<String> getListContent (String flavour) {
-        List <String> resultList = new ArrayList<>();
+    public static List<String> getListContent(String flavour) {
+        List<String> resultList = new ArrayList<>();
 
-        List <FlavourIngredient> flavourIngredientList = getFlavourIngredientTable();
+        List<FlavourIngredient> flavourIngredientList = getFlavourIngredientTable();
 
         for (FlavourIngredient flavourIngredient : flavourIngredientList) {
             if (flavourIngredient.flavour().equals(flavour)) {
                 resultList.add(flavourIngredient.amount() + " " + DbConnection.getUnitfromIngredient(flavourIngredient.ingredient()) + " from " + flavourIngredient.ingredient());
             }
         }
+        logger.debug("Generated list content for flavour {}: {}", flavour, resultList);
         return resultList;
     }
 
-     /**
+    /**
      * Produces the given flavour in the specified amount.
      *
      * @param inputFlavour the name of the flavour to be produced
-     * @param inputAmount       the amount of the flavour to be produced
+     * @param inputAmount  the amount of the flavour to be produced
      */
     public static void produceFlavour(String inputFlavour, Double inputAmount) {
         try (Connection connection = DbConnection.getDbConnection()) {
 
-            Map<String,Double> ingredientsForFlavour = FlavourtoIngredients(inputFlavour);
+            Map<String, Double> ingredientsForFlavour = FlavourtoIngredients(inputFlavour);
 
             for (Map.Entry<String, Double> entry : ingredientsForFlavour.entrySet()) {
                 boolean loopbool = true;
@@ -158,28 +161,32 @@ public class ProductionService implements ProductionInterface {
                             int rowsDeleted = stmtDelete.executeUpdate();
                             UpdatedAmount -= chargeAmount;
                             System.out.println(rowsDeleted + " deleted");
+                            logger.debug("{} units of {} used up. Rows deleted: {}", chargeAmount, entry.getKey(), rowsDeleted);
                             continue;
                         } else if (chargeAmount >= UpdatedAmount) {
                             PreparedStatement stmtUpdate = connection.prepareStatement(queryUpdate);
                             stmtUpdate.setString(2, entry.getKey());
                             stmtUpdate.setDouble(1, chargeAmount - UpdatedAmount);
                             stmtUpdate.executeUpdate();
-                            System.out.println("Update of " + entry.getKey() + " done");
+                            logger.debug("Updated amount for {}: {}", entry.getKey(), chargeAmount - UpdatedAmount);
                             break;
                         }
                     } else {
+                        logger.warn("No rows found for ingredient {}.", entry.getKey());
                     }
                 }
             }
-        } catch (SQLException e) {String errorMessage = e.getMessage();
-            System.out.println("Error message: " + errorMessage);}
+            logger.info("{} units of {} produced.", inputAmount, inputFlavour);
+        } catch (SQLException e) {
+            logger.error("Error producing flavour {}: {}", inputFlavour, e.getMessage());
+        }
     }
 
     /**
      * Returns the Amount of the Ingredient that you need to produce a specific Flavour
      *
-     * @param flavour         the name of the flavour to be produced
-     * @param ingredient      the ingredient for the flavour
+     * @param flavour    the name of the flavour to be produced
+     * @param ingredient the ingredient for the flavour
      */
     public static double getAmountNeededForOne(String flavour, String ingredient) {
         try (Connection connection = DbConnection.getDbConnection()) {
@@ -194,30 +201,34 @@ public class ProductionService implements ProductionInterface {
             if (rs.next()) {
                 return rs.getDouble("amount");
             } else {
-                throw new IllegalArgumentException("Invalid flavour-ingredient combination: " + flavour + "-" + ingredient);
+                String errorMessage = "Invalid flavour-ingredient combination: " + flavour + "-" + ingredient;
+                logger.error(errorMessage);
+                throw new IllegalArgumentException(errorMessage);
             }
-        } catch(SQLException e) {String errorMessage = e.getMessage();
-            System.out.println("Error message: " + errorMessage);}
+        } catch (SQLException e) {
+            String errorMessage = "Error while getting amount needed for one: " + e.getMessage();
+            logger.error(errorMessage);
+        }
 
         return 0.0;
     }
 
-        /**
+    /**
      * Checks if there are enough ingredient across all batches to produce a specified amount of a Flavour
      *
-     * @param inputFlavour    the name of the Flavour to check
-     * @param inputAmount     the desired amount to be produced
+     * @param inputFlavour the name of the Flavour to check
+     * @param inputAmount  the desired amount to be produced
      * @return true if there are enough Ingredients to produce the desired amount of the Flavour, false otherwise
      */
-    public static boolean checkIfEnoughIngredients (String inputFlavour, double inputAmount) {
+    public static boolean checkIfEnoughIngredients(String inputFlavour, double inputAmount) {
 
-        try(Connection connection = DbConnection.getDbConnection()) {
-            Map<String,Double> ingredientsForFlavour = FlavourtoIngredients(inputFlavour);
-            Map<String,Double> ingredientsNotAvailable = new TreeMap<>();
+        try (Connection connection = DbConnection.getDbConnection()) {
+            Map<String, Double> ingredientsForFlavour = FlavourtoIngredients(inputFlavour);
+            Map<String, Double> ingredientsNotAvailable = new TreeMap<>();
 
             // Group inventory by ingredient name and sum the amount for each group
             String groupQuery = "SELECT ingredient_name, SUM(amount) AS total_amount FROM warehouse GROUP BY ingredient_name";
-            PreparedStatement groupStmt = connection.prepareStatement(groupQuery,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement groupStmt = connection.prepareStatement(groupQuery, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet groupRs = groupStmt.executeQuery();
             Map<String, Double> inventory = new HashMap<>();
             while (groupRs.next()) {
@@ -234,11 +245,11 @@ public class ProductionService implements ProductionInterface {
              */
             Double tempamount;
             for (Map.Entry<String, Double> entry : ingredientsForFlavour.entrySet()) {
-                tempamount = inputAmount * getAmountNeededForOne(inputFlavour,entry.getKey());
+                tempamount = inputAmount * getAmountNeededForOne(inputFlavour, entry.getKey());
                 if (!inventory.containsKey(entry.getKey())) {
-                    ingredientsNotAvailable.put(entry.getKey(),tempamount);
-                } else if (inventory.containsKey(entry.getKey()) && inventory.get(entry.getKey())<tempamount) {
-                    ingredientsNotAvailable.put(entry.getKey(),inventory.get(entry.getKey())-tempamount);
+                    ingredientsNotAvailable.put(entry.getKey(), tempamount);
+                } else if (inventory.containsKey(entry.getKey()) && inventory.get(entry.getKey()) < tempamount) {
+                    ingredientsNotAvailable.put(entry.getKey(), inventory.get(entry.getKey()) - tempamount);
                 }
             }
 
@@ -251,7 +262,7 @@ public class ProductionService implements ProductionInterface {
 
             boolean ingredientsAvailable = false;
             if (ingredientsNotAvailable.isEmpty()) {
-                System.out.println("All Ingredients are available");
+                logger.info("All Ingredients are available");
                 return true;
             } else {
                 StringBuilder sb = new StringBuilder("The following Ingredients are not available --> ");
@@ -259,9 +270,14 @@ public class ProductionService implements ProductionInterface {
                     sb.append(entry.getKey()).append("=").append(entry.getValue()).append(",");
                 }
                 errorOfIngredientsamount = sb.deleteCharAt(sb.length() - 1).toString(); // remove the trailing comma
-                return false;
+                logger.warn(errorOfIngredientsamount);
             }
-        } catch (SQLException e) {}
+            return false;
+
+        } catch (SQLException e) {
+            logger.error("An error occurred while checking ingredients availability", e);
+        }
 
         return false;
+    }
 }

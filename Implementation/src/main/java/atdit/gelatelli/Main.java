@@ -8,6 +8,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The main class for the Ice Cream Shop application.
@@ -24,7 +26,7 @@ public class Main extends Application {
 
     private Scene warehouseScene;
     private WarehouseController warehouseController;
-
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
     @FXML
     private VBox homeAnchorPane;
 
@@ -36,6 +38,7 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
+        logger.info("Starting Gelatelli IT System...");
         stage = primaryStage;
 
         // Load the FXML files and create controllers
@@ -57,6 +60,7 @@ public class Main extends Application {
         stage.setScene(homeScene);
         stage.setTitle("IT System Gelatelli");
         stage.show();
+        logger.info("Gelatelli IT System started successfully.");
     }
 
     /**
@@ -65,6 +69,7 @@ public class Main extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        logger.info("Launching Gelatelli IT System");
         launch(args);
     }
 

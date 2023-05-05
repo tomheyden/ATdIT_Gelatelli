@@ -18,7 +18,7 @@ import java.lang.*;
  */
 
 public class DbConnection {
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /**
      * Returns a Connection object for connecting to the Gelatelli database.
@@ -34,9 +34,12 @@ public class DbConnection {
         String user = dbAccessProperties.getProperty("user");
         String password = dbAccessProperties.getProperty("password");
 
+        logger.info("Connecting to database with url: {} and user: {}", url, user);
         logMissingParameters(url, user, password);
 
         Connection connection = getConnection(url, user, password);
+
+        logger.info("Database connection established");
         return connection;
     }
 
@@ -49,13 +52,13 @@ public class DbConnection {
      */
     private static void logMissingParameters(String url, String user, String password) {
         if (url == null) {
-            log.error("Database URL is missing.");
+            logger.error("Database URL is missing.");
         }
         if (user == null) {
-            log.error("Database username is missing.");
+            logger.error("Database username is missing.");
         }
         if (password == null) {
-            log.error("Database password is missing.");
+            logger.error("Database password is missing.");
         }
     }
 
@@ -89,7 +92,7 @@ public class DbConnection {
 
         } catch (SQLException e) {
             final String msg = "database access failed";
-            log.error(msg, e);
+            logger.error(msg, e);
             throw new RuntimeException(msg);
         }
         return finalList;
@@ -108,10 +111,12 @@ public class DbConnection {
              PreparedStatement preparedStatement = connection.prepareStatement(sql2)) {
 
             int rowsInserted = preparedStatement.executeUpdate();
+            logger.info("{} rows inserted into database", rowsInserted);
+
 
         } catch (SQLException e) {
             final String msg = "Error inserting data: " + e.getMessage();
-            //log.error(msg,e)
+            logger.error(msg,e);
             throw new RuntimeException(msg);
         }
     }
@@ -130,7 +135,7 @@ public class DbConnection {
             dbAccessProperties.load(is);
         } catch (IOException | IllegalArgumentException | NullPointerException e) {
             final String msg = "Loading database connection properties failed";
-            log.error(msg, e);
+            logger.error(msg, e);
             throw new RuntimeException(msg);
         }
         return dbAccessProperties;
@@ -168,7 +173,9 @@ public class DbConnection {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to get the maximum id from the warehouse table", e);
+            final String msg = "Failed to get the maximum id from the " + table + " table";
+            logger.error(msg, e);
+            throw new RuntimeException(msg);
         }
         return maxId;
     }
@@ -205,6 +212,10 @@ public class DbConnection {
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(triggerSql);
+            logger.info("Trigger {} created successfully for table {} in database {}", triggerName, tableName, dbName);
+        } catch (SQLException e) {
+            logger.error("Error creating trigger {} for table {} in database {}: {}", triggerName, tableName, dbName, e.getMessage());
+            throw e;
         }
     }
 
@@ -220,9 +231,11 @@ public class DbConnection {
 
         for (Ingredient ingredienttemp : ingredientList) {
             if (ingredienttemp.equals(new Ingredient(ingredient, 0.0, null))) {
+                logger.debug("Unit of ingredient {} found: {}", ingredient, ingredienttemp.getUnit());
                 return ingredienttemp.getUnit();
             }
         }
+        logger.warn("Unit of ingredient {} not found in the ingredient list", ingredient);
         return null;
     }
 
