@@ -27,44 +27,49 @@
 
 ## 1. Introduction
    ### a. Purpose of the Documentation
-   Explain the purpose of the technical documentation and the scope of the provided information.
+   The purpose of this technical documentation is to provide an overview of the technical aspects of the "Eiscafe Gelatelli" project. It aims to describe the          architecture, program structure, program execution and workflow, interfaces and communication, data model, and logging system.
    ### b. Target Audience: 
-   Define the target audience for the documentation, e.g., developers, system architects, or support staff.
+   The target audience for this documentation includes developers, system architects, and support staff who are involved in the development and maintenance of the "Eiscafe Gelatelli" project (In this case @Patrick Gutgesell & @Britta Jung).
 
 ## 2. Architecture Description
    ### a. High-Level Architecture
-   Describe the high-level architecture of the system, including the main components and their interactions.
+   The "Eiscafe Gelatelli" system has a client-server architecture. The client side is a JavaFX application that interacts with the server side, which is implemented   in Java and uses a MySQL database. The main components of the system include the controllers, models, resources, and utils packages, which are responsible for managing the business logic and user interface of the application.
    ### b. Diagrams
-   Add appropriate diagrams to illustrate the architecture, e.g., block diagrams, UML component diagrams, or layer models.
+   A block diagram illustrating the architecture of the "Eiscafe Gelatelli" system is provided below:
+   Eiscafe Gelatelli System Architecture (Alina)
 
 ## 3. Program Structure
    ### a. Module Structure
-   Describe the structure of the system in terms of modules, packages, or classes and their relationships to one another.
+   The "Eiscafe Gelatelli" system is structured into several modules, including the controllers, models, resources, and utils packages. These packages contain classes that are responsible for implementing the business logic and user interface of the application.
    ### b. Important Classes and Methods
-   Introduce the main classes and methods of the system and explain their functions and responsibilities.
+   Some of the important classes in the "Eiscafe Gelatelli" system include the ProductionInterface, ProductionService, WarehouseInterface, and WarehouseService classes, which provide interfaces and services for managing the production and warehouse functions of the system. The FlavourSingleton class is also important, as it provides a centralized storage for the flavour information.
    ### c. Diagrams
-   Add appropriate diagrams to illustrate the program structure, e.g., UML class diagrams or package diagrams.
+   A UML class diagram illustrating the program structure of the "Eiscafe Gelatelli" system is provided below:
+   UML Diagram
 
 ## 4. Program Execution and Workflow
    ### a. Execution Process
-   Describe the sequence of program execution, e.g., the start of the system, the initialization of components, and the processing of requests.
+  The execution process of the "Eiscafe Gelatelli" system involves starting the server side of the application, which initializes the database connection and starts listening for client requests. When the client side of the application is started, it connects to the server and interacts with it to manage the production and warehouse functions of the system.
    ### b. Workflow Diagrams
-   Add suitable workflow diagrams to illustrate the program execution and workflow, e.g., UML sequence diagrams, activity diagrams, or flowcharts.
+   A UML sequence diagram illustrating the workflow of the "Eiscafe Gelatelli" system is provided below:
+   UML Sequence Diagram
 
 ## 5. Interfaces and Communication
    ### a. Internal Interfaces
-   Describe the interfaces between the components of the system and how they communicate with each other.
+   The main internal interface of the "Eiscafe Gelatelli" system is the communication between the client and server sides of the application. This communication is implemented using Java Remote Method Invocation (RMI) technology, which allows the client to invoke methods on the server and receive the results.
    ### b. External Interfaces: 
-   Explain how the system interacts with external systems or services, e.g., through APIs, databases, or messaging systems.
+   The "Eiscafe Gelatelli" system interacts with external systems in two ways. First, it connects to a MySQL database to store and retrieve data. Second, it uses an external logging system, such as log4j2, to generate and store log messages.
 
 ## 6. Data Model
    ### a. Data Structures
-   Describe the main data structures or entities of the system and their relationships with each other.
+  The main data structures used in the system include Batch, Flavour, Ingredient, and FlavourIngredient. The Batch class represents a batch of ice cream produced in the production process, which is associated with a specific flavour and a production date. The Flavour class represents an ice cream flavour and has a unique name, description, and a list of ingredients. The Ingredient class represents an ingredient used in the production of ice cream and has a name, description, and unit of measurement. The FlavourIngredient class represents the quantity of an ingredient required to produce a specific flavour of ice cream.
    ### b. Database Design
-   Explain the design of the database, including tables, relationships, and indexes, if a database is used.
+   The system uses a MySQL database to store and retrieve data. The database design includes five tables: Batch, Flavour, Ingredient, FlavourIngredient, and ProductionLog. The Batch table has columns for batch ID, flavour ID, production date, and quantity produced. The Flavour table has columns for flavour ID, name, and description. The Ingredient table has columns for ingredient ID, name, description, and unit of measurement. The FlavourIngredient table has columns for flavour ID, ingredient ID, and quantity required. The ProductionLog table has columns for production log ID, batch ID, and production date.
    ### c. Diagrams
-   Add appropriate diagrams to illustrate the data model, e.g., UML class diagrams, Entity-Relationship diagrams, or data flow diagrams.
+   Here is an Entity-Relationship diagram (ERD) that illustrates the data model for the system:
+   ER-Diagram
 
 ## 7. Logging
    ### a. Logging
-   Explain the logging system, how log messages are generated, stored, and analyzed.
+   The system uses the Log4j2 logging framework to log events and errors. Log messages are generated using various logging levels, including DEBUG, INFO, WARN, and ERROR. The log messages are stored in a file called 'eiscafegelatelli.log' in the project's root directory.
+The logging configuration is defined in the 'log4j2.xml' file, which specifies the log file path, logging pattern, and log levels. The logging system is designed to provide detailed information about the system's behavior, including request handling, data processing, and error handling.
