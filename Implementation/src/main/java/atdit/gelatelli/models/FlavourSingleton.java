@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * can exist.
  */
 public class FlavourSingleton {
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static FlavourSingleton instance;
     private List<Flavour> flavours;
@@ -40,6 +40,7 @@ public class FlavourSingleton {
     public static FlavourSingleton getInstance() {
         if (instance == null) {
             instance = new FlavourSingleton();
+            logger.debug("New instance of FlavourSingleton created.");
         }
         return instance;
     }
@@ -50,6 +51,7 @@ public class FlavourSingleton {
      * @return the list of all flavours.
      */
     public List<Flavour> getFlavours() {
+        logger.debug("List of all flavours retrieved.");
         return flavours;
     }
 
@@ -61,6 +63,7 @@ public class FlavourSingleton {
      */
     public void addFlavour(Flavour flavour) {
         flavours.add(flavour);
+        logger.info("New flavour {} added to the list of flavours.", flavour.getFlavourName());
     }
 
 
@@ -70,7 +73,11 @@ public class FlavourSingleton {
      * @param flavour the flavour to be removed from the list of flavours.
      */
     public void removeFlavour(Flavour flavour) {
-        flavours.remove(flavours);
+        if (flavours.remove(flavour)) {
+            logger.info("Flavour {} removed from the list of flavours.", flavour.getFlavourName());
+        } else {
+            logger.warn("Attempt to remove non-existent flavour {} from the list of flavours.", flavour.getFlavourName());
+        }
     }
 
     /**
@@ -78,6 +85,7 @@ public class FlavourSingleton {
      */
     public void sortByBbd() {
         Collections.sort(flavours);
+        logger.info("List of flavours sorted by best before date.");
     }
 
     /**
@@ -97,7 +105,7 @@ public class FlavourSingleton {
             Flavour flavour = new Flavour((String) objarray[0], Double.parseDouble(objarray[1].toString()));
             flavours.add(flavour);
         }
-        log.debug("Retrieved data from database: {}", result);
+        logger.debug("Retrieved data from database: {}", flavours.size());
         return flavours;
     }
 
@@ -111,6 +119,7 @@ public class FlavourSingleton {
         for (Flavour flavour : flavours) {
             if (flavour.getFlavourName().equals(flavourName)) {
                 flavour.increaseSort();
+                logger.info("Sort of flavour {} increased by one.", flavourName);
                 return 0;
             }
         }
