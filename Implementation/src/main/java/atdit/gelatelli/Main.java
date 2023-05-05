@@ -9,21 +9,16 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.util.ResourceBundle;
+
 /**
  * The main class for the Ice Cream Shop application.
  */
 public class Main extends Application {
 
     private Stage stage;
-
-    private Scene homeScene;
-    private HomeController homeController;
-
-    private Scene productionScene;
-    private ProductionController productionController;
-
-    private Scene warehouseScene;
-    private WarehouseController warehouseController;
+    private static ResourceBundle resourceBundle = ResourceBundle.getBundle("english");
 
     @FXML
     private VBox homeAnchorPane;
@@ -38,25 +33,35 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
 
-        // Load the FXML files and create controllers
-        FXMLLoader homeLoader = new FXMLLoader(getClass().getResource("home.fxml"));
-        homeScene = new Scene(homeLoader.load());
-        homeController = homeLoader.getController();
-
-        FXMLLoader productionLoader = new FXMLLoader(getClass().getResource("Production.fxml"));
-        productionScene = new Scene(productionLoader.load());
-        productionController = productionLoader.getController();
-
-        FXMLLoader warehouseLoader = new FXMLLoader(getClass().getResource("warehouse.fxml"));
-        warehouseScene = new Scene(warehouseLoader.load());
-        warehouseController = warehouseLoader.getController();
-
-        homeController.setScenes(homeScene, productionScene, warehouseScene);
-
         // Set the main scene to the Home view
-        stage.setScene(homeScene);
+        stage.setScene(loadHomeScene());
         stage.setTitle("IT System Gelatelli");
         stage.show();
+    }
+
+    public static void setRessource(String properties) {
+        resourceBundle = ResourceBundle.getBundle(properties);
+    }
+
+    public Scene loadHomeScene() throws IOException {
+        FXMLLoader homeLoader = new FXMLLoader(getClass().getResource("home.fxml"),resourceBundle);
+        Scene homeScene = new Scene(homeLoader.load());
+        HomeController homeController = homeLoader.getController();
+        return homeScene;
+    }
+
+    public Scene loadProductionScene() throws IOException {
+        FXMLLoader productionLoader = new FXMLLoader(getClass().getResource("Production.fxml"),resourceBundle);
+        Scene productionScene = new Scene(productionLoader.load());
+        ProductionController productionController = productionLoader.getController();
+        return productionScene;
+    }
+
+    public Scene loadWarehouseScene() throws IOException {
+        FXMLLoader warehouseLoader = new FXMLLoader(getClass().getResource("warehouse.fxml"),resourceBundle);
+        Scene warehouseScene = new Scene(warehouseLoader.load());
+        WarehouseController warehouseController = warehouseLoader.getController();
+        return warehouseScene;
     }
 
     /**

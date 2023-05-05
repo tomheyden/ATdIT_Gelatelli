@@ -26,7 +26,6 @@ public class ProductionService implements ProductionInterface {
     static List<FlavourIngredient> flavourIngredientList = getFlavourIngredientTable();
     WarehouseService warehouseService = new WarehouseService();
 
-
     public static String errorOfIngredientsamount = "";
 
 
@@ -211,13 +210,13 @@ public class ProductionService implements ProductionInterface {
      */
     public static boolean checkIfEnoughIngredients (String inputFlavour, double inputAmount) {
 
-        try(Connection connection = DbConnection.getDbConnection()) {
-            Map<String,Double> ingredientsForFlavour = FlavourtoIngredients(inputFlavour);
-            Map<String,Double> ingredientsNotAvailable = new TreeMap<>();
+        try (Connection connection = DbConnection.getDbConnection()) {
+            Map<String, Double> ingredientsForFlavour = FlavourtoIngredients(inputFlavour);
+            Map<String, Double> ingredientsNotAvailable = new TreeMap<>();
 
             // Group inventory by ingredient name and sum the amount for each group
             String groupQuery = "SELECT ingredient_name, SUM(amount) AS total_amount FROM warehouse GROUP BY ingredient_name";
-            PreparedStatement groupStmt = connection.prepareStatement(groupQuery,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement groupStmt = connection.prepareStatement(groupQuery, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet groupRs = groupStmt.executeQuery();
             Map<String, Double> inventory = new HashMap<>();
             while (groupRs.next()) {
@@ -234,11 +233,11 @@ public class ProductionService implements ProductionInterface {
              */
             Double tempamount;
             for (Map.Entry<String, Double> entry : ingredientsForFlavour.entrySet()) {
-                tempamount = inputAmount * getAmountNeededForOne(inputFlavour,entry.getKey());
+                tempamount = inputAmount * getAmountNeededForOne(inputFlavour, entry.getKey());
                 if (!inventory.containsKey(entry.getKey())) {
-                    ingredientsNotAvailable.put(entry.getKey(),tempamount);
-                } else if (inventory.containsKey(entry.getKey()) && inventory.get(entry.getKey())<tempamount) {
-                    ingredientsNotAvailable.put(entry.getKey(),inventory.get(entry.getKey())-tempamount);
+                    ingredientsNotAvailable.put(entry.getKey(), tempamount);
+                } else if (inventory.containsKey(entry.getKey()) && inventory.get(entry.getKey()) < tempamount) {
+                    ingredientsNotAvailable.put(entry.getKey(), inventory.get(entry.getKey()) - tempamount);
                 }
             }
 
@@ -261,7 +260,9 @@ public class ProductionService implements ProductionInterface {
                 errorOfIngredientsamount = sb.deleteCharAt(sb.length() - 1).toString(); // remove the trailing comma
                 return false;
             }
-        } catch (SQLException e) {}
+        } catch (SQLException e) {
+        }
 
         return false;
+    }
 }

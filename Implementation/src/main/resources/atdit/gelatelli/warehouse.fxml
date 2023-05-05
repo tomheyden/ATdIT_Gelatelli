@@ -12,25 +12,25 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="atdit.gelatelli.controllers.WarehouseController">
    <children>
-      <Label layoutX="27.0" layoutY="54.0" prefHeight="17.0" prefWidth="98.0" text="Warehouse" />
+      <Label fx:id="warehouseLabel" layoutX="27.0" layoutY="54.0" prefHeight="17.0" prefWidth="98.0" text="%warehouseLabeltitle.text" />
       <ComboBox layoutX="131.0" layoutY="50.0" prefHeight="26.0" prefWidth="98.0" promptText="Filter" />
-      <Label layoutX="328.0" layoutY="55.0" prefHeight="17.0" prefWidth="108.0" text="Incoming goods">
+      <Label fx:id="incomingGoodsLabel" layoutX="328.0" layoutY="55.0" prefHeight="17.0" prefWidth="108.0" text="%incomingGoodsLabel.text">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
-      <ComboBox fx:id="goodsComboBox" layoutX="328.0" layoutY="81.0" prefWidth="150.0" promptText="Choose good" />
+      <ComboBox fx:id="goodsComboBox" layoutX="328.0" layoutY="81.0" prefWidth="150.0" promptText="%goodsComboBox.text" />
       <ChoiceBox fx:id="amountComboBox" layoutX="328.0" layoutY="140.0" prefHeight="26.0" prefWidth="98.0" />
-      <Label layoutX="328.0" layoutY="117.0" prefHeight="17.0" prefWidth="108.0" text="Amount" />
+      <Label fx:id="warehouseAmountLabel" layoutX="328.0" layoutY="117.0" prefHeight="17.0" prefWidth="108.0" text="%warehouseAmountLabel.text" />
       <ChoiceBox fx:id="unitComboBox" layoutX="328.0" layoutY="204.0" prefHeight="26.0" prefWidth="98.0" />
-      <Label layoutX="328.0" layoutY="181.0" prefHeight="17.0" prefWidth="108.0" text="Unit" />
+      <Label fx:id="warehouseUnitLabel" layoutX="328.0" layoutY="181.0" prefHeight="17.0" prefWidth="108.0" text="%warehouseUnitLabel.text" />
       <DatePicker fx:id="expiryDatePicker" layoutX="328.0" layoutY="255.0" prefWidth="150.0" promptText="Expiry Date" />
       <Separator layoutX="280.0" layoutY="1.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="20.0" />
-      <Label fx:id="doneLabel" layoutX="328.0" layoutY="340.0" prefHeight="17.0" prefWidth="244.0" text="Done" />
+      <Label fx:id="doneLabel" layoutX="328.0" layoutY="340.0" prefHeight="17.0" prefWidth="244.0" text="%doneLabel_done.text" />
       <ListView fx:id="warehouseListView" layoutX="25.0" layoutY="98.0" prefHeight="200.0" prefWidth="200.0" />
-      <Button fx:id="updateButton" layoutX="27.0" layoutY="314.0" mnemonicParsing="false" onAction="#handleUpdateButtonAction" prefHeight="26.0" prefWidth="98.0" text="Update" />
-      <Button fx:id="goBackButton" layoutX="-1.0" layoutY="-1.0" mnemonicParsing="false" onAction="#handleGoBackButtonAction" prefHeight="26.0" prefWidth="98.0" text="&lt; Go Back" />
-      <Button fx:id="insertButton" layoutX="328.0" layoutY="301.0" mnemonicParsing="false" onAction="#handleInsertButton" prefHeight="26.0" prefWidth="98.0" text="Insert" />
-      <Label fx:id="hintLabel" layoutX="29.0" layoutY="349.0" prefHeight="17.0" prefWidth="200.0" text="" />
+      <Button fx:id="updateButton" layoutX="27.0" layoutY="314.0" mnemonicParsing="false" onAction="#handleUpdateButtonAction" prefHeight="26.0" prefWidth="98.0" text="%updateButton.text" />
+      <Button fx:id="warehouseGoBackButton" layoutX="-1.0" layoutY="-1.0" mnemonicParsing="false" onAction="#handleGoBackButtonAction" prefHeight="26.0" prefWidth="98.0" text="%warehouseGoBackButton.text" />
+      <Button fx:id="insertButton" layoutX="328.0" layoutY="301.0" mnemonicParsing="false" onAction="#handleInsertButton" prefHeight="26.0" prefWidth="98.0" text="%insertButton.text" />
+      <Label fx:id="hintLabel" layoutX="29.0" layoutY="349.0" prefHeight="17.0" prefWidth="200.0" text="%hintLabel.text" />
    </children>
 </AnchorPane>

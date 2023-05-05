@@ -1,5 +1,6 @@
 package atdit.gelatelli.controllers;
 
+import atdit.gelatelli.Main;
 import atdit.gelatelli.models.Batch;
 import atdit.gelatelli.ressources.StageHelper;
 import atdit.gelatelli.utils.ProductionService;
@@ -16,7 +17,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.ResourceBundle;
 
 
 /**
@@ -52,6 +55,7 @@ public class ProductionController {
     private Button goBackButton;
 
     WarehouseService warehouseService = new WarehouseService();
+    Main main = new Main();
 
     List<Batch> warehouseList;
 
@@ -109,18 +113,14 @@ public class ProductionController {
         sizeChoiceBox.setItems(numbers);
 
         goBackButton.setOnAction(event -> {
-            goBackButton.getScene().getWindow().hide();
-            StageHelper.showScene(staticHomeScene);
-        });
-    }
 
-    /**
-     * Sets the static home scene for this controller. This is used to switch back to the home scene when the "Go back" button is pressed.
-     *
-     * @param homeScene the static home scene
-     */
-    public static void setHomeScene(Scene homeScene) {
-        staticHomeScene = homeScene;
+            goBackButton.getScene().getWindow().hide();
+            try {
+                StageHelper.showScene(main.loadHomeScene());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void progessBarDisplay (String color) {
