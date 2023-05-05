@@ -3,7 +3,7 @@
 
 # IT-System for Eiscafé Gelatelli
 
-This programm is designed to help ice cream shops streamline their production process and optimize their inventory management. It includes a range of features to help shops use their ingredients more efficiently, make informed predictions about ice cream demand, and track their inventory and sales
+This programm is designed to help ice cream shops streamline their production process and optimize their inventory management. It includes a range of features to help shops use their ingredients more efficiently, make informed predictions about ice cream demand, and track their inventory and sales.
 
 ## Table of Contents
 - [Installation](#installation)
@@ -54,11 +54,11 @@ For information on how to install the programm and get it ready-to-use refer to 
 
 ## Usage
 
-For information on how to use the programm once it is installed refer to the [Operating Manual](https://github.com/tomheyden/ATdIT_Gelatelli/blob/ReadMe/Operating%20Manual.md).
+For information on how to use the programm once it is installed please refer to the [Operating Manual](https://github.com/tomheyden/ATdIT_Gelatelli/blob/ReadMe/Operating%20Manual.md).
 
 ## Documentation
 
-[Links to documentation or user guides]
+For information on the technical aspects of the project please refer to [Documentation](Documentation.md).
 
 ## Contact
 
