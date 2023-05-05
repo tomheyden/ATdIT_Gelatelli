@@ -3,6 +3,10 @@ package atdit.gelatelli.models;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import atdit.gelatelli.controllers.ProductionController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Represents a icecream flavour.
  */
@@ -12,6 +16,7 @@ public class Flavour implements Comparable<Flavour> {
     private double contributionMargin;
     private int sort;
     private LocalDate earliestBBD;
+    private static final Logger logger = LoggerFactory.getLogger(ProductionController.class);
 
     /**
      * Constructs a new flavour with the given name and contribution margin.
@@ -24,6 +29,7 @@ public class Flavour implements Comparable<Flavour> {
         this.contributionMargin = contributionMargin;
         sort = 0;
         //earliestBBD = LocalDate.of(0000,01,01);
+        logger.debug("New Flavour instance created with name: {} and contribution margin: {}", flavourName, contributionMargin);
     }
 
     /**
@@ -39,6 +45,9 @@ public class Flavour implements Comparable<Flavour> {
         this.contributionMargin = contributionMargin;
         this.sort = sort;
         this.earliestBBD = earliestBBD;
+        logger.debug("New Flavour instance created with name: {}, contribution margin: {}, sort value: {}, and earliest best-before date: {}",
+                flavourName, contributionMargin, sort, earliestBBD);
+
     }
 
     /**
@@ -47,6 +56,7 @@ public class Flavour implements Comparable<Flavour> {
      * @return the sort value of the flavour
      */
     public int getSort() {
+        logger.debug("Retrieving the sort value of the Flavour instance");
         return sort;
     }
 
@@ -57,6 +67,7 @@ public class Flavour implements Comparable<Flavour> {
      */
     public void setSort(int sort) {
         this.sort = sort;
+        logger.debug("Setting the sort value of the Flavour instance to {}", sort);
     }
 
     /**
@@ -65,6 +76,7 @@ public class Flavour implements Comparable<Flavour> {
      * @return the name of the flavour
      */
     public String getFlavourName() {
+        logger.debug("Retrieving the name of the Flavour instance");
         return flavourName;
     }
 
@@ -75,6 +87,7 @@ public class Flavour implements Comparable<Flavour> {
      */
     public void setFlavourName(String flavourName) {
         this.flavourName = flavourName;
+        logger.debug("Setting the name of the Flavour instance to {}", flavourName);
     }
 
     /**
@@ -83,6 +96,7 @@ public class Flavour implements Comparable<Flavour> {
      * @return the contribution margin of the flavour
      */
     public double getContributionMargin() {
+        logger.debug("Retrieving the contribution margin of the Flavour instance");
         return contributionMargin;
     }
 
@@ -93,6 +107,7 @@ public class Flavour implements Comparable<Flavour> {
      */
     public void setContributionMargin(double contributionMargin) {
         this.contributionMargin = contributionMargin;
+        logger.debug("Setting the contribution margin of the Flavour instance to {}", contributionMargin);
     }
 
     /**
@@ -101,6 +116,7 @@ public class Flavour implements Comparable<Flavour> {
      * @return the earliest best-before date of the flavour
      */
     public LocalDate getEarliestBBD() {
+        logger.debug("Retrieving the earliest best before date of the Flavour instance");
         return earliestBBD;
     }
 
@@ -111,6 +127,7 @@ public class Flavour implements Comparable<Flavour> {
      */
     public void setEarliestBBD(LocalDate earliestBBD) {
         this.earliestBBD = earliestBBD;
+        logger.debug("Setting the earliest best before date of the Flavour instance to {}", earliestBBD);
     }
 
     /**
@@ -141,6 +158,7 @@ public class Flavour implements Comparable<Flavour> {
         if (earliestBBD != null && other.getEarliestBBD() != null) {
             int bbdComparison = this.earliestBBD.compareTo(other.earliestBBD);
             if (bbdComparison != 0) {
+                logger.debug("Comparing Flavour objects by earliestBBD: {} vs {}", this.earliestBBD, other.getEarliestBBD());
                 return bbdComparison;
             }
         }
@@ -149,6 +167,7 @@ public class Flavour implements Comparable<Flavour> {
 
         // If 'sort' attributes are equal, compare by the 'contributionMargin' attribute
         if (sortComparison == 0) {
+            logger.debug("Comparing flavours by contributionMargin: {} vs. {}: {}", this, other, sortComparison);
             return Double.compare(other.contributionMargin, this.contributionMargin);
         }
 
@@ -164,11 +183,15 @@ public class Flavour implements Comparable<Flavour> {
      */
     @Override
     public boolean equals(Object obj) {
+        logger.debug("Calling Flavour.equals()");
+
         if (this == obj) {
+            logger.debug("The objects are the same.");
             return true;
         }
 
         if (obj == null || getClass() != obj.getClass()) {
+            logger.debug("The objects are not the same class.");
             return false;
         }
 
@@ -185,6 +208,7 @@ public class Flavour implements Comparable<Flavour> {
      */
     @Override
     public int hashCode() {
+        logger.debug("Calling Flavour.hashCode()");
         return Objects.hash(flavourName, contributionMargin, sort);
     }
 }

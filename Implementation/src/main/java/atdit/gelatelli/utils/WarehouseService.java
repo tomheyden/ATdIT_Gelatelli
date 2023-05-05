@@ -8,10 +8,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import atdit.gelatelli.models.*;
 import atdit.gelatelli.utils.WarehouseInterface;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +21,7 @@ import static java.sql.DriverManager.getConnection;
  */
 
 public class WarehouseService implements WarehouseInterface {
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     DbConnection dbConnection = new DbConnection();
 
     /**
@@ -35,9 +33,9 @@ public class WarehouseService implements WarehouseInterface {
      */
     @Override
     public void updateDBfromWE(String bbd, double amount, String ingredientName) {
-
         String sql = "INSERT INTO warehouse (id, bbd, amount, ingredient_name) VALUES (" + (dbConnection.getMaxId("warehouse") + 1) + ", '" + Date.valueOf(bbd) + "', " + amount + ", '" + ingredientName + "')";
         dbConnection.updateDBentry(sql);
+        logger.info("Database updated with new batch of " + ingredientName + " with expiration date " + bbd + " and amount " + amount);
     }
 
     /**
@@ -53,6 +51,7 @@ public class WarehouseService implements WarehouseInterface {
         for (Batch good : warehouseList) {
             ListContent.add(good.amount() + " " + DbConnection.getUnitfromIngredient(good.ingredient()) + " from " + good.ingredient() + " expiring: " + getbbd(good.ingredient()));
         }
+        logger.info("Warehouse contents retrieved and returned in user-friendly format.");
         return ListContent;
     }
 
@@ -71,8 +70,11 @@ public class WarehouseService implements WarehouseInterface {
             nameResults.add(ingredient.getName());
             unitResults.add(ingredient.getUnit());
         }
-        if (column.equalsIgnoreCase("Name"))
+        if (column.equalsIgnoreCase("Name")) {
+            logger.info("Ingredients returned by name.");
             return nameResults;
+        }
+        logger.info("Ingredients returned by unit.");
         return unitResults;
     }
 
@@ -84,12 +86,17 @@ public class WarehouseService implements WarehouseInterface {
      */
     public static Date getbbd(String ingredient) {
         List<Batch> batchList = ProductionService.getBatchTable();
+        logger.info("Getting expiration date for ingredient: " + ingredient);
+
 
         for (Batch batch : batchList) {
             if (batch.ingredient().equalsIgnoreCase(ingredient)) {
-                return (Date) batch.bbd();
+                Date bbd = (Date) batch.bbd();
+                logger.info("Found batch for ingredient " + ingredient + " with expiration date: " + bbd);
+                return bbd;
             }
         }
+        logger.warn("No batch found for ingredient: " + ingredient);
         return null;
     }
 
@@ -100,6 +107,7 @@ public class WarehouseService implements WarehouseInterface {
      * @param batch the ingredient batch to be inserted
      */
     public static void insertIngredient(Batch batch) {
+        logger.info("Inserting new ingredient batch: " + batch);
 
         try (Connection connection = DbConnection.getDbConnection();
              PreparedStatement ps = connection.prepareStatement(" INSERT INTO `warehouse` (`id`,`bbd`, `amount`, `ingredient_name`) VALUES (? ,?, ?, ?)")) {
@@ -110,8 +118,10 @@ public class WarehouseService implements WarehouseInterface {
             ps.setString(4, batch.ingredient());
 
             ps.executeUpdate();
+            logger.info("New ingredient batch inserted successfully");
 
         } catch (SQLException e) {
+            logger.error("Error while inserting ingredient batch: " + e.getMessage());
             e.printStackTrace();
         }
     }

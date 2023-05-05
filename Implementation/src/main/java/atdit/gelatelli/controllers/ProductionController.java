@@ -16,6 +16,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -53,7 +55,7 @@ public class ProductionController {
     private ListView<String> activityListView;
     @FXML
     private Button goBackButton;
-
+    private static final Logger logger = LoggerFactory.getLogger(ProductionController.class);
     WarehouseService warehouseService = new WarehouseService();
     Main main = new Main();
 
@@ -67,6 +69,8 @@ public class ProductionController {
      */
     @FXML
     private void handleShowRecipeButtonAction() {
+        logger.debug("Show Recipe Button clicked");
+
         receiptListView.getItems().clear();
         receiptListView.getItems().addAll(ProductionService.getListContent(flavorComboBox.getValue()));
         System.out.println("Show Recipe Button");
@@ -79,6 +83,8 @@ public class ProductionController {
      */
     @FXML
     private void handleProduceButtonAction() {
+        logger.debug("Produce Button clicked");
+
         System.out.println("Produce Button");
         String selectedFlavour = flavorComboBox.getValue();
         Double selectedAmount = Double.valueOf(sizeChoiceBox.getValue());
@@ -86,11 +92,15 @@ public class ProductionController {
         System.out.println(selectedAmount);
         System.out.println(selectedFlavour);
 
-        if (ProductionService.checkIfEnoughIngredients(selectedFlavour,selectedAmount)) {
+        logger.debug("Selected Flavor: {}, Selected Amount: {}", selectedFlavour, selectedAmount);
+
+        if (ProductionService.checkIfEnoughIngredients(selectedFlavour, selectedAmount)) {
             ProductionService.produceFlavour(selectedFlavour, selectedAmount);
             progessBarDisplay("green");
+            logger.info("Successfully produced {} of {} flavor", selectedAmount, selectedFlavour);
         } else {
             progessBarDisplay("red");
+            logger.warn("Could not produce {} of {} flavor due to insufficient ingredients", selectedAmount, selectedFlavour);
         }
     }
 
@@ -100,7 +110,7 @@ public class ProductionController {
      * ProductionService. It also initializes the sizeChoiceBox with the numbers from 1 to 20.
      */
     public void initialize() {
-
+        logger.info("Initializing ProductionController");
         productionStatusLabel.setVisible(false);
         warehouseListView.getItems().addAll(warehouseService.getListContent());
         flavorComboBox.getItems().addAll(ProductionService.getFlavourTable());
@@ -114,6 +124,7 @@ public class ProductionController {
 
         goBackButton.setOnAction(event -> {
 
+            logger.debug("Go back button pressed");
             goBackButton.getScene().getWindow().hide();
             try {
                 StageHelper.showScene(main.loadHomeScene());
@@ -123,7 +134,9 @@ public class ProductionController {
         });
     }
 
-    private void progessBarDisplay (String color) {
+    private void progessBarDisplay(String color) {
+    
+        logger.debug("Displaying progress bar");
         productionProgressBar.setStyle("-fx-accent: blue;");
         Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(productionProgressBar.progressProperty(), 0)),
                 new KeyFrame(Duration.seconds(3), new KeyValue(productionProgressBar.progressProperty(), 1)));
@@ -131,10 +144,12 @@ public class ProductionController {
 
         timeline.setOnFinished(e -> {
             productionStatusLabel.setVisible(true);
-            if(color.equalsIgnoreCase(color)) {
-                productionProgressBar.setStyle("-fx-accent: "+ color +" ;");
+            if (color.equalsIgnoreCase(color)) {
+                logger.warn("Error in production: {}", ProductionService.errorOfIngredientsamount);
+                productionProgressBar.setStyle("-fx-accent: " + color + " ;");
                 productionStatusLabel.setText(ProductionService.errorOfIngredientsamount);
             } else {
+                logger.info("Production finished successfully");
                 productionProgressBar.setStyle("-fx-accent: green ;");
                 productionStatusLabel.setText("Finished");
             }
