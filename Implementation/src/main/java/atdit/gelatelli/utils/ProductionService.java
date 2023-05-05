@@ -22,12 +22,8 @@ import java.util.*;
 public class ProductionService implements ProductionInterface {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    List<Flavour> productionList = new ArrayList<>();
-    static List<FlavourIngredient> flavourIngredientList = getFlavourIngredientTable();
-    WarehouseService warehouseService = new WarehouseService();
 
     public static String errorOfIngredientsamount = "";
-
 
     /**
      * Returns a list of batches ordered by their expiration dates.

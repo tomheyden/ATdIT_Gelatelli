@@ -50,6 +50,7 @@ public class HomeController {
      
     @FXML
     public void initialize() {
+    
         logger.info("HomeController initialized");
         // Set the actions for the buttons
         productionButton.setOnAction(event -> {
@@ -63,9 +64,10 @@ public class HomeController {
         });
 
         warehouseButton.setOnAction(event -> {
+
             logger.debug("Warehouse button clicked");
             logger.info("Navigated to Warehouse screen");
-            
+
             warehouseButton.getScene().getWindow().hide();
             try {
                 StageHelper.showScene(main.loadWarehouseScene());
