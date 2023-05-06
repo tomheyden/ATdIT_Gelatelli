@@ -58,7 +58,7 @@ INSERT INTO `ingredient` (`ingredient_name`, `purchase_price`, `unit`) VALUES
     ('Fresh Strawberries', 7,'kg');
 
 -- Exportiere Struktur von Tabelle eiscafegelatelli.warehouse
-CREATE TABLE IF NOT EXISTS `warehouse` (
+CREATE TABLE IF NOT EXISTS `batch` (
   `id` INT(10) NOT NULL COMMENT 'unique id to identify batch of ingredients',
   `bbd` DATE NOT NULL COMMENT 'ingredient batch''s best before date',
   `amount` DECIMAL(65, 2) NOT NULL,
