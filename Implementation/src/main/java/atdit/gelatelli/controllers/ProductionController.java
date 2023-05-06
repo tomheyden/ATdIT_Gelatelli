@@ -55,13 +55,12 @@ public class ProductionController {
     private ListView<String> activityListView;
     @FXML
     private Button goBackButton;
+
     private static final Logger logger = LoggerFactory.getLogger(ProductionController.class);
+
     WarehouseService warehouseService = new WarehouseService();
     Main main = new Main();
 
-    List<Batch> warehouseList;
-
-    private static Scene staticHomeScene;
 
     /**
      * This method is called when the "Show Recipe" button is clicked by the user. It clears the receiptListView and
@@ -96,6 +95,8 @@ public class ProductionController {
 
         if (ProductionService.checkIfEnoughIngredients(selectedFlavour, selectedAmount)) {
             ProductionService.produceFlavour(selectedFlavour, selectedAmount);
+            productionStatusLabel.setText("Finished");
+
             progessBarDisplay("green");
             logger.info("Successfully produced {} of {} flavor", selectedAmount, selectedFlavour);
         } else {
@@ -143,15 +144,16 @@ public class ProductionController {
         timeline.play();
 
         timeline.setOnFinished(e -> {
-            productionStatusLabel.setVisible(true);
+
             if (color.equalsIgnoreCase(color)) {
                 logger.warn("Error in production: {}", ProductionService.errorOfIngredientsamount);
                 productionProgressBar.setStyle("-fx-accent: " + color + " ;");
                 productionStatusLabel.setText(ProductionService.errorOfIngredientsamount);
             } else {
                 logger.info("Production finished successfully");
+                String finished = "finished";
+                productionStatusLabel.setText(finished);
                 productionProgressBar.setStyle("-fx-accent: green ;");
-                productionStatusLabel.setText("Finished");
             }
         });
     }

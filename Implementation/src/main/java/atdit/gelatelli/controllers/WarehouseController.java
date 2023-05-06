@@ -2,18 +2,12 @@ package atdit.gelatelli.controllers;
 
 import atdit.gelatelli.Main;
 import atdit.gelatelli.models.Batch;
-import atdit.gelatelli.models.Ingredient;
 import atdit.gelatelli.ressources.StageHelper;
-import atdit.gelatelli.utils.ProductionService;
 import atdit.gelatelli.utils.WarehouseService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.skin.LabelSkin;
-import javafx.scene.layout.Border;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +16,6 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 /**
  * The WarehouseController class controls the UI for the warehouse management system.
@@ -154,8 +147,7 @@ public class WarehouseController {
             refreshItems();
 
             inserted = true;
-            logger.info("New inventory item added to the database: {} amount of {} with expiry date {}",
-                    amountComboBox.getValue(), goodsComboBox.getValue(), Date.valueOf(expiryDatePicker.getValue()));
+            logger.info("New inventory item added to the database: {} amount of {} with expiry date {}");
         }
     }
 
@@ -265,10 +257,5 @@ public class WarehouseController {
                 continue;
             }
         }
-    }
-
-    public void setResourceBundle(String bundleName, Scene scene) {
-        ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
-
     }
 }

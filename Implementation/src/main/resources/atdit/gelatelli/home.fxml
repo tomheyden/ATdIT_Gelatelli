@@ -25,8 +25,8 @@
       <menus>
          <Menu text="Language">
             <items>
-               <MenuItem text="English" onAction="#changeLanguageToEnglish"/>
-               <MenuItem text="Deutsch" onAction="#changeLanguageToGerman"/>
+               <MenuItem onAction="#changeLanguageToEnglish" text="English" />
+               <MenuItem onAction="#changeLanguageToGerman" text="Deutsch" />
             </items>
          </Menu>
       </menus>
@@ -38,7 +38,9 @@
          <Image url="@../../gelatelli-new2.png" />
       </image>
    </ImageView>
-   <Button fx:id="orderButton" layoutX="153.0" layoutY="300.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="106.0" text="%orderButton.text" />
-   <Button fx:id="interfaceButton" layoutX="270.0" layoutY="300.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="106.0" text="%interfaceButton.text" />
+   <Label fx:id="dbConnection" alignment="CENTER" layoutX="18.0" layoutY="214.0" prefHeight="18.0" prefWidth="497.0" text="DBConnection.text">
+      <font>
+         <Font name="Arial Italic" size="11.0" />
+      </font></Label>
 
 </AnchorPane>

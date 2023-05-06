@@ -272,6 +272,7 @@ public class ProductionService implements ProductionInterface {
 
         } catch (SQLException e) {
             logger.error("An error occurred while checking ingredients availability", e);
-        return false;
+            return false;
+        }
     }
 }

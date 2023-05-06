@@ -1,6 +1,7 @@
 package atdit.gelatelli;
 
 import atdit.gelatelli.controllers.*;
+import atdit.gelatelli.utils.DbConnection;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
@@ -22,8 +24,9 @@ public class Main extends Application {
     private Stage stage;
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
-
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("english");
+
+    public static boolean databaseConnection = true;
 
     @FXML
     private VBox homeAnchorPane;
@@ -38,6 +41,11 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         logger.info("Starting Gelatelli IT System...");
         stage = primaryStage;
+        
+        try {
+            DbConnection.getDbConnection();
+        } catch (SQLException e) {databaseConnection = false;}
+
 
         // Set the main scene to the Home view
         stage.setScene(loadHomeScene());

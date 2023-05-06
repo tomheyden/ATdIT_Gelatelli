@@ -2,6 +2,8 @@ package atdit.gelatelli.controllers;
 
 import atdit.gelatelli.Main;
 import atdit.gelatelli.ressources.StageHelper;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javafx.fxml.FXML;
@@ -23,6 +25,8 @@ public class HomeController {
     @FXML
     private Button warehouseButton;
 
+    @FXML
+    private Label dbConnection;
 
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
@@ -50,15 +54,27 @@ public class HomeController {
      
     @FXML
     public void initialize() {
-    
+
+        if(!Main.databaseConnection) {
+            disableButtons();
+            dbConnection.setVisible(true);
+            dbConnection.setText("Database is not connected -- Please start the Database and restart");
+            dbConnection.setTextFill(Color.RED);
+        } else {
+            dbConnection.setText("Database connected");
+            dbConnection.setTextFill(Color.GREEN);
+        }
+
         logger.info("HomeController initialized");
         // Set the actions for the buttons
         productionButton.setOnAction(event -> {
             logger.debug("Production button clicked");
-
-            ProductionController.setHomeScene(homeScene);
             productionButton.getScene().getWindow().hide();
-            StageHelper.showScene(productionScene);
+            try {
+                StageHelper.showScene(main.loadProductionScene());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             logger.info("Navigated to Production screen.");
         });
@@ -75,5 +91,10 @@ public class HomeController {
                 e.printStackTrace();
             }
         });
+    }
+
+    private void disableButtons() {
+        productionButton.setDisable(true);
+        warehouseButton.setDisable(true);
     }
 }
