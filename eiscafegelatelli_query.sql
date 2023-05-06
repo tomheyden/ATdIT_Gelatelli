@@ -71,7 +71,7 @@ CREATE EVENT IF NOT EXISTS check_bbd_event
 ON SCHEDULE EVERY 1 DAY
 DO
 BEGIN
-    DELETE FROM warehouse WHERE bbd < CURDATE();
+    DELETE FROM batch WHERE bbd < CURDATE();
 END;
 
 -- Exportiere Daten aus Tabelle eiscafegelatelli.warehouse: 4~ rows (ungefähr)
