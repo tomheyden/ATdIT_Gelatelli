@@ -87,6 +87,8 @@ public class DbConnectionTest {
     @Test
     public void testBatch() throws SQLException{
         //ProductionService.produceFlavour("Chocolate",2.0);
+        boolean isenough = ProductionService.checkIfEnoughIngredients("Chocolate", 1.0);
+        System.out.println(isenough);
         ProductionService.produceFlavour("Chocolate",1.0);
         Assertions.assertNotNull(1);
     }

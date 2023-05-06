@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The WarehouseController class controls the UI for the warehouse management system.
+ * The WarehouseController class controls the UI for the batch management system.
  * It includes methods for handling user actions on the UI components, such as inserting
  * and deleting inventory items, and refreshing the view.
  *
@@ -181,7 +181,7 @@ public class WarehouseController {
             hintLabel.setText("Refreshed");
             hintLabel.setTextFill(Color.GREEN);
             inserted = false;
-            logger.info("Warehouse list has been refreshed");
+            logger.info("batch list has been refreshed");
         } else {
             hintLabel.setText("No Items inserted after last refresh");
             hintLabel.setTextFill(Color.RED);

@@ -180,46 +180,7 @@ public class DbConnection {
         return maxId;
     }
 
-
-    /**
-     * Creates a trigger to check for low inventory and insert a new row into the low_inventory table
-     * if the amount of a newly inserted ingredient falls below a certain threshold.
-     *
-     * @param conn the Connection object for the database.
-     * @throws SQLException if there is a problem creating the trigger.
-     */
-    public static void createLowInventoryTrigger(Connection conn) throws SQLException {
-        String dbName = "eiscafegelatelli";
-        String tableName = "warehouse";
-        String ingredientNameColumn = "ingredient_name";
-        String amountColumn = "amount";
-        int threshold = 5;
-
-        String triggerName = "check_inventory";
-        String triggerSql = String.format(
-                "CREATE TRIGGER %s AFTER INSERT ON %s " +
-                        "FOR EACH ROW " +
-                        "BEGIN " +
-                        "    IF (SELECT %s FROM %s WHERE %s = NEW.%s) < %d " +
-                        "    THEN " +
-                        "        INSERT INTO low_inventory (ingredient_name, quantity) " +
-                        "        VALUES (NEW.%s, NEW.%s); " +
-                        "    END IF; " +
-                        "END;",
-                triggerName, tableName, amountColumn, tableName,
-                ingredientNameColumn, ingredientNameColumn, threshold,
-                ingredientNameColumn, amountColumn);
-
-        try (Statement stmt = conn.createStatement()) {
-            stmt.execute(triggerSql);
-            logger.info("Trigger {} created successfully for table {} in database {}", triggerName, tableName, dbName);
-        } catch (SQLException e) {
-            logger.error("Error creating trigger {} for table {} in database {}: {}", triggerName, tableName, dbName, e.getMessage());
-            throw e;
-        }
-    }
-
-
+    
     /**
      * Returns the unit of the given ingredient by searching through the list of ingredients.
      *

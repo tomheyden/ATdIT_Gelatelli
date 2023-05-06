@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
@@ -23,7 +24,6 @@
       <ChoiceBox fx:id="sizeChoiceBox" layoutX="33.0" layoutY="197.0" prefWidth="150.0" />
       <Button fx:id="produceButton" layoutX="33.0" layoutY="230.0" minHeight="20.0" mnemonicParsing="false" onAction="#handleProduceButtonAction" prefHeight="40.0" prefWidth="124.0" text="%produceButton.text" />
       <ProgressBar fx:id="productionProgressBar" layoutX="33.0" layoutY="287.0" prefHeight="20.0" prefWidth="124.0" progress="0.0" />
-      <Label fx:id="productionStatusLabel" layoutX="35.0" layoutY="319.0" prefHeight="18.0" prefWidth="501.0" text="%productionStatusLabel_done.text" />
       <Label fx:id="warehouseLabel_title" layoutX="239.0" layoutY="152.0" prefHeight="18.0" prefWidth="91.0" text="%warehouseLabel.text" />
       <Label fx:id="amountLabel" layoutX="33.0" layoutY="171.0" prefHeight="18.0" prefWidth="102.0" text="%amountLabel.text" />
       <Button fx:id="goBackButton" layoutY="-1.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="102.0" text="%goBackButton.text" />
@@ -35,5 +35,6 @@
       <Label fx:id="recipeLabel" layoutX="239.0" layoutY="38.0" prefHeight="18.0" prefWidth="91.0" text="%recipeLabel.text" />
       <ListView fx:id="receiptListView" layoutX="235.0" layoutY="61.0" prefHeight="79.0" prefWidth="306.0" />
       <ListView fx:id="warehouseListView" layoutX="239.0" layoutY="180.0" prefHeight="79.0" prefWidth="306.0" />
+      <TextArea fx:id="productionStatusLabel" layoutX="35.0" layoutY="314.0" prefHeight="71.0" prefWidth="366.0" text=""/>
    </children>
 </AnchorPane>

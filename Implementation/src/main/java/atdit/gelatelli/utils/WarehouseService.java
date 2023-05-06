@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import static java.sql.DriverManager.getConnection;
 
 /**
- * This class provides services for the Warehouse UI (see {@link WarehouseInterface}).
+ * This class provides services for the batch UI (see {@link WarehouseInterface}).
  */
 
 public class WarehouseService implements WarehouseInterface {
@@ -25,7 +25,7 @@ public class WarehouseService implements WarehouseInterface {
     DbConnection dbConnection = new DbConnection();
 
     /**
-     * Updates the warehouse database entries based on the input from the Warehouse UI by the employee.
+     * Updates the batch database entries based on the input from the batch UI by the employee.
      *
      * @param bbd            the expiration date of the batch in the format of "yyyy-MM-dd"
      * @param amount         the amount of the ingredient in the batch
@@ -33,25 +33,25 @@ public class WarehouseService implements WarehouseInterface {
      */
     @Override
     public void updateDBfromWE(String bbd, double amount, String ingredientName) {
-        String sql = "INSERT INTO warehouse (id, bbd, amount, ingredient_name) VALUES (" + (dbConnection.getMaxId("warehouse") + 1) + ", '" + Date.valueOf(bbd) + "', " + amount + ", '" + ingredientName + "')";
+        String sql = "INSERT INTO batch (id, bbd, amount, ingredient_name) VALUES (" + (dbConnection.getMaxId("batch") + 1) + ", '" + Date.valueOf(bbd) + "', " + amount + ", '" + ingredientName + "')";
         dbConnection.updateDBentry(sql);
         logger.info("Database updated with new batch of " + ingredientName + " with expiration date " + bbd + " and amount " + amount);
     }
 
     /**
-     * Returns the list of contents in the warehouse in a user-friendly format.
+     * Returns the list of contents in the batch in a user-friendly format.
      *
-     * @return a list of strings containing the amount, unit, ingredient name, and expiration date of the batches in the warehouse
+     * @return a list of strings containing the amount, unit, ingredient name, and expiration date of the batches in the batch
      */
     public List<String> getListContent() {
-        List<Batch> warehouseList = ProductionService.getBatchTable();
+        List<Batch> batchList = ProductionService.getBatchTable();
         List<Ingredient> ingredientList = Ingredient.readIngredients();
         List<String> ListContent = new ArrayList<String>();
 
-        for (Batch good : warehouseList) {
+        for (Batch good : batchList) {
             ListContent.add(good.amount() + " " + DbConnection.getUnitfromIngredient(good.ingredient()) + " from " + good.ingredient() + " expiring: " + getbbd(good.ingredient()));
         }
-        logger.info("Warehouse contents retrieved and returned in user-friendly format.");
+        logger.info("batch contents retrieved and returned in user-friendly format.");
         return ListContent;
     }
 
@@ -102,7 +102,7 @@ public class WarehouseService implements WarehouseInterface {
 
 
     /**
-     * Inserts a new ingredient batch into the warehouse table of the database.
+     * Inserts a new ingredient batch into the batch table of the database.
      *
      * @param batch the ingredient batch to be inserted
      */
@@ -110,9 +110,9 @@ public class WarehouseService implements WarehouseInterface {
         logger.info("Inserting new ingredient batch: " + batch);
 
         try (Connection connection = DbConnection.getDbConnection();
-             PreparedStatement ps = connection.prepareStatement(" INSERT INTO `warehouse` (`id`,`bbd`, `amount`, `ingredient_name`) VALUES (? ,?, ?, ?)")) {
+             PreparedStatement ps = connection.prepareStatement(" INSERT INTO `batch` (`id`,`bbd`, `amount`, `ingredient_name`) VALUES (? ,?, ?, ?)")) {
 
-            ps.setInt(1, (DbConnection.getMaxId("warehouse") + 1));
+            ps.setInt(1, (DbConnection.getMaxId("batch") + 1));
             ps.setDate(2, (Date) batch.bbd());
             ps.setDouble(3, batch.amount());
             ps.setString(4, batch.ingredient());

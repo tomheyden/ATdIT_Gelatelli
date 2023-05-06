@@ -33,7 +33,7 @@ public class ProductionService implements ProductionInterface {
     public static List<Batch> getBatchTable() {
         List<Batch> batchList = new ArrayList<>();
 
-        String sql = "SELECT * FROM warehouse ORDER BY bbd ASC";
+        String sql = "SELECT * FROM batch ORDER BY bbd ASC";
         List<Object[]> rows = DbConnection.getDbTable(sql);
         for (Object[] row : rows) {
             Batch batch = new Batch(
@@ -138,8 +138,8 @@ public class ProductionService implements ProductionInterface {
                 boolean loopbool = true;
                 Double UpdatedAmount = inputAmount * getAmountNeededForOne(inputFlavour, entry.getKey());
                 while (loopbool) {
-                    String querySelect = "SELECT amount,id FROM warehouse WHERE ingredient_name = ? ORDER BY bbd ASC";
-                    String queryUpdate = "UPDATE warehouse SET amount = ? WHERE ingredient_name = ? ORDER BY bbd ASC";
+                    String querySelect = "SELECT amount,id FROM batch WHERE ingredient_name = ? ORDER BY bbd ASC";
+                    String queryUpdate = "UPDATE batch SET amount = ? WHERE ingredient_name = ? ORDER BY bbd ASC";
 
                     PreparedStatement stmtSelect = connection.prepareStatement(querySelect, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
                     stmtSelect.setString(1, entry.getKey());
@@ -150,7 +150,7 @@ public class ProductionService implements ProductionInterface {
                         int chargeId = rsSelect.getInt("id");
 
                         if (chargeAmount < UpdatedAmount) {
-                            String sqlDelete = "DELETE FROM warehouse WHERE id = ?";
+                            String sqlDelete = "DELETE FROM batch WHERE id = ?";
                             PreparedStatement stmtDelete = connection.prepareStatement(sqlDelete);
                             stmtDelete.setInt(1, chargeId);
                             int rowsDeleted = stmtDelete.executeUpdate();
@@ -222,7 +222,7 @@ public class ProductionService implements ProductionInterface {
             Map<String, Double> ingredientsNotAvailable = new TreeMap<>();
 
             // Group inventory by ingredient name and sum the amount for each group
-            String groupQuery = "SELECT ingredient_name, SUM(amount) AS total_amount FROM warehouse GROUP BY ingredient_name";
+            String groupQuery = "SELECT ingredient_name, SUM(amount) AS total_amount FROM batch GROUP BY ingredient_name";
             PreparedStatement groupStmt = connection.prepareStatement(groupQuery, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet groupRs = groupStmt.executeQuery();
             Map<String, Double> inventory = new HashMap<>();

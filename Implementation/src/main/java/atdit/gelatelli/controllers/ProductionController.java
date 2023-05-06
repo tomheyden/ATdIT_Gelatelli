@@ -46,7 +46,7 @@ public class ProductionController {
     @FXML
     private ProgressBar productionProgressBar;
     @FXML
-    private Label productionStatusLabel;
+    private TextArea productionStatusLabel;
     @FXML
     private ListView<String> receiptListView;
     @FXML
@@ -78,18 +78,14 @@ public class ProductionController {
     /**
      * This method is called when the "Produce" button is clicked by the user. It checks if there are enough
      * ingredients in the warehouse to produce the selected flavor and amount. If there are, it produces the flavor
-     * and updates the progress bar accordingly. If there are not, it displays an error message.
+     * and updates the progress batchbar accordingly. If there are not, it displays an error message.
      */
     @FXML
     private void handleProduceButtonAction() {
         logger.debug("Produce Button clicked");
 
-        System.out.println("Produce Button");
         String selectedFlavour = flavorComboBox.getValue();
         Double selectedAmount = Double.valueOf(sizeChoiceBox.getValue());
-
-        System.out.println(selectedAmount);
-        System.out.println(selectedFlavour);
 
         logger.debug("Selected Flavor: {}, Selected Amount: {}", selectedFlavour, selectedAmount);
 
@@ -97,10 +93,10 @@ public class ProductionController {
             ProductionService.produceFlavour(selectedFlavour, selectedAmount);
             productionStatusLabel.setText("Finished");
 
-            progessBarDisplay("green");
+            progessBarDisplay(true);
             logger.info("Successfully produced {} of {} flavor", selectedAmount, selectedFlavour);
         } else {
-            progessBarDisplay("red");
+            progessBarDisplay(false);
             logger.warn("Could not produce {} of {} flavor due to insufficient ingredients", selectedAmount, selectedFlavour);
         }
     }
@@ -135,7 +131,7 @@ public class ProductionController {
         });
     }
 
-    private void progessBarDisplay(String color) {
+    private void progessBarDisplay(boolean successful) {
     
         logger.debug("Displaying progress bar");
         productionProgressBar.setStyle("-fx-accent: blue;");
@@ -144,14 +140,14 @@ public class ProductionController {
         timeline.play();
 
         timeline.setOnFinished(e -> {
-
-            if (color.equalsIgnoreCase(color)) {
+            productionStatusLabel.setVisible(true);
+            if (!successful) {
                 logger.warn("Error in production: {}", ProductionService.errorOfIngredientsamount);
-                productionProgressBar.setStyle("-fx-accent: " + color + " ;");
+                productionProgressBar.setStyle("-fx-accent: red ;");
                 productionStatusLabel.setText(ProductionService.errorOfIngredientsamount);
             } else {
                 logger.info("Production finished successfully");
-                String finished = "finished";
+                String finished = "Finished";
                 productionStatusLabel.setText(finished);
                 productionProgressBar.setStyle("-fx-accent: green ;");
             }
