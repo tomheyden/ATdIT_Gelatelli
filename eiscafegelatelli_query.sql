@@ -33,7 +33,7 @@ INSERT INTO flavour (flavour_name, contribution_margin) VALUES
         ('Vanilla', 0.6),
         ('Oreo', 0.4),
         ('Strawberry', 0.5);
-	
+
 -- Exportiere Struktur von Tabelle eiscafegelatelli.ingredient
 CREATE TABLE IF NOT EXISTS `ingredient` (
 	`ingredient_name` VARCHAR(15) NOT NULL COMMENT 'ingredient''s unique name',
@@ -72,15 +72,6 @@ ON SCHEDULE EVERY 1 DAY
 DO
 BEGIN
     DELETE FROM warehouse WHERE bbd < CURDATE();
-END;
-
-CREATE TRIGGER check_amount_update_trigger
-AFTER UPDATE ON warehouse
-FOR EACH ROW
-BEGIN
-    IF NEW.amount = 0 THEN
-        DELETE FROM warehouse WHERE id = NEW.id;
-    END IF;
 END;
 
 -- Exportiere Daten aus Tabelle eiscafegelatelli.warehouse: 4~ rows (ungefähr)
