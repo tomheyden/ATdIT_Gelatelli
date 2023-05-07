@@ -143,7 +143,7 @@ public class ProductionService {
      * @param inputAmount  the amount of the flavour to be produced
      */
     public static void produceFlavour(String inputFlavour, Double inputAmount) {
-        try (Connection connection = DbConnection.getDbConnection()) {
+        try (Connection connection = DbConnection.getCurrentConnection()) {
 
             Map<String, Double> ingredientsForFlavour = FlavourtoIngredients(inputFlavour);
 
@@ -197,7 +197,7 @@ public class ProductionService {
      * @param ingredient the ingredient for the flavour
      */
     public static double getAmountNeededForOne(String flavour, String ingredient) {
-        try (Connection connection = DbConnection.getDbConnection()) {
+        try (Connection connection = DbConnection.getCurrentConnection()) {
 
             String sql = "SELECT amount FROM flavour_ingredient WHERE ingredient_name = ? AND flavour_name = ?";
 
@@ -230,7 +230,7 @@ public class ProductionService {
      */
     public static boolean checkIfEnoughIngredients(String inputFlavour, double inputAmount) {
 
-        try (Connection connection = DbConnection.getDbConnection()) {
+        try (Connection connection = DbConnection.getCurrentConnection()) {
             Map<String, Double> ingredientsForFlavour = FlavourtoIngredients(inputFlavour);
             Map<String, Double> ingredientsNotAvailable = new TreeMap<>();
 

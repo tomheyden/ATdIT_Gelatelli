@@ -29,6 +29,7 @@ public class MethodsTests {
     @Test
     public void testInsert () {
 
+
         //Insert Ingredients for Chocolate production
         datalist.add(new Batch(DbConnection.getMaxId("batch"),java.sql.Date.valueOf(localDate),0.50,"Bittersweet Cho"));
         datalist.add(new Batch(DbConnection.getMaxId("batch"),java.sql.Date.valueOf(localDate),15.0,"Egg Yolk"));

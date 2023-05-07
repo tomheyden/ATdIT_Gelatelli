@@ -20,7 +20,16 @@ import java.lang.*;
 public class DbConnection {
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public static Connection conn;
+    public static Connection conn=null;
+
+    public static Connection getCurrentConnection() throws SQLException {
+        if (conn != null ) {
+            if(!conn.isClosed())
+                return conn;
+        }
+
+        return getDbConnection();
+    }
 
     /**
      * Returns a Connection object for connecting to the Gelatelli database.
@@ -39,10 +48,10 @@ public class DbConnection {
         logger.info("Connecting to database with url: {} and user: {}", url, user);
         logMissingParameters(url, user, password);
 
-        Connection connection = getConnection(url, user, password);
+        conn = getConnection(url, user, password);
 
         logger.info("Database connection established");
-        return connection;
+        return conn;
     }
 
     /**
@@ -80,7 +89,7 @@ public class DbConnection {
         List<Object[]> finalList = new ArrayList<>();
 
 
-        try (Connection connection = getDbConnection();
+        try (Connection connection = getCurrentConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql1);
              ResultSet dbQueryResult = preparedStatement.executeQuery();) {
 
@@ -111,7 +120,7 @@ public class DbConnection {
     public static void updateDBentry(String sqlStatement) {
         String sql2 = sqlStatement;
 
-        try (Connection connection = getDbConnection();
+        try (Connection connection = getCurrentConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql2)) {
 
             int rowsInserted = preparedStatement.executeUpdate();
@@ -167,7 +176,7 @@ public class DbConnection {
      */
     public static int getMaxId(String table) {
         int maxId = 0;
-        try (Connection connection = getDbConnection();
+        try (Connection connection = getCurrentConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(id) FROM " + table)) {
 
             ResultSet resultSet = preparedStatement.executeQuery();

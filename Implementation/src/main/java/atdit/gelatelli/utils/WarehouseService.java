@@ -87,7 +87,7 @@ public class WarehouseService {
     public void insertIngredient(Batch batch) {
         logger.info("Inserting new ingredient batch: " + batch);
 
-        try (Connection connection = DbConnection.getDbConnection();
+        try (Connection connection = DbConnection.getCurrentConnection();
              PreparedStatement ps = connection.prepareStatement(" INSERT INTO `batch` (`id`,`bbd`, `amount`, `ingredient_name`) VALUES (? ,?, ?, ?)")) {
 
             ps.setInt(1, (DbConnection.getMaxId("batch") + 1));
