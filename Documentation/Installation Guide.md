@@ -10,6 +10,7 @@ Thank you for choosing our ice cream software. This guide will provide you with 
 ## Installation Process
 ### ...
 * Fork the Github Repository into your own Github account.
+* It is enough to only fork the Master Branch
 * Open the forked Repository in your IDE.
 ### Set up and start the database server
 The following guide uses MariaDB. While any other Database Server is possible, installation steps might vary.
@@ -22,7 +23,12 @@ While it is possible to manage the Database through the MariaDB command prompt, 
  To ensure that the database is not empty, execute the [given SQL-File](https://github.com/tomheyden/ATdIT_Gelatelli/blob/ReadMe/eiscafegelatelli_query.sql) to fill the database with mockdata.
 
 ## Configuration
-### ...
+##
+
+## Libraries 
+* Add Library org.apache.logging.log4j.core to your classpath - You can download the Maven Dependency here (https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core)
+
+
 * Open the pom.xml and change the artifactId and groupId to match the forked project. (noch genauer spezifizieren)
 ### Database Connection
 To connect the Programm to the Database you just created, alter the [db.properties](https://github.com/tomheyden/ATdIT_Gelatelli/blob/ReadMe/Implementation/src/main/resources/db.properties) file to match your configurations.
