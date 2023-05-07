@@ -3,7 +3,7 @@ module atdit.gelatelli {
     requires javafx.fxml;
     requires java.sql;
     requires org.kordamp.bootstrapfx.core;
-    requires slf4j.api;
+    requires org.slf4j;
 
 
     opens atdit.gelatelli to javafx.fxml;

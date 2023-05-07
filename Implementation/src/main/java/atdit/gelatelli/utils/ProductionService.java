@@ -4,6 +4,7 @@ import atdit.gelatelli.models.*;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,147 +16,263 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.*;
 
+/**
+ * This class implements the ProductionInterface and provides the production service methods.
+ */
 public class ProductionService implements ProductionInterface {
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    List<Flavour> productionList = new ArrayList<>();
-    static List<FlavourIngredient> flavourIngredientList = getFlavourIngredientTable();
-    WarehouseService warehouseService = new WarehouseService();
 
-    public static void produceFlavour(String flavour_name, double amount) {
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-        String tempingredient = FlavourtoIngredient(flavour_name).toString();
-        Double productionAmount = getProductionAmount(flavour_name,amount);
+    public static String errorOfIngredientsamount = "";
 
-        SortedMap<Date,Double> sortedExpirationList = getExpirationDates(flavour_name);
+    /**
+     * Returns a list of batches ordered by their expiration dates.
+     *
+     * @return a list of batches ordered by their expiration dates
+     */
+    public static List<Batch> getBatchTable() {
+        List<Batch> batchList = new ArrayList<>();
 
-        String query = "UPDATE warehouse SET amount = amount - ? WHERE flavour_name = ? AND bbd = ?;";
-
-        try (Connection connection = DbConnection.getDbConnection();
-             PreparedStatement ps = connection.prepareStatement(query)) {
-            // Set parameters for subquery
-
-            ps.setString(1, flavour_name);
-
-            for (int i = 0; productionAmount > sortedExpirationList.get(i); i++) {
-
-                ps.setDouble(2, productionAmount);
-                ps.executeQuery();
-                productionAmount =- sortedExpirationList.get(i);
-            }
-
-        } catch (SQLException e){}
-    }
-
-
-    public static double getProductionAmount(String flavour, double amount) {
-        List<FlavourIngredient> flavourIngredientsList = getFlavourIngredientTable();
-
-        double productionamount = 0;
-
-        for (FlavourIngredient flavourIngredienttemp : flavourIngredientsList) {
-            if (flavourIngredienttemp.flavour().equals(flavour)) {
-                productionamount = flavourIngredienttemp.amount() * amount;
-            }
-        }
-        return productionamount;
-    }
-
-
-    public static List<Batch> getBatchTable () {
-        List<Batch> batchlist = new ArrayList<>();
-
-        String sql = "SELECT * FROM warehouse ORDER BY bbd ASC";
-        List<Object []> rows = DbConnection.getDbTable(sql);
+        String sql = "SELECT * FROM batch ORDER BY bbd ASC";
+        List<Object[]> rows = DbConnection.getDbTable(sql);
         for (Object[] row : rows) {
             Batch batch = new Batch(
-                    Integer.parseInt((String)row[0]),
-                    Date.valueOf((String)row[1]),
+                    Integer.parseInt((String) row[0]),
+                    Date.valueOf((String) row[1]),
                     Double.parseDouble((String) row[2]),
                     (String) row[3]
             );
-            batchlist.add(batch);
+            batchList.add(batch);
         }
-        return batchlist;
+        logger.debug("Retrieved data from the database: {}", batchList);
+        return batchList;
     }
 
-    public static String FlavourtoIngredient(String flavour) {
+    /**
+     * Returns a map of ingredients and their corresponding amounts for a given flavour.
+     *
+     * @param flavour the name of the flavour
+     * @return a map of ingredients and their corresponding amounts for the given flavour
+     */
+    public static Map<String, Double> FlavourtoIngredients(String flavour) {
         List<FlavourIngredient> flavourIngredients = getFlavourIngredientTable();
-
+        Map<String, Double> ingredientsForFlavour = new TreeMap();
         for (FlavourIngredient obj : flavourIngredients) {
             if (obj.flavour().equalsIgnoreCase(flavour)) {
-                return obj.ingredient();
+                ingredientsForFlavour.put(obj.ingredient(), obj.amount());
             }
         }
-        return null;
+        logger.debug("Retrieved the ingredients of the flavour '{}' from the database: {}", flavour, ingredientsForFlavour);
+        return ingredientsForFlavour;
     }
 
-    public static List<FlavourIngredient> getFlavourIngredientTable(){
+    /**
+     * Returns a list of FlavourIngredient objects containing information about all flavour-ingredient relationships.
+     *
+     * @return a list of FlavourIngredient objects
+     */
+    public static List<FlavourIngredient> getFlavourIngredientTable() {
         String sql = """
-                      SELECT * FROM flavour_ingredient
-                      """ ;
+                SELECT * FROM flavour_ingredient
+                """;
 
         List<Object[]> result = DbConnection.getDbTable(sql);
         List<FlavourIngredient> flavourIngredients = new ArrayList<>();
 
         for (Object[] objarray : result) {
-            FlavourIngredient flavourIngredientobj = new FlavourIngredient ((String) objarray[0],(String) objarray[1] ,Double.parseDouble(objarray[2].toString()));
+            FlavourIngredient flavourIngredientobj = new FlavourIngredient((String) objarray[0], (String) objarray[1], Double.parseDouble(objarray[2].toString()));
             flavourIngredients.add(flavourIngredientobj);
         }
-        log.debug("Retrieved data from database: {}", result);
+        logger.debug("Retrieved data from database: {}", flavourIngredients);
         return flavourIngredients;
     }
 
+    /**
+     * Returns an ObservableList of strings containing the names of all flavours in the database.
+     *
+     * @return an ObservableList of strings containing the names of all flavours in the database
+     */
     public static ObservableList<String> getFlavourTable() {
         String sql = """
-                      SELECT * FROM flavour
-                      """ ;
+                SELECT * FROM flavour
+                """;
 
         List<Object[]> result = DbConnection.getDbTable(sql);
         ObservableList<String> flavourList = FXCollections.observableArrayList();
 
         for (Object[] objarray : result) {
-            String flavour= (String) objarray[0];
+            String flavour = (String) objarray[0];
             flavourList.add(flavour);
         }
-        log.debug("Retrieved data from database: {}", result);
-        System.out.println(flavourList);
+        logger.debug("Retrieved data from database: {}", result);
+        logger.debug("Flavour list: {}", flavourList);
         return flavourList;
     }
 
-    public static boolean checkifenoughIngredients (String ingredient , double amount) {
-        List<Batch> batchlist = getBatchTable();
-        double tempamount = 0;
-        String flavour;
+    public static List<String> getListContent(String flavour) {
+        List<String> resultList = new ArrayList<>();
 
-        for (Batch charge : batchlist) {
-            if (charge.ingredient().equals(ingredient)) {
-                tempamount += charge.amount();
-            }
-        }
-        return tempamount >= amount;
-    }
-
-    public static List<String> getListContent (String flavour) {
-        List <String> resultList = new ArrayList<>();
-
-        List <FlavourIngredient> flavourIngredientList = getFlavourIngredientTable();
+        List<FlavourIngredient> flavourIngredientList = getFlavourIngredientTable();
 
         for (FlavourIngredient flavourIngredient : flavourIngredientList) {
             if (flavourIngredient.flavour().equals(flavour)) {
                 resultList.add(flavourIngredient.amount() + " " + DbConnection.getUnitfromIngredient(flavourIngredient.ingredient()) + " from " + flavourIngredient.ingredient());
             }
         }
+        logger.debug("Generated list content for flavour {}: {}", flavour, resultList);
         return resultList;
     }
 
-    public static SortedMap<Date, Double> getExpirationDates (String flavour_name) {
-        List <Batch> batchTable = getBatchTable();
-        SortedMap<Date,Double> resultMap = new TreeMap<Date, Double>();
+    /**
+     * Produces the given flavour in the specified amount.
+     *
+     * @param inputFlavour the name of the flavour to be produced
+     * @param inputAmount  the amount of the flavour to be produced
+     */
+    public static void produceFlavour(String inputFlavour, Double inputAmount) {
+        try (Connection connection = DbConnection.getDbConnection()) {
 
-        for (Batch batch : batchTable) {
-            if (batch.ingredient().equalsIgnoreCase(flavour_name))
-            resultMap.put((Date) batch.bbd(),batch.amount());
+            Map<String, Double> ingredientsForFlavour = FlavourtoIngredients(inputFlavour);
+
+            for (Map.Entry<String, Double> entry : ingredientsForFlavour.entrySet()) {
+                boolean loopbool = true;
+                Double UpdatedAmount = inputAmount * getAmountNeededForOne(inputFlavour, entry.getKey());
+                while (loopbool) {
+                    String querySelect = "SELECT amount,id FROM batch WHERE ingredient_name = ? ORDER BY bbd ASC";
+                    String queryUpdate = "UPDATE batch SET amount = ? WHERE ingredient_name = ? ORDER BY bbd ASC";
+
+                    PreparedStatement stmtSelect = connection.prepareStatement(querySelect, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                    stmtSelect.setString(1, entry.getKey());
+                    ResultSet rsSelect = stmtSelect.executeQuery();
+
+                    if (rsSelect.next()) {
+                        double chargeAmount = rsSelect.getDouble("amount");
+                        int chargeId = rsSelect.getInt("id");
+
+                        if (chargeAmount < UpdatedAmount) {
+                            String sqlDelete = "DELETE FROM batch WHERE id = ?";
+                            PreparedStatement stmtDelete = connection.prepareStatement(sqlDelete);
+                            stmtDelete.setInt(1, chargeId);
+                            int rowsDeleted = stmtDelete.executeUpdate();
+                            UpdatedAmount -= chargeAmount;
+                            System.out.println(rowsDeleted + " deleted");
+                            logger.debug("{} units of {} used up. Rows deleted: {}", chargeAmount, entry.getKey(), rowsDeleted);
+                            continue;
+                        } else if (chargeAmount >= UpdatedAmount) {
+                            PreparedStatement stmtUpdate = connection.prepareStatement(queryUpdate);
+                            stmtUpdate.setString(2, entry.getKey());
+                            stmtUpdate.setDouble(1, chargeAmount - UpdatedAmount);
+                            stmtUpdate.executeUpdate();
+                            logger.debug("Updated amount for {}: {}", entry.getKey(), chargeAmount - UpdatedAmount);
+                            break;
+                        }
+                    } else {
+                        logger.warn("No rows found for ingredient {}.", entry.getKey());
+                    }
+                }
+            }
+            logger.info("{} units of {} produced.", inputAmount, inputFlavour);
+        } catch (SQLException e) {
+            logger.error("Error producing flavour {}: {}", inputFlavour, e.getMessage());
         }
-        return resultMap;
+    }
+
+    /**
+     * Returns the Amount of the Ingredient that you need to produce a specific Flavour
+     *
+     * @param flavour    the name of the flavour to be produced
+     * @param ingredient the ingredient for the flavour
+     */
+    public static double getAmountNeededForOne(String flavour, String ingredient) {
+        try (Connection connection = DbConnection.getDbConnection()) {
+
+            String sql = "SELECT amount FROM flavour_ingredient WHERE ingredient_name = ? AND flavour_name = ?";
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, ingredient);
+            stmt.setString(2, flavour);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getDouble("amount");
+            } else {
+                String errorMessage = "Invalid flavour-ingredient combination: " + flavour + "-" + ingredient;
+                logger.error(errorMessage);
+                throw new IllegalArgumentException(errorMessage);
+            }
+        } catch (SQLException e) {
+            String errorMessage = "Error while getting amount needed for one: " + e.getMessage();
+            logger.error(errorMessage);
+        }
+
+        return 0.0;
+    }
+
+    /**
+     * Checks if there are enough ingredient across all batches to produce a specified amount of a Flavour
+     *
+     * @param inputFlavour the name of the Flavour to check
+     * @param inputAmount  the desired amount to be produced
+     * @return true if there are enough Ingredients to produce the desired amount of the Flavour, false otherwise
+     */
+    public static boolean checkIfEnoughIngredients(String inputFlavour, double inputAmount) {
+
+        try (Connection connection = DbConnection.getDbConnection()) {
+            Map<String, Double> ingredientsForFlavour = FlavourtoIngredients(inputFlavour);
+            Map<String, Double> ingredientsNotAvailable = new TreeMap<>();
+
+            // Group inventory by ingredient name and sum the amount for each group
+            String groupQuery = "SELECT ingredient_name, SUM(amount) AS total_amount FROM batch GROUP BY ingredient_name";
+            PreparedStatement groupStmt = connection.prepareStatement(groupQuery, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet groupRs = groupStmt.executeQuery();
+            Map<String, Double> inventory = new HashMap<>();
+            while (groupRs.next()) {
+                String ingredient = groupRs.getString("ingredient_name");
+                Double amount = groupRs.getDouble("total_amount");
+                inventory.put(ingredient, amount);
+            }
+
+            /* Comparision of the two List to check if ingredients are available
+
+            - ingredientsForFlavour is a List containing all Ingredients we need to produce the Flavour
+            - inventory is a Map containing all the ingredients with a Sum of their amount to check if all the added amount is enough to produce
+
+             */
+            Double tempamount;
+            for (Map.Entry<String, Double> entry : ingredientsForFlavour.entrySet()) {
+                tempamount = inputAmount * getAmountNeededForOne(inputFlavour, entry.getKey());
+                if (!inventory.containsKey(entry.getKey())) {
+                    ingredientsNotAvailable.put(entry.getKey(), tempamount);
+                } else if (inventory.containsKey(entry.getKey()) && inventory.get(entry.getKey()) < tempamount) {
+                    ingredientsNotAvailable.put(entry.getKey(), inventory.get(entry.getKey()) - tempamount);
+                }
+            }
+
+            /* Check if all ingredients for the flavour are available
+
+            - If yes Then confirm
+            - If no then print out error Message containing missing Ingredients with values
+
+             */
+
+            boolean ingredientsAvailable = false;
+            if (ingredientsNotAvailable.isEmpty()) {
+                logger.info("All Ingredients are available");
+                return true;
+            } else {
+                StringBuilder sb = new StringBuilder("The following Ingredients are not available --> ");
+                for (Map.Entry<String, Double> entry : ingredientsNotAvailable.entrySet()) {
+                    sb.append(entry.getKey()).append("=").append(entry.getValue()).append(",");
+                }
+                errorOfIngredientsamount = sb.deleteCharAt(sb.length() - 1).toString(); // remove the trailing comma
+                logger.warn(errorOfIngredientsamount);
+            }
+
+            return false;
+
+        } catch (SQLException e) {
+            logger.error("An error occurred while checking ingredients availability", e);
+            return false;
+        }
     }
 }

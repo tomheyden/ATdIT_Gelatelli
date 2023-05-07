@@ -2,28 +2,45 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="homeAnchorPane" prefHeight="386.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="atdit.gelatelli.controllers.HomeController">
+<AnchorPane fx:id="homeAnchorPane" prefHeight="386.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="atdit.gelatelli.controllers.HomeController">
 
-    <Label layoutX="175.0" layoutY="160.0" prefHeight="20.0" prefWidth="137.0" text="Eiscafé Gelatelli " textAlignment="CENTER" AnchorPane.leftAnchor="175.0" AnchorPane.topAnchor="160.0">
+    <Label fx:id="title_gelatelli" layoutX="202.0" layoutY="33.0" prefHeight="20.0" prefWidth="137.0" text="%title_gelatelli.text" textAlignment="CENTER" AnchorPane.leftAnchor="202.0" AnchorPane.topAnchor="33.0">
       <font>
          <Font name="Arial Bold" size="17.0" />
       </font></Label>
-   <Label layoutX="175.0" layoutY="143.0" prefHeight="17.0" prefWidth="137.0" text="IT System">
+   <Label fx:id="title_itSystem" alignment="CENTER" layoutX="202.0" layoutY="14.0" prefHeight="17.0" prefWidth="129.0" text="%title_itSystem.text" textAlignment="CENTER">
       <font>
          <Font name="Arial" size="11.0" />
       </font>
    </Label>
-   <Button fx:id="productionButton" layoutX="126.0" layoutY="199.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="106.0" text="Produktion" />
-   <Button fx:id="warehouseButton" layoutX="243.0" layoutY="199.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="106.0" text="Lager" />
-   <ImageView fitHeight="122.0" fitWidth="119.0" layoutX="177.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+   <MenuBar prefHeight="21.0" prefWidth="82.0">
+      <menus>
+         <Menu text="Language">
+            <items>
+               <MenuItem onAction="#changeLanguageToEnglish" text="English" />
+               <MenuItem onAction="#changeLanguageToGerman" text="Deutsch" />
+            </items>
+         </Menu>
+      </menus>
+   </MenuBar>
+   <Button fx:id="productionButton" layoutX="153.0" layoutY="252.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="106.0" text="%productionButton.text" />
+   <Button fx:id="warehouseButton" layoutX="270.0" layoutY="252.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="106.0" text="%warehouseButton.text" />
+   <ImageView fitHeight="80.0" fitWidth="252.0" layoutX="139.0" layoutY="107.0" pickOnBounds="true" preserveRatio="true">
       <image>
-         <Image url="@../../Gelatelli_Logo.png" />
+         <Image url="@../../gelatelli-new2.png" />
       </image>
    </ImageView>
+   <Label fx:id="dbConnection" alignment="CENTER" layoutX="18.0" layoutY="214.0" prefHeight="18.0" prefWidth="497.0" text="DBConnection.text">
+      <font>
+         <Font name="Arial Italic" size="11.0" />
+      </font></Label>
 
 </AnchorPane>

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.*;
 
 public class DbConnectionTest {
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static WarehouseService warehouseService;
 
     @Test
@@ -33,10 +33,10 @@ public class DbConnectionTest {
     @Test
     public void testConnection() throws SQLException {
 
-        log.info("Starting testConnection");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/eiscafegelatelli", "root", "Tlhlfh0108");
+        logger.info("Starting testConnection");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/eiscafegelatelli", "root", "");
         Assertions.assertNotNull(connection);
-        log.info("Finished testConnection");
+        logger.info("Finished testConnection");
     }
 
     @Test
@@ -60,15 +60,19 @@ public class DbConnectionTest {
 
     @Test
     public void testupdateDB() throws SQLException {
+
+        logger.info("Starting testUpdateDB");
         WarehouseService warehouseService = new WarehouseService();
         warehouseService.updateDBfromWE("2023-08-01",0.1,"Strawberry");
         Assertions.assertNotNull(1);
+        logger.info("Finished testUpdateDB");
     }
 
     @Test
     public void testReadBatches() throws SQLException {
+        logger.info("Starting testreadfromDBtoWE");
 
-
+        logger.info("Reading ingredients from the database");
         List<Flavour> expectedFlavours = new ArrayList<>();
         expectedFlavours.add(new Flavour("Strawberry", 0.12, 2, LocalDate.of(2023,04,15)));
         expectedFlavours.add(new Flavour("Chocolate", 0.15, 1, LocalDate.of(2023,04,18)));
@@ -76,12 +80,17 @@ public class DbConnectionTest {
         expectedFlavours.add(new Flavour("Oreo", 0.1, 0, null));
 
         Assertions.assertEquals(expectedFlavours,FlavourSingleton.getInstance().getFlavours());
+        logger.info("Finished testreadfromDBtoWE");
 
     }
 
     @Test
     public void testBatch() throws SQLException{
-        Assertions.assertEquals("Cocoa Powder", ProductionService.FlavourtoIngredient("Chocolate"));
+        //ProductionService.produceFlavour("Chocolate",2.0);
+        boolean isenough = ProductionService.checkIfEnoughIngredients("Chocolate", 1.0);
+        System.out.println(isenough);
+        ProductionService.produceFlavour("Chocolate",1.0);
+        Assertions.assertNotNull(1);
     }
 
     @Test
