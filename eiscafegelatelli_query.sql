@@ -57,7 +57,7 @@ INSERT INTO `ingredient` (`ingredient_name`, `purchase_price`, `unit`) VALUES
     ('Lemon Juice', 3.0,'l'),
     ('Fresh Strawberries', 7,'kg');
 
--- Exportiere Struktur von Tabelle eiscafegelatelli.warehouse
+-- Exportiere Struktur von Tabelle eiscafegelatelli.batch
 CREATE TABLE IF NOT EXISTS `batch` (
   `id` INT(10) NOT NULL COMMENT 'unique id to identify batch of ingredients',
   `bbd` DATE NOT NULL COMMENT 'ingredient batch''s best before date',
@@ -74,9 +74,9 @@ BEGIN
     DELETE FROM batch WHERE bbd < CURDATE();
 END;
 
--- Exportiere Daten aus Tabelle eiscafegelatelli.warehouse: 4~ rows (ungefähr)
-DELETE FROM `warehouse`;
-INSERT INTO `warehouse` (`id`, `bbd`, `amount`, `ingredient_name`) VALUES
+-- Exportiere Daten aus Tabelle eiscafegelatelli.batch: 4~ rows (ungefähr)
+DELETE FROM `batch`;
+INSERT INTO `batch` (`id`, `bbd`, `amount`, `ingredient_name`) VALUES
 	(1, '2025.05.23', 1, 'Unsweetened Cocoa Powder'),
 	(2, '2023.12.31', 0.22, 'Vanilla Extract'),
 	(3, '2024.12.31', 0.4, 'Oreo Cookies'),
