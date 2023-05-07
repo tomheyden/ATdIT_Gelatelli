@@ -1,4 +1,4 @@
-![LogoGelatelli](Logo_gelatelli.svg)
+![LogoGelatelli](Images/Logo_gelatelli.svg)
 
 
 # IT-System for Eiscafé Gelatelli
@@ -19,7 +19,7 @@ This programm is designed to help ice cream shops streamline their production pr
 - [Contact](#contact)
 
 ## Installation
-For information on how to install the programm and get it ready-to-use refer to the [Installation Guide](https://github.com/tomheyden/ATdIT_Gelatelli/blob/ReadMe/Installation%20Guide.md).
+For information on how to install the programm and get it ready-to-use refer to the [Installation Guide](Documentation/Installation%20Guide.md).
 
 ## Features
 
@@ -54,11 +54,11 @@ For information on how to install the programm and get it ready-to-use refer to 
 
 ## Usage
 
-For information on how to use the programm once it is installed please refer to the [Operating Manual](https://github.com/tomheyden/ATdIT_Gelatelli/blob/ReadMe/Operating%20Manual.md).
+For information on how to use the programm once it is installed please refer to the [Operating Manual](Documentation/Operating%20Manual.md).
 
 ## Documentation
 
-For information on the technical aspects of the project please refer to [Documentation](Documentation.md).
+For information on the technical aspects of the project please refer to [Documentation](Documentation/Documentation.md).
 
 ## Contact
 
