@@ -1,4 +1,4 @@
-![LogoGelatelli](Logo_gelatelli.svg)
+![LogoGelatelli](Images/Logo_gelatelli.svg)
 
 
 # IT-System for Eiscafé Gelatelli
