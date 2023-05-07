@@ -17,9 +17,9 @@ import java.util.ArrayList;
 import java.util.*;
 
 /**
- * This class implements the ProductionInterface and provides the production service methods.
+ * This class provides the production service methods.
  */
-public class ProductionService implements ProductionInterface {
+public class ProductionService {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

@@ -2,14 +2,11 @@ package atdit.gelatelli.utils;
 
 import java.lang.invoke.MethodHandles;
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import atdit.gelatelli.models.*;
-import atdit.gelatelli.utils.WarehouseInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,10 +14,10 @@ import org.slf4j.LoggerFactory;
 import static java.sql.DriverManager.getConnection;
 
 /**
- * This class provides services for the batch UI (see {@link WarehouseInterface}).
+ * This class provides services for the batch UI ().
  */
 
-public class WarehouseService implements WarehouseInterface {
+public class WarehouseService {
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     DbConnection dbConnection = new DbConnection();
 
@@ -31,7 +28,7 @@ public class WarehouseService implements WarehouseInterface {
      * @param amount         the amount of the ingredient in the batch
      * @param ingredientName the name of the ingredient in the batch
      */
-    @Override
+
     public void updateDBfromWE(String bbd, double amount, String ingredientName) {
         String sql = "INSERT INTO batch (id, bbd, amount, ingredient_name) VALUES (" + (dbConnection.getMaxId("batch") + 1) + ", '" + Date.valueOf(bbd) + "', " + amount + ", '" + ingredientName + "')";
         dbConnection.updateDBentry(sql);
