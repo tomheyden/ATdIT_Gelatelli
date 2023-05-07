@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Displays a JavaFX scene in a new stage.
  *
- * @param scene the scene to be displayed
  */
 public class StageHelper {
     private static final Logger logger = LoggerFactory.getLogger(StageHelper.class);
