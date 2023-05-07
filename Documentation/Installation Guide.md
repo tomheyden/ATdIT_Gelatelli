@@ -8,7 +8,7 @@ Thank you for choosing our ice cream software. This guide will provide you with 
 * Integrated Development Environment (IDE): An IDE (e.g. IntelliJ, Eclipse) is needed in order to run the software.
 
 ## Installation Process
-### ...
+### Fork from Github
 * Fork the Github Repository into your own Github account.
 * It is enough to only fork the Master Branch
 * Open the forked Repository in your IDE.
