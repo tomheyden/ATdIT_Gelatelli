@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="homeAnchorPane" prefHeight="386.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="atdit.gelatelli.controllers.HomeController">
+<AnchorPane fx:id="homeAnchorPane" prefHeight="386.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="atdit.gelatelli.controllers.HomeController">
 
     <Label fx:id="title_gelatelli" layoutX="202.0" layoutY="33.0" prefHeight="20.0" prefWidth="137.0" text="%title_gelatelli.text" textAlignment="CENTER" AnchorPane.leftAnchor="202.0" AnchorPane.topAnchor="33.0">
       <font>
