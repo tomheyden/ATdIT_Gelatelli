@@ -67,6 +67,7 @@ public class WarehouseController {
     private boolean inserted;
 
     Main main = new Main();
+    StageHelper stageHelper = new StageHelper();
 
     /**
      * Initializes the UI components and sets their initial values.
@@ -109,35 +110,35 @@ public class WarehouseController {
         logger.debug("Handling the insert button action.");
         doneLabel.setText("");
         doneLabel.setVisible(true);
-        boolean fieldsempty = true;
+        boolean fieldsempty = false;
 
         // Validate that all required fields have been filled out
         if (expiryDatePicker.getValue() == null) {
-            handleEmptyBox(expiryDatePicker, doneLabel, "Date");
-            fieldsempty = false;
+            stageHelper.handleEmptyBox(expiryDatePicker, doneLabel, "Date");
+            fieldsempty = true;
             logger.warn("Expiry date is not selected");
         } else {
             expiryDatePicker.setStyle("-fx-border-color: WHITE;");
         }
 
         if (amountComboBox.getValue() == null) {
-            handleEmptyBox(amountComboBox, doneLabel, "Amount");
-            fieldsempty = false;
+            stageHelper.handleEmptyBox(amountComboBox, doneLabel, "Amount");
+            fieldsempty = true;
             logger.warn("Amount is not selected");
         } else {
             amountComboBox.setStyle("-fx-border-color: WHITE;");
         }
 
         if (goodsComboBox.getValue() == null) {
-            handleEmptyBox(goodsComboBox, doneLabel, "Ingredient");
-            fieldsempty = false;
+            stageHelper.handleEmptyBox(goodsComboBox, doneLabel, "Ingredient");
+            fieldsempty = true;
             logger.warn("Ingredient is not selected");
         } else {
             goodsComboBox.setStyle("-fx-border-color: WHITE;");
         }
 
         // If all fields have been filled out, insert the new item into the database
-        if (fieldsempty) {
+        if (!fieldsempty) {
             WarehouseService.insertIngredient(new Batch(0, Date.valueOf(expiryDatePicker.getValue()), amountComboBox.getValue(), goodsComboBox.getValue()));
             doneLabel.setText("Done");
             doneLabel.setTextFill(Color.GREEN);
@@ -149,20 +150,6 @@ public class WarehouseController {
             inserted = true;
             logger.info("New inventory item added to the database: {} amount of {} with expiry date {}");
         }
-    }
-
-    /**
-     * Handles the case where a required input field is empty.
-     *
-     * @param control The control representing the empty input field.
-     * @param label   The label to display the error message.
-     * @param type    The type of the input field.
-     */
-    private void handleEmptyBox(Control control, Label label, String type) {
-        control.setStyle("-fx-border-color: RED;");
-        label.setText("Values are missing");
-        label.setTextFill(Color.RED);
-        logger.warn("Required input field of type {} is empty", type);
     }
 
     /**

@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="atdit.gelatelli.controllers.ProductionController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="atdit.gelatelli.controllers.ProductionController">
    <children>
       <Accordion layoutX="66.0" layoutY="49.0" />
       <HBox layoutX="33.0" layoutY="59.0" prefHeight="27.0" prefWidth="198.0">
@@ -35,6 +35,7 @@
       <Label fx:id="recipeLabel" layoutX="239.0" layoutY="38.0" prefHeight="18.0" prefWidth="91.0" text="%recipeLabel.text" />
       <ListView fx:id="receiptListView" layoutX="235.0" layoutY="61.0" prefHeight="79.0" prefWidth="306.0" />
       <ListView fx:id="warehouseListView" layoutX="239.0" layoutY="180.0" prefHeight="79.0" prefWidth="306.0" />
-      <TextArea fx:id="productionStatusLabel" layoutX="35.0" layoutY="314.0" prefHeight="71.0" prefWidth="366.0" text=""/>
+      <TextArea fx:id="productionStatusLabel" layoutX="35.0" layoutY="314.0" prefHeight="18.0" prefWidth="366.0" text="" />
+      <Label fx:id="doneLabelProduction" layoutX="173.0" layoutY="288.0" prefHeight="18.0" prefWidth="226.0" text="Label" />
    </children>
 </AnchorPane>

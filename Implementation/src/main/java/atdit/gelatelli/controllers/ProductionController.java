@@ -55,11 +55,14 @@ public class ProductionController {
     private ListView<String> activityListView;
     @FXML
     private Button goBackButton;
+    @FXML
+    private Label doneLabelProduction;
 
     private static final Logger logger = LoggerFactory.getLogger(ProductionController.class);
 
     WarehouseService warehouseService = new WarehouseService();
     Main main = new Main();
+    StageHelper stageHelper = new StageHelper();
 
 
     /**
@@ -83,21 +86,43 @@ public class ProductionController {
     @FXML
     private void handleProduceButtonAction() {
         logger.debug("Produce Button clicked");
+        boolean fieldsempty = false;
 
-        String selectedFlavour = flavorComboBox.getValue();
-        Double selectedAmount = Double.valueOf(sizeChoiceBox.getValue());
-
-        logger.debug("Selected Flavor: {}, Selected Amount: {}", selectedFlavour, selectedAmount);
-
-        if (ProductionService.checkIfEnoughIngredients(selectedFlavour, selectedAmount)) {
-            ProductionService.produceFlavour(selectedFlavour, selectedAmount);
-            productionStatusLabel.setText("Finished");
-
-            progessBarDisplay(true);
-            logger.info("Successfully produced {} of {} flavor", selectedAmount, selectedFlavour);
+        // Validate that all required fields have been filled out
+        if (flavorComboBox.getValue() == null) {
+            stageHelper.handleEmptyBox(flavorComboBox, doneLabelProduction, "Date");
+            fieldsempty = true;
+            logger.warn("Flavour is not selected");
         } else {
-            progessBarDisplay(false);
-            logger.warn("Could not produce {} of {} flavor due to insufficient ingredients", selectedAmount, selectedFlavour);
+            flavorComboBox.setStyle("-fx-border-color: WHITE;");
+        }
+
+        if (sizeChoiceBox.getValue() == null) {
+            stageHelper.handleEmptyBox(sizeChoiceBox, doneLabelProduction, "Amount");
+            fieldsempty = true;
+            logger.warn("Amount is not selected");
+        } else {
+            sizeChoiceBox.setStyle("-fx-border-color: WHITE;");
+        }
+
+        if (!fieldsempty) {
+            String selectedFlavour = flavorComboBox.getValue();
+            Double selectedAmount = Double.valueOf(sizeChoiceBox.getValue());
+
+            doneLabelProduction.setVisible(false);
+
+            logger.debug("Selected Flavor: {}, Selected Amount: {}", selectedFlavour, selectedAmount);
+
+            if (ProductionService.checkIfEnoughIngredients(selectedFlavour, selectedAmount)) {
+                ProductionService.produceFlavour(selectedFlavour, selectedAmount);
+                productionStatusLabel.setText("Finished");
+
+                progessBarDisplay(true);
+                logger.info("Successfully produced {} of {} flavor", selectedAmount, selectedFlavour);
+            } else {
+                progessBarDisplay(false);
+                logger.warn("Could not produce {} of {} flavor due to insufficient ingredients", selectedAmount, selectedFlavour);
+            }
         }
     }
 
@@ -109,6 +134,7 @@ public class ProductionController {
     public void initialize() {
         logger.info("Initializing ProductionController");
         productionStatusLabel.setVisible(false);
+        doneLabelProduction.setVisible(false);
         warehouseListView.getItems().addAll(warehouseService.getListContent());
         flavorComboBox.getItems().addAll(ProductionService.getFlavourTable());
 
