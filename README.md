@@ -1,14 +1,25 @@
+![LogoGelatelli](Logo_gelatelli.svg)
+
+
 # IT-System for Eiscafé Gelatelli
 
-This programm is designed to help ice cream shops streamline their production process and optimize their inventory management. It includes a range of features to help shops use their ingredients more efficiently, make informed predictions about ice cream demand, and track their inventory and sales
+This programm is designed to help ice cream shops streamline their production process and optimize their inventory management. It includes a range of features to help shops use their ingredients more efficiently, make informed predictions about ice cream demand, and track their inventory and sales.
+
+## Table of Contents
+- [Installation](#installation)
+- [Features](#features)
+  - [Production Planning](#production-planning)
+  - [Efficient Ingredient Usage](#efficient-ingredient-usage)
+  - [Efficient Ingredient Procurement](#efficient-ingredient-procurement)
+  - [Criteria-Based Prediction](#criteria-based-prediction)
+  - [Ice Cream Consumption Tracking](#ice-cream-consumption-tracking)
+  - [Data Analysis for Trend Detection](#data-analysis-for-trend-detection)
+- [Usage](#usage)
+- [Documentation](#documentation)
+- [Contact](#contact)
 
 ## Installation
-
-[Installation instructions]
-
-## Usage
-
-[Usage instructions]
+For information on how to install the programm and get it ready-to-use refer to the [Installation Guide](https://github.com/tomheyden/ATdIT_Gelatelli/blob/ReadMe/Installation%20Guide.md).
 
 ## Features
 
@@ -40,9 +51,14 @@ This programm is designed to help ice cream shops streamline their production pr
 ### Data Analysis for Trend Detection
 * Anonymized analysis of IoT data to detect trends in ice cream flavors
 
+
+## Usage
+
+For information on how to use the programm once it is installed please refer to the [Operating Manual](https://github.com/tomheyden/ATdIT_Gelatelli/blob/ReadMe/Operating%20Manual.md).
+
 ## Documentation
 
-[Links to documentation or user guides]
+For information on the technical aspects of the project please refer to [Documentation](Documentation.md).
 
 ## Contact
 
