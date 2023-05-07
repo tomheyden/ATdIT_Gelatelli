@@ -14,11 +14,16 @@ import org.slf4j.LoggerFactory;
 import static java.sql.DriverManager.getConnection;
 
 /**
- * This class provides services for the batch UI ().
+ * This class provides services for the Warehouse UI.
  */
 
 public class WarehouseService {
+
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    /**
+     * Instance from the DbConnection Class
+     */
     DbConnection dbConnection = new DbConnection();
 
     /**
@@ -36,17 +41,16 @@ public class WarehouseService {
     }
 
     /**
-     * Returns the list of contents in the batch in a user-friendly format.
+     * Returns the list of contents in the batch in the format for the List displayed on the Warehouse UI.
      *
      * @return a list of strings containing the amount, unit, ingredient name, and expiration date of the batches in the batch
      */
     public List<String> getListContent() {
         List<Batch> batchList = ProductionService.getBatchTable();
-        List<Ingredient> ingredientList = Ingredient.readIngredients();
         List<String> ListContent = new ArrayList<String>();
 
         for (Batch good : batchList) {
-            ListContent.add(good.amount() + " " + DbConnection.getUnitfromIngredient(good.ingredient()) + " from " + good.ingredient() + " expiring: " + getbbd(good.ingredient()));
+            ListContent.add(good.amount() + " " + DbConnection.getUnitfromIngredient(good.ingredient()) + " from " + good.ingredient() + " expiring: " + good.bbd());
         }
         logger.info("batch contents retrieved and returned in user-friendly format.");
         return ListContent;
@@ -76,34 +80,11 @@ public class WarehouseService {
     }
 
     /**
-     * Returns the expiration date of the batch containing the specified ingredient.
-     *
-     * @param ingredient the name of the ingredient in the batch
-     * @return the expiration date of the batch containing the specified ingredient, or null if no such batch exists
-     */
-    public static Date getbbd(String ingredient) {
-        List<Batch> batchList = ProductionService.getBatchTable();
-        logger.info("Getting expiration date for ingredient: " + ingredient);
-
-
-        for (Batch batch : batchList) {
-            if (batch.ingredient().equalsIgnoreCase(ingredient)) {
-                Date bbd = (Date) batch.bbd();
-                logger.info("Found batch for ingredient " + ingredient + " with expiration date: " + bbd);
-                return bbd;
-            }
-        }
-        logger.warn("No batch found for ingredient: " + ingredient);
-        return null;
-    }
-
-
-    /**
      * Inserts a new ingredient batch into the batch table of the database.
      *
      * @param batch the ingredient batch to be inserted
      */
-    public static void insertIngredient(Batch batch) {
+    public void insertIngredient(Batch batch) {
         logger.info("Inserting new ingredient batch: " + batch);
 
         try (Connection connection = DbConnection.getDbConnection();

@@ -51,26 +51,6 @@ public class Flavour implements Comparable<Flavour> {
     }
 
     /**
-     * Gets the sort value of the flavour.
-     *
-     * @return the sort value of the flavour
-     */
-    public int getSort() {
-        logger.debug("Retrieving the sort value of the Flavour instance");
-        return sort;
-    }
-
-    /**
-     * Sets the sort value of the flavour.
-     *
-     * @param sort the new sort value of the flavour
-     */
-    public void setSort(int sort) {
-        this.sort = sort;
-        logger.debug("Setting the sort value of the Flavour instance to {}", sort);
-    }
-
-    /**
      * Gets the name of the flavour.
      *
      * @return the name of the flavour
@@ -80,35 +60,6 @@ public class Flavour implements Comparable<Flavour> {
         return flavourName;
     }
 
-    /**
-     * Sets the name of the flavour.
-     *
-     * @param flavourName the new name of the flavour
-     */
-    public void setFlavourName(String flavourName) {
-        this.flavourName = flavourName;
-        logger.debug("Setting the name of the Flavour instance to {}", flavourName);
-    }
-
-    /**
-     * Gets the contribution margin of the flavour.
-     *
-     * @return the contribution margin of the flavour
-     */
-    public double getContributionMargin() {
-        logger.debug("Retrieving the contribution margin of the Flavour instance");
-        return contributionMargin;
-    }
-
-    /**
-     * Sets the contribution margin of the flavour.
-     *
-     * @param contributionMargin the new contribution margin of the flavour
-     */
-    public void setContributionMargin(double contributionMargin) {
-        this.contributionMargin = contributionMargin;
-        logger.debug("Setting the contribution margin of the Flavour instance to {}", contributionMargin);
-    }
 
     /**
      * Gets the earliest best-before date of the flavour.
@@ -121,27 +72,10 @@ public class Flavour implements Comparable<Flavour> {
     }
 
     /**
-     * Sets the earliest best-before date of the flavour.
-     *
-     * @param earliestBBD the new earliest best-before date of the flavour
-     */
-    public void setEarliestBBD(LocalDate earliestBBD) {
-        this.earliestBBD = earliestBBD;
-        logger.debug("Setting the earliest best before date of the Flavour instance to {}", earliestBBD);
-    }
-
-    /**
      * Increases the sort value of the flavour by 1.
      */
     public void increaseSort() {
         sort++;
-    }
-
-    /**
-     * Resets the sort value of the flavour to 0.
-     */
-    public void resetSort() {
-        sort = 0;
     }
 
     /**

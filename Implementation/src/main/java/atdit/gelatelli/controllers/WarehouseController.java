@@ -49,8 +49,6 @@ public class WarehouseController {
     @FXML
     private ListView<String> warehouseListView;
     @FXML
-    private Button deleteButton;
-    @FXML
     private Button updateButton;
     @FXML
     private Button warehouseGoBackButton;
@@ -139,7 +137,7 @@ public class WarehouseController {
 
         // If all fields have been filled out, insert the new item into the database
         if (!fieldsempty) {
-            WarehouseService.insertIngredient(new Batch(0, Date.valueOf(expiryDatePicker.getValue()), amountComboBox.getValue(), goodsComboBox.getValue()));
+            warehouseService.insertIngredient(new Batch(0, Date.valueOf(expiryDatePicker.getValue()), amountComboBox.getValue(), goodsComboBox.getValue()));
             doneLabel.setText("Done");
             doneLabel.setTextFill(Color.GREEN);
             doneLabel.setVisible(true);
@@ -203,46 +201,18 @@ public class WarehouseController {
      */
     private void refreshItems() {
         logger.debug("Refreshing input fields");
-        List<Control> controls = new ArrayList<>();
-        controls.add(expiryDatePicker);
-        controls.add(amountComboBox);
-        controls.add(goodsComboBox);
-        controls.add(filterComboBox);
 
-        List<Label> labels = new ArrayList<>();
-        labels.add(doneLabel);
-        labels.add(hintLabel);
+        try {
+            expiryDatePicker.setValue(null);
+            expiryDatePicker.setStyle("-fx-border-color: WHITE;");
+            amountComboBox.getItems().clear();
+            amountComboBox.setStyle("-fx-border-color: WHITE;");
+            goodsComboBox.getItems().clear();
+            goodsComboBox.setStyle("-fx-border-color: WHITE;");
 
-        for (Label label : labels) {
-            label.setVisible(false);
-        }
+            doneLabel.setVisible(false);
+            hintLabel.setVisible(false);
 
-        for (Control control : controls) {
-            try {
-                control.setStyle("-fx-border-color: WHITE;");
-
-                if (control instanceof TextField) {
-                    ((TextField) control).clear();
-                } else if (control instanceof TextArea) {
-                    ((TextArea) control).clear();
-                } else if (control instanceof ChoiceBox) {
-                    ((ChoiceBox<?>) control).setValue(null);
-                } else if (control instanceof ComboBox) {
-                    ((ComboBox<?>) control).setValue(null);
-                } else if (control instanceof DatePicker) {
-                    ((DatePicker) control).setValue(null);
-                } else if (control instanceof Spinner) {
-                    ((Spinner<?>) control).getValueFactory().setValue(null);
-                } else if (control instanceof TableView) {
-                    ((TableView<?>) control).getItems().clear();
-                } else if (control instanceof ListView) {
-                    ((ListView<?>) control).getItems().clear();
-                }
-            } catch (NullPointerException e) {
-                System.out.println("Item is empty");
-                logger.error("Null pointer exception when refreshing item.", e);
-                continue;
-            }
-        }
+        } catch(NullPointerException e) {e.printStackTrace();logger.error("Null pointer exception when refreshing item.", e);}
     }
 }

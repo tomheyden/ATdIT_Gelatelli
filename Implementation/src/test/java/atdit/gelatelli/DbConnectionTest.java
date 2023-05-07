@@ -108,6 +108,6 @@ public class DbConnectionTest {
     @Test
     public void testWarehouse() throws SQLException {
         java.sql.Date sqlDate = new java.sql.Date(2023-1900, Calendar.AUGUST, 28);
-        WarehouseService.insertIngredient(new Batch(0,sqlDate,2.0,"Strawberry"));
+        warehouseService.insertIngredient(new Batch(0,sqlDate,2.0,"Strawberry"));
     }
 }

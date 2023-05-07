@@ -20,6 +20,8 @@ import java.lang.*;
 public class DbConnection {
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    public static Connection conn;
+
     /**
      * Returns a Connection object for connecting to the Gelatelli database.
      *
@@ -63,7 +65,10 @@ public class DbConnection {
     }
 
     /**
-     * Returns a list of Object arrays representing the result of a SELECT query on the database.
+     * This methods receive an "easy" SQL Statement and returns a List containing the Table with values.
+     * <p>
+     * With the help of this methods we are able to call it whenever we need any table with values and
+     * receive them
      *
      * @param sqlstatement a String containing the SELECT query to execute
      * @return a List of Object arrays representing the result of the query
@@ -91,9 +96,8 @@ public class DbConnection {
             }
 
         } catch (SQLException e) {
-            final String msg = "database access failed";
-            logger.error(msg, e);
-            throw new RuntimeException(msg);
+            logger.error("database access failed", e);
+            throw new RuntimeException();
         }
         return finalList;
     }
@@ -183,6 +187,9 @@ public class DbConnection {
     
     /**
      * Returns the unit of the given ingredient by searching through the list of ingredients.
+     *
+     * This methods is called from both the WarehouseService and ProductionService and is
+     * therefore in this Class
      *
      * @param ingredient the name of the ingredient to get the unit for
      * @return the unit of the ingredient, or null if it is not found

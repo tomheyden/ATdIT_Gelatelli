@@ -23,6 +23,8 @@ public class MethodsTests {
     java.sql.Date date = new java.sql.Date(2023-1900, Calendar.AUGUST, 28);
     LocalDate localDate = date.toLocalDate().plusDays(1);
 
+    WarehouseService warehouseService = new WarehouseService();
+
     @Order(1)
     @Test
     public void testInsert () {
@@ -38,7 +40,7 @@ public class MethodsTests {
         datalist.add(new Batch(DbConnection.getMaxId("batch"),java.sql.Date.valueOf(localDate),1.25,"Whole Milk"));
 
         for (Batch batch : datalist) {
-            WarehouseService.insertIngredient(batch);
+            warehouseService.insertIngredient(batch);
         }
 
         Assertions.assertEquals(true,ProductionService.checkIfEnoughIngredients("Chocolate",1.0));

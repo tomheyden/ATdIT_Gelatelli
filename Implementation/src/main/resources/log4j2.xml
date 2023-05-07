@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Properties>
-        <Property name="LOG_DIR">logs</Property>
+        <Property name="LOG_DIR">${sys:user.home}/logs</Property>
     </Properties>
 
     <Appenders>
@@ -14,7 +14,7 @@
         <RollingFile
                 name="File"
                 fileName="${LOG_DIR}/eiscafegelatelli.log"
-                filePattern="${LOG_DIR}/discount.%d{yyyy_MM_dd_HH_mm_ss}_%i.log"
+                filePattern="${LOG_DIR}/eiscafegelatelli.%d{yyyy_MM_dd_HH_mm_ss}_%i.log"
                 ignoreExceptions="false">
             <PatternLayout>
                 <Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
@@ -33,7 +33,8 @@
     <Loggers>
         <Root level="debug">
             <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
         </Root>
-        <Logger name="org.mariadb" level="off"/>
+        <Logger name="org.mysql" level="off"/>
     </Loggers>
 </Configuration>

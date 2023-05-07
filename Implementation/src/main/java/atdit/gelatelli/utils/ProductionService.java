@@ -23,7 +23,12 @@ public class ProductionService {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    /**
+     * This Variable is used whenever there are too less Ingredients to produce a Flavour. It is called
+     * by the ProductionController so it is a public class Element.
+     */
     public static String errorOfIngredientsamount = "";
+
 
     /**
      * Returns a list of batches ordered by their expiration dates.
@@ -109,6 +114,14 @@ public class ProductionService {
         return flavourList;
     }
 
+    /**
+     * Returns an ObservableList for the List on the Production UI.
+     * It is called when the User clicks on the "Show Recipe" Button to see the Ingredients,
+     * the amount and unit per Ingredient.
+     *
+     * @param flavour       The Flavour selected for the Ingredient List (Recipe)
+     * @return an ObservableList of strings for the Recipe on the Production UI
+     */
     public static List<String> getListContent(String flavour) {
         List<String> resultList = new ArrayList<>();
 
@@ -254,7 +267,6 @@ public class ProductionService {
             - If no then print out error Message containing missing Ingredients with values
 
              */
-
             boolean ingredientsAvailable = false;
             if (ingredientsNotAvailable.isEmpty()) {
                 logger.info("All Ingredients are available");

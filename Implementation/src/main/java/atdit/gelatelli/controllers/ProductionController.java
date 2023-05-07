@@ -64,72 +64,12 @@ public class ProductionController {
     Main main = new Main();
     StageHelper stageHelper = new StageHelper();
 
-
-    /**
-     * This method is called when the "Show Recipe" button is clicked by the user. It clears the receiptListView and
-     * populates it with the recipe for the selected flavor.
-     */
-    @FXML
-    private void handleShowRecipeButtonAction() {
-        logger.debug("Show Recipe Button clicked");
-
-        receiptListView.getItems().clear();
-        receiptListView.getItems().addAll(ProductionService.getListContent(flavorComboBox.getValue()));
-        System.out.println("Show Recipe Button");
-    }
-
-    /**
-     * This method is called when the "Produce" button is clicked by the user. It checks if there are enough
-     * ingredients in the warehouse to produce the selected flavor and amount. If there are, it produces the flavor
-     * and updates the progress batchbar accordingly. If there are not, it displays an error message.
-     */
-    @FXML
-    private void handleProduceButtonAction() {
-        logger.debug("Produce Button clicked");
-        boolean fieldsempty = false;
-
-        // Validate that all required fields have been filled out
-        if (flavorComboBox.getValue() == null) {
-            stageHelper.handleEmptyBox(flavorComboBox, doneLabelProduction, "Date");
-            fieldsempty = true;
-            logger.warn("Flavour is not selected");
-        } else {
-            flavorComboBox.setStyle("-fx-border-color: WHITE;");
-        }
-
-        if (sizeChoiceBox.getValue() == null) {
-            stageHelper.handleEmptyBox(sizeChoiceBox, doneLabelProduction, "Amount");
-            fieldsempty = true;
-            logger.warn("Amount is not selected");
-        } else {
-            sizeChoiceBox.setStyle("-fx-border-color: WHITE;");
-        }
-
-        if (!fieldsempty) {
-            String selectedFlavour = flavorComboBox.getValue();
-            Double selectedAmount = Double.valueOf(sizeChoiceBox.getValue());
-
-            doneLabelProduction.setVisible(false);
-
-            logger.debug("Selected Flavor: {}, Selected Amount: {}", selectedFlavour, selectedAmount);
-
-            if (ProductionService.checkIfEnoughIngredients(selectedFlavour, selectedAmount)) {
-                ProductionService.produceFlavour(selectedFlavour, selectedAmount);
-                productionStatusLabel.setText("Finished");
-
-                progessBarDisplay(true);
-                logger.info("Successfully produced {} of {} flavor", selectedAmount, selectedFlavour);
-            } else {
-                progessBarDisplay(false);
-                logger.warn("Could not produce {} of {} flavor due to insufficient ingredients", selectedAmount, selectedFlavour);
-            }
-        }
-    }
-
     /**
      * This method is called when the Production View is loaded. It populates the warehouseListView with the content
      * returned by the WarehouseService and the flavorComboBox with the available flavors returned by the
-     * ProductionService. It also initializes the sizeChoiceBox with the numbers from 1 to 20.
+     * ProductionService.
+     * <p>
+     * It also initializes the sizeChoiceBox with the numbers from 1 to 20.
      */
     public void initialize() {
         logger.info("Initializing ProductionController");
@@ -157,6 +97,57 @@ public class ProductionController {
         });
     }
 
+    /**
+     * This method is called when the "Show Recipe" button is clicked by the user. It clears the receiptListView and
+     * populates it with the recipe for the selected flavor.
+     */
+    @FXML
+    private void handleShowRecipeButtonAction() {
+        logger.debug("Show Recipe Button clicked");
+
+        receiptListView.getItems().clear();
+        receiptListView.getItems().addAll(ProductionService.getListContent(flavorComboBox.getValue()));
+        System.out.println("Show Recipe Button");
+    }
+
+    /**
+     * This method is called when the "Produce" button is clicked by the user. It checks if there are enough
+     * ingredients in the warehouse to produce the selected flavor and amount. If there are, it produces the flavor
+     * and updates the progress batchbar accordingly. If there are not, it displays an error message.
+     */
+    @FXML
+    private void handleProduceButtonAction() {
+        logger.debug("Produce Button clicked");
+
+        if (!respondToControlContent()) {
+            String selectedFlavour = flavorComboBox.getValue();
+            Double selectedAmount = Double.valueOf(sizeChoiceBox.getValue());
+            doneLabelProduction.setVisible(false);
+            logger.debug("Selected Flavor: {}, Selected Amount: {}", selectedFlavour, selectedAmount);
+
+            if (ProductionService.checkIfEnoughIngredients(selectedFlavour, selectedAmount)) {
+                ProductionService.produceFlavour(selectedFlavour, selectedAmount);
+                productionStatusLabel.setText("Finished");
+
+                progessBarDisplay(true);
+                logger.info("Successfully produced {} of {} flavor", selectedAmount, selectedFlavour);
+            } else {
+                progessBarDisplay(false);
+                logger.warn("Could not produce {} of {} flavor due to insufficient ingredients", selectedAmount, selectedFlavour);
+            }
+        }
+    }
+
+    /**
+     * This method is being called when the Production Button is clicked.
+     * <p>
+     * On the basis of its parameter, there is either a successful response with the Label
+     * being set to "Finished" and a green bar or an unsuccessful response with the Label
+     * displaying the missing ingredients and a red bar
+     *
+     * @param successful    information about whether or not the Production was successful
+     *
+     */
     private void progessBarDisplay(boolean successful) {
     
         logger.debug("Displaying progress bar");
@@ -178,5 +169,32 @@ public class ProductionController {
                 productionProgressBar.setStyle("-fx-accent: green ;");
             }
         });
+    }
+
+    /**
+     * This method is called to respond to whether or not a Control returns null and responds to it.
+     * Control(s) with no selected items are highlighted with a red border
+     * Control(s) with selected items get a white border
+     *
+     * @return true if there is at minimum one Control that returns null (contains no data)
+     */
+    private boolean respondToControlContent() {
+        // Validate that all required fields have been filled out
+        if (flavorComboBox.getValue() == null) {
+            stageHelper.handleEmptyBox(flavorComboBox, doneLabelProduction, "Date");
+            logger.warn("Flavour is not selected");
+            return true;
+        } else {
+            flavorComboBox.setStyle("-fx-border-color: WHITE;");
+        }
+
+        if (sizeChoiceBox.getValue() == null) {
+            stageHelper.handleEmptyBox(sizeChoiceBox, doneLabelProduction, "Amount");
+            logger.warn("Amount is not selected");
+            return true;
+        } else {
+            sizeChoiceBox.setStyle("-fx-border-color: WHITE;");
+        }
+        return false;
     }
 }
