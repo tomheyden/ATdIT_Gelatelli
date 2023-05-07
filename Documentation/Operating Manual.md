@@ -4,7 +4,7 @@
 This manual will provide you with a comprehensive guide on how to use the Eiscafe Gelatelli software to manage your ice cream business effectively.
 
 ## 2 Installation
-Please refer to the [Installation Guide](Documentation/Installation%20Guide.md) for information on how to install the software.
+Please refer to the [Installation Guide](Installation%20Guide.md) for information on how to install the software.
 ## 3 Getting Started
 After installation, launch the Eiscafe Gelatelli application to begin using the software.
 ## 4 Using the Software
