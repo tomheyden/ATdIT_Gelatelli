@@ -21,7 +21,7 @@ USE `eiscafegelatelli`;
 
 -- Exportiere Struktur von Tabelle eiscafegelatelli.flavour
 CREATE TABLE IF NOT EXISTS flavour (
-                                       flavour_name VARCHAR(15) NOT NULL COMMENT 'flavour''s unique name',
+                                       flavour_name VARCHAR(30) NOT NULL COMMENT 'flavour''s unique name',
                                        contribution_margin DECIMAL(65, 2) COMMENT 'flavor''s contribution margin',
                                        PRIMARY KEY (flavour_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='offered icecream flavours';
@@ -36,7 +36,7 @@ INSERT INTO flavour (flavour_name, contribution_margin) VALUES
 
 -- Exportiere Struktur von Tabelle eiscafegelatelli.ingredient
 CREATE TABLE IF NOT EXISTS `ingredient` (
-	`ingredient_name` VARCHAR(15) NOT NULL COMMENT 'ingredient''s unique name',
+	`ingredient_name` VARCHAR(30) NOT NULL COMMENT 'ingredient''s unique name',
 	`purchase_price` DECIMAL(3,2) NOT NULL COMMENT 'purchase price of the ingredient per unit',
 	`unit` TINYTEXT NOT NULL COMMENT 'unit in which the ingredient is commonly measured',
 	PRIMARY KEY (`ingredient_name`)
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `batch` (
   `id` INT(10) NOT NULL COMMENT 'unique id to identify batch of ingredients',
   `bbd` DATE NOT NULL COMMENT 'ingredient batch''s best before date',
   `amount` DECIMAL(65, 2) NOT NULL,
-  `ingredient_name` VARCHAR(15) NOT NULL COMMENT 'foreign key type of ingredient stored in the batch',
+  `ingredient_name` VARCHAR(30) NOT NULL COMMENT 'foreign key type of ingredient stored in the batch',
   PRIMARY KEY (`id`),
   CONSTRAINT `FK__stored_ingredient` FOREIGN KEY (`ingredient_name`) REFERENCES `ingredient` (`ingredient_name`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='storage for batches of ingredients';
@@ -84,8 +84,8 @@ INSERT INTO `batch` (`id`, `bbd`, `amount`, `ingredient_name`) VALUES
 
 -- Exportiere Struktur von Tabelle eiscafegelatelli.flavour_ingredient
 CREATE TABLE IF NOT EXISTS `flavour_ingredient` (
-  `flavour_name` VARCHAR(15) NOT NULL,
-  `ingredient_name` VARCHAR(15) NOT NULL,
+  `flavour_name` VARCHAR(30) NOT NULL,
+  `ingredient_name` VARCHAR(30) NOT NULL,
   `amount` DECIMAL(65, 2) NOT NULL,
   PRIMARY KEY (`flavour_name`,`ingredient_name`),
   KEY `FK__ingredient` (`ingredient_name`),
