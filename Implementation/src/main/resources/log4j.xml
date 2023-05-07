@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Properties>
-        <Property name="LOG_DIR">${sys:user.home}/logs</Property>
+        <Property name="LOG_DIR">Implementation/logs</Property>
     </Properties>
 
     <Appenders>
@@ -11,10 +11,10 @@
                     disableAnsi="false"/>
         </Console>
 
-        <RollingFile
+        <File
                 name="File"
                 fileName="${LOG_DIR}/eiscafegelatelli.log"
-                filePattern="${LOG_DIR}/eiscafegelatelli.%d{yyyy_MM_dd_HH_mm_ss}_%i.log"
+                immediateFlush="false"
                 ignoreExceptions="false">
             <PatternLayout>
                 <Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
@@ -22,16 +22,11 @@
             <Policies>
                 <OnStartupTriggeringPolicy minSize="0"/>
             </Policies>
-            <DefaultRolloverStrategy>
-                <Delete basePath="${LOG_DIR}" maxDepth="2">
-                    <IfLastModified age="P01D"/>
-                </Delete>
-            </DefaultRolloverStrategy>
-        </RollingFile>
+        </File>
     </Appenders>
 
     <Loggers>
-        <Root level="debug">
+        <Root level="trace">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="File"/>
         </Root>
