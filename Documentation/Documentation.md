@@ -37,7 +37,7 @@
    ### b. Diagrams
    A block ER Diagram illustrating the architecture of the "Eiscafe Gelatelli" system is provided below:
    Eiscafe Gelatelli System Architecture
-   ![ER Diagram](Images/Models/ERMDiagram.png)
+   ![ER Diagram](../Images/Models/ERMDiagram.png)
 
 ## 3. Program Structure
    ### a. Module Structure
