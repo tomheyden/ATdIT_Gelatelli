@@ -5,15 +5,15 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Displays a JavaFX scene in a new stage.
  *
  */
 public class StageHelper {
-    private static final Logger logger = LoggerFactory.getLogger(StageHelper.class);
+    private static final Logger logger = LogManager.getLogger();
     public static void showScene(Scene scene) {
         logger.info("Displaying JavaFX scene in a new stage");
         Stage stage = new Stage();

@@ -1,25 +1,19 @@
 package atdit.gelatelli.utils;
 
-import java.lang.invoke.MethodHandles;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.sql.Date;
+import java.util.*;
+
 import atdit.gelatelli.models.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
-import static java.sql.DriverManager.getConnection;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This class provides services for the Warehouse UI.
  */
-
 public class WarehouseService {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LogManager.getLogger();
 
     /**
      * Instance from the DbConnection Class
@@ -47,12 +41,13 @@ public class WarehouseService {
      */
     public List<String> getListContent() {
         List<Batch> batchList = ProductionService.getBatchTable();
+        Map<String, String> ingredientUnitList = DbConnection.getUnitfromIngredient();
         List<String> ListContent = new ArrayList<String>();
 
         for (Batch good : batchList) {
-            ListContent.add(good.amount() + " " + DbConnection.getUnitfromIngredient(good.ingredient()) + " from " + good.ingredient() + " expiring: " + good.bbd());
+            ListContent.add(good.amount() + " " + ingredientUnitList.get(good.ingredient()) + " from " + good.ingredient() + " expiring: " + good.bbd());
         }
-        logger.info("batch contents retrieved and returned in user-friendly format.");
+        logger.info("batch contents retrieved and returned for List.");
         return ListContent;
     }
 

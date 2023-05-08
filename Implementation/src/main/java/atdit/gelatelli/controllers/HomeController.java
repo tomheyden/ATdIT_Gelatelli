@@ -5,7 +5,7 @@ import atdit.gelatelli.ressources.StageHelper;
 import atdit.gelatelli.utils.ProductionService;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * The HomeController class is a controller for the Home.fxml view file.
@@ -29,7 +30,7 @@ public class HomeController {
     @FXML
     private Label dbConnection;
 
-    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+    private static final Logger logger = LogManager.getLogger();
 
     ProductionController productionController = new ProductionController();
     WarehouseController warehouseController = new WarehouseController();

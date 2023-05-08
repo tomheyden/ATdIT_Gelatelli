@@ -2,24 +2,22 @@ package atdit.gelatelli.models;
 
 import atdit.gelatelli.utils.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Represents an ingredient used in the production of icecream.
  */
 public class Ingredient implements Comparable<Ingredient> {
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LogManager.getLogger();
 
     private String name;
     private double purchasePrice;
     private String unit;
+
 
     /**
      * Returns the unit of measurement for the ingredient.
@@ -52,8 +50,6 @@ public class Ingredient implements Comparable<Ingredient> {
         this.name = name;
         this.purchasePrice = purchasePrice;
         this.unit = unit;
-
-        logger.info("Created new ingredient: name={}, purchasePrice={}, unit={}", name, purchasePrice, unit);
     }
 
     /**
@@ -104,7 +100,7 @@ public class Ingredient implements Comparable<Ingredient> {
      * @return a list of all ingredients in the database
      */
     public static List<Ingredient> readIngredients() {
-        logger.info("Starting readfromDBtoWE method...");
+        logger.info("Starting readIngredients method...");
         String sql1 = "SELECT * from ingredient";
 
         List<Object[]> result = DbConnection.getDbTable(sql1);
@@ -123,7 +119,6 @@ public class Ingredient implements Comparable<Ingredient> {
                 Ingredient ingredient_temp = new Ingredient((String) temp[0], Double.parseDouble(temp[1].toString()), (String) temp[2]);
                 ingredients.add(ingredient_temp);
 
-                logger.trace("Adding Ingredient object to list: {}", ingredient_temp);
             } catch (Exception e) {
                 logger.error("Error converting data to Ingredient objects: {}", e.getMessage());
             }
