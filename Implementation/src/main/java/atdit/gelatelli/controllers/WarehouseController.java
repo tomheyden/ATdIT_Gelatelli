@@ -9,8 +9,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -55,7 +55,7 @@ public class WarehouseController {
     @FXML
     private Button insertButton;
     
-    private static final Logger logger = LoggerFactory.getLogger(ProductionController.class);
+    private static final Logger logger = LogManager.getLogger();
     
     // WarehouseService instance for interacting with the database
     WarehouseService warehouseService = new WarehouseService();

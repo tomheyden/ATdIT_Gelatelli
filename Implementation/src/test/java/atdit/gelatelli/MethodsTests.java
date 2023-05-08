@@ -29,13 +29,16 @@ public class MethodsTests {
     @Test
     public void testInsert () {
 
+        System.out.println("");
+        ProductionService.getListContent("Chocolate");
+
         //Insert Ingredients for Chocolate production
-        datalist.add(new Batch(DbConnection.getMaxId("batch"),java.sql.Date.valueOf(localDate),0.50,"Bittersweet Cho"));
+        datalist.add(new Batch(DbConnection.getMaxId("batch"),java.sql.Date.valueOf(localDate),0.50,"Bittersweet Chocolate"));
         datalist.add(new Batch(DbConnection.getMaxId("batch"),java.sql.Date.valueOf(localDate),15.0,"Egg Yolk"));
         datalist.add(new Batch(DbConnection.getMaxId("batch"),java.sql.Date.valueOf(localDate),0.50,"Fine Sea Salt"));
-        datalist.add(new Batch(DbConnection.getMaxId("batch"),java.sql.Date.valueOf(localDate),0.75,"Granulated Suga"));
+        datalist.add(new Batch(DbConnection.getMaxId("batch"),java.sql.Date.valueOf(localDate),0.75,"Granulated Sugar"));
         datalist.add(new Batch(DbConnection.getMaxId("batch"),java.sql.Date.valueOf(localDate),2.50,"Heavy Cream"));
-        datalist.add(new Batch(DbConnection.getMaxId("batch"),java.sql.Date.valueOf(localDate),0.25,"Unsweetened Coc"));
+        datalist.add(new Batch(DbConnection.getMaxId("batch"),java.sql.Date.valueOf(localDate),0.25,"Unsweetened Cocoa Powder"));
         datalist.add(new Batch(DbConnection.getMaxId("batch"),java.sql.Date.valueOf(localDate),2.50,"Vanilla Extract"));
         datalist.add(new Batch(DbConnection.getMaxId("batch"),java.sql.Date.valueOf(localDate),1.25,"Whole Milk"));
 

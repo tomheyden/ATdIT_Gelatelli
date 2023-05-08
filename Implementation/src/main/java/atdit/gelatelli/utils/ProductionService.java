@@ -5,7 +5,8 @@ import atdit.gelatelli.models.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
@@ -21,7 +22,7 @@ import java.util.*;
  */
 public class ProductionService {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LogManager.getLogger();
 
     /**
      * This Variable is used whenever there are too less Ingredients to produce a Flavour. It is called
@@ -109,8 +110,7 @@ public class ProductionService {
             String flavour = (String) objarray[0];
             flavourList.add(flavour);
         }
-        logger.debug("Retrieved data from database: {}", result);
-        logger.debug("Flavour list: {}", flavourList);
+        logger.debug("Retrieved Flavour Table from database");
         return flavourList;
     }
 
@@ -126,13 +126,14 @@ public class ProductionService {
         List<String> resultList = new ArrayList<>();
 
         List<FlavourIngredient> flavourIngredientList = getFlavourIngredientTable();
+        Map<String, String> ingredientUnitList = DbConnection.getUnitfromIngredient();
 
         for (FlavourIngredient flavourIngredient : flavourIngredientList) {
             if (flavourIngredient.flavour().equals(flavour)) {
-                resultList.add(flavourIngredient.amount() + " " + DbConnection.getUnitfromIngredient(flavourIngredient.ingredient()) + " from " + flavourIngredient.ingredient());
+                resultList.add(flavourIngredient.amount() + " " + ingredientUnitList.get(flavourIngredient.ingredient()) + " from " + flavourIngredient.ingredient());
             }
         }
-        logger.debug("Generated list content for flavour {}: {}", flavour, resultList);
+        logger.debug("Generated list content for flavour " + flavour);
         return resultList;
     }
 
@@ -162,16 +163,17 @@ public class ProductionService {
                         double chargeAmount = rsSelect.getDouble("amount");
                         int chargeId = rsSelect.getInt("id");
 
-                        if (chargeAmount < UpdatedAmount) {
+                        if (chargeAmount <= UpdatedAmount) {
                             String sqlDelete = "DELETE FROM batch WHERE id = ?";
                             PreparedStatement stmtDelete = connection.prepareStatement(sqlDelete);
                             stmtDelete.setInt(1, chargeId);
                             int rowsDeleted = stmtDelete.executeUpdate();
                             UpdatedAmount -= chargeAmount;
-                            System.out.println(rowsDeleted + " deleted");
                             logger.debug("{} units of {} used up. Rows deleted: {}", chargeAmount, entry.getKey(), rowsDeleted);
+                            if (UpdatedAmount == 0.0)
+                                break;
                             continue;
-                        } else if (chargeAmount >= UpdatedAmount) {
+                        } else if (chargeAmount > UpdatedAmount) {
                             PreparedStatement stmtUpdate = connection.prepareStatement(queryUpdate);
                             stmtUpdate.setString(2, entry.getKey());
                             stmtUpdate.setDouble(1, chargeAmount - UpdatedAmount);
@@ -182,6 +184,7 @@ public class ProductionService {
                     } else {
                         logger.warn("No rows found for ingredient {}.", entry.getKey());
                     }
+                    DbConnection.deleteAmountZero();
                 }
             }
             logger.info("{} units of {} produced.", inputAmount, inputFlavour);

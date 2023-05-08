@@ -11,13 +11,11 @@ import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -58,7 +56,7 @@ public class ProductionController {
     @FXML
     private Label doneLabelProduction;
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductionController.class);
+    private static final Logger logger = LogManager.getLogger();
 
     WarehouseService warehouseService = new WarehouseService();
     Main main = new Main();

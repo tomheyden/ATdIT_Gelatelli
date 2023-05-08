@@ -1,8 +1,8 @@
 package atdit.gelatelli.utils;
 
 import atdit.gelatelli.models.Ingredient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +18,7 @@ import java.lang.*;
  */
 
 public class DbConnection {
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LogManager.getLogger();
 
     public static Connection conn;
 
@@ -191,20 +191,36 @@ public class DbConnection {
      * This methods is called from both the WarehouseService and ProductionService and is
      * therefore in this Class
      *
-     * @param ingredient the name of the ingredient to get the unit for
+     *
      * @return the unit of the ingredient, or null if it is not found
      */
-    public static String getUnitfromIngredient(String ingredient) {
+    public static Map<String, String> getUnitfromIngredient() {
         List<Ingredient> ingredientList = Ingredient.readIngredients();
+        Map<String, String> result = new HashMap<>();
 
         for (Ingredient ingredienttemp : ingredientList) {
-            if (ingredienttemp.equals(new Ingredient(ingredient, 0.0, null))) {
-                logger.debug("Unit of ingredient {} found: {}", ingredient, ingredienttemp.getUnit());
-                return ingredienttemp.getUnit();
+                result.put(ingredienttemp.getName(),ingredienttemp.getUnit());
             }
+        return result;
+    }
+
+    /**
+     * Checks and deletes entities in the batch table where amount = 0
+     *
+     */
+    public static void deleteAmountZero () {
+        try (Connection connection = getDbConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("Delete FROM batch WHERE amount = 0.0")) {
+
+            int rowsInserted = preparedStatement.executeUpdate();
+            logger.info("{} rows inserted into database", rowsInserted);
+
+
+        } catch (SQLException e) {
+            final String msg = "Error inserting data: " + e.getMessage();
+            logger.error(msg,e);
+            throw new RuntimeException(msg);
         }
-        logger.warn("Unit of ingredient {} not found in the ingredient list", ingredient);
-        return null;
     }
 
 
