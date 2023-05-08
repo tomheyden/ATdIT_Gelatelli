@@ -48,7 +48,7 @@
    ### c. Diagrams
    A UML class diagram illustrating the program structure of the "Eiscafe Gelatelli" system is provided below:
    #### Class Diagram
-   ![UML Class Diagram](Images/Models/ClassDiagram.png)
+   ![UML Class Diagram](../Images/Models/ClassDiagram.png)
 
 ## 4. Program Execution and Workflow
    ### a. Execution Process
@@ -56,10 +56,10 @@
    ### b. Workflow Diagrams
    A UML sequence diagram illustrating the workflow of the "Eiscafe Gelatelli" system is provided below:
    #### Sequence Diagram of the implemented program
-   ![UML Sequence Diagram of the implemented program](Images/Models/SequenceImplementedProgram.png)
+   ![UML Sequence Diagram of the implemented program](../Images/Models/SequenceImplementedProgram.png)
    
    #### Sequence Diagram of the mocked program
-   ![UML Sequence Diagram of the mocked program](Images/Models/SequenceMockedProgram.png)
+   ![UML Sequence Diagram of the mocked program](../Images/Models/SequenceMockedProgram.png)
 
 ## 5. Interfaces and Communication
    ### a. Internal Interfaces
@@ -75,7 +75,7 @@
    ### c. Diagrams
    Here is an Entity-Relationship diagram (ERD) that illustrates the data model for the system:
    #### ER Diagram
-   ![ER Diagram](Images/Models/ERMDiagram.png)
+   ![ER Diagram](../Images/Models/ERMDiagram.png)
 
 ## 7. Logging
    ### a. Logging
