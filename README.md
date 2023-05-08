@@ -1,5 +1,4 @@
 ![LogoGelatelli](Images/gelatelli-Vordergrund.jpg)
-![LogoGelatelli](Images/Logo_gelatelli.svg)
 
 
 # IT-System for Eiscafé Gelatelli
@@ -64,3 +63,5 @@ For information on the technical aspects of the project please refer to [Documen
 ## Contact
 
 If you have any questions or concerns about this project, please contact us at tom.heyden@studmail.hwg-lu.de, alina.pradel@studmail.hwg-lu.de, ivan.sachau@studmail.hwg-lu.de or johannes.scheufler@studmail.hwg-lu.de.
+
+![LogoGelatelli](Images/Logo_gelatelli.svg)
