@@ -1,4 +1,4 @@
-![LogoGelatelli](Images/gelatelli-Vordergrundsvg)
+![LogoGelatelli](Images/gelatelli-Vordergrund.jpg)
 ![LogoGelatelli](Images/Logo_gelatelli.svg)
 
 
