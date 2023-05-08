@@ -35,8 +35,10 @@
    ### a. High-Level Architecture
    The "Eiscafe Gelatelli" system has a client-server architecture. The client side is a JavaFX application that interacts with the server side, which is implemented   in Java and uses a MySQL database. The main components of the system include the controllers, models, resources, and utils packages, which are responsible for managing the business logic and user interface of the application.
    ### b. Diagrams
-   A block diagram illustrating the architecture of the "Eiscafe Gelatelli" system is provided below:
-   Eiscafe Gelatelli System Architecture (Alina)
+   A block ER Diagram illustrating the architecture of the "Eiscafe Gelatelli" system is provided below:
+   Eiscafe Gelatelli System Architecture
+   #### ER Diagram
+   ![ER Diagram](../Images/Models/ERMDiagram.png)
 
 ## 3. Program Structure
    ### a. Module Structure
@@ -45,14 +47,19 @@
    Some of the important classes in the "Eiscafe Gelatelli" system include the ProductionInterface, ProductionService, WarehouseInterface, and WarehouseService classes, which provide interfaces and services for managing the production and warehouse functions of the system. The FlavourSingleton class is also important, as it provides a centralized storage for the flavour information.
    ### c. Diagrams
    A UML class diagram illustrating the program structure of the "Eiscafe Gelatelli" system is provided below:
-   UML Diagram
+   #### Class Diagram
+   ![UML Class Diagram](Images/Models/ClassDiagram.png)
 
 ## 4. Program Execution and Workflow
    ### a. Execution Process
   The execution process of the "Eiscafe Gelatelli" system involves starting the server side of the application, which initializes the database connection and starts listening for client requests. When the client side of the application is started, it connects to the server and interacts with it to manage the production and warehouse functions of the system.
    ### b. Workflow Diagrams
    A UML sequence diagram illustrating the workflow of the "Eiscafe Gelatelli" system is provided below:
-   UML Sequence Diagram
+   #### Sequence Diagram of the implemented program
+   ![UML Sequence Diagram of the implemented program](Images/Models/SequenceImplementedProgram.png)
+   
+   #### Sequence Diagram of the mocked program
+   ![UML Sequence Diagram of the mocked program](Images/Models/SequenceMockedProgram.png)
 
 ## 5. Interfaces and Communication
    ### a. Internal Interfaces
@@ -67,7 +74,8 @@
    The system uses a MySQL database to store and retrieve data. The database design includes five tables: Batch, Flavour, Ingredient, FlavourIngredient, and ProductionLog. The Batch table has columns for batch ID, flavour ID, production date, and quantity produced. The Flavour table has columns for flavour ID, name, and description. The Ingredient table has columns for ingredient ID, name, description, and unit of measurement. The FlavourIngredient table has columns for flavour ID, ingredient ID, and quantity required. The ProductionLog table has columns for production log ID, batch ID, and production date.
    ### c. Diagrams
    Here is an Entity-Relationship diagram (ERD) that illustrates the data model for the system:
-   ER-Diagram
+   #### ER Diagram
+   ![ER Diagram](Images/Models/ERMDiagram.png)
 
 ## 7. Logging
    ### a. Logging
